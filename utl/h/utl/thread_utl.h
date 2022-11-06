@@ -27,6 +27,8 @@ BS_STATUS ThreadUtl_Suspend(THREAD_ID thread_id);
 BS_STATUS ThreadUtl_Resume(THREAD_ID thread_id);
 THREAD_ID ThreadUtl_GetSelfID();
 
+#define THREAD_GetSelfID() ThreadUtl_GetSelfID()
+
 #ifdef __cplusplus
 }
 #endif

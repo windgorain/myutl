@@ -44,13 +44,22 @@ typedef struct {
 }PCIE_DEV_CFG_S;
 
 
+typedef struct {
+    unsigned char fmt_type; /* TLP Fmt Type. Type: [0,4], Fmt: [5,7] */
+    unsigned char flag; /* th:0,attr:2,TC:[4,6] */
+    unsigned short len_attr; /* len:[0-9], AT:[10-11], Attr:[12-13], EP:14, TD:15 */
+
+    unsigned int bytes[3]; /* type相关字段 */
+}PCIE_TLP_HEADER_S;
 
 typedef struct {
     unsigned char fmt_type; /* TLP Fmt Type. Type: [0,4], Fmt: [5,7] */
     unsigned char flag; /* th:0,attr:2,TC:[4,6] */
     unsigned short len_attr; /* len:[0-9], AT:[10-11], Attr:[12-13], EP:14, TD:15 */
-    unsigned int bytes[3];
-    unsigned char payload[0]; /* 可变字段 */
+
+    unsigned int bytes[3]; /* type相关字段 */
+
+    unsigned int payload[1024];
 }PCIE_TLP_S;
 
 #define PCIE_TLP_FMT(tlp) ((tlp)->fmt_type >> 5)
@@ -64,7 +73,6 @@ typedef struct {
 #define PCIE_TLP_EP(tlp) (((tlp)->len_attr >> 14) & 0x1)
 #define PCIE_TLP_TD(tlp) (((tlp)->len_attr >> 15) & 0x1)
 
-#define PCIE_SET_TLP_CFG_FIRST_DW(tlp, v) BIT_OFF_SETTO((tlp)->req_tag, 0xf, v, 0)
 #define PCIE_SET_TLP_FMT(tlp, v) BIT_OFF_SETTO((tlp)->fmt_type, 0x3, v, 5)
 #define PCIE_SET_TLP_TYPE(tlp, v) BIT_OFF_SETTO((tlp)->fmt_type, 0x1f, v, 0)
 #define PCIE_SET_TLP_TH(tlp, v) BIT_OFF_SETTO((tlp)->flag, 0x1, v, 0)
@@ -81,15 +89,18 @@ typedef struct {
     unsigned char fmt_type;
     unsigned char flag;
     unsigned short len_attr;
-    unsigned int req_tag;
+
+    unsigned short request_id;
+    unsigned char tag;
+    unsigned char dw;
+
     unsigned int bdf_reg;
-    unsigned int data;
 }PCIE_TLP_CFG_S;
 
-#define PCIE_TLP_CFG_FIRST_DW(tlp) ((tlp)->req_tag & 0xf)
-#define PCIE_TLP_CFG_LAST_DW(tlp) (((tlp)->req_tag >> 4) & 0xf)
-#define PCIE_TLP_CFG_TAG(tlp) (((tlp)->req_tag >> 8) & 0xff)
-#define PCIE_TLP_CFG_REQUEST_ID(tlp) (((tlp)->req_tag >> 16) & 0xffff)
+#define PCIE_TLP_CFG_FIRST_DW(tlp) ((tlp)->dw & 0xf)
+#define PCIE_TLP_CFG_LAST_DW(tlp) (((tlp)->dw >> 4) & 0xf)
+#define PCIE_TLP_CFG_TAG(tlp) ((tlp)->tag) 
+#define PCIE_TLP_CFG_REQUEST_ID(tlp) ((tlp)->request_id)
 #define PCIE_TLP_CFG_REG_NUM(tlp) (((tlp)->bdf_reg >> 2) & 0x3f)
 #define PCIE_TLP_CFG_EXT_REG_NUM(tlp) (((tlp)->bdf_reg >> 8) & 0xf)
 #define PCIE_TLP_CFG_BDF(tlp) (((tlp)->bdf_reg >> 16) & 0xffff)
@@ -97,10 +108,10 @@ typedef struct {
 #define PCIE_TLP_CFG_BDF_DEV(tlp) (((tlp)->bdf_reg >> 19) & 0x1f)
 #define PCIE_TLP_CFG_BDF_FUNC(tlp) (((tlp)->bdf_reg >> 16) & 0x7)
 
-#define PCIE_SET_TLP_CFG_FIRST_DW(tlp, v) BIT_OFF_SETTO((tlp)->req_tag, 0xf, v, 0)
-#define PCIE_SET_TLP_CFG_LAST_DW(tlp, v) BIT_OFF_SETTO((tlp)->req_tag, 0xf, v, 4)
-#define PCIE_SET_TLP_CFG_TAG(tlp, v) BIT_OFF_SETTO((tlp)->req_tag, 0xff, v, 8)
-#define PCIE_SET_TLP_CFG_REQUEST_ID(tlp, v) BIT_OFF_SETTO((tlp)->req_tag, 0xffff, v, 16)
+#define PCIE_SET_TLP_CFG_FIRST_DW(tlp, v) BIT_OFF_SETTO((tlp)->dw, 0xf, v, 0)
+#define PCIE_SET_TLP_CFG_LAST_DW(tlp, v) BIT_OFF_SETTO((tlp)->dw, 0xf, v, 4)
+#define PCIE_SET_TLP_CFG_TAG(tlp, v) do{(tlp)->tag = (v);}while(0)
+#define PCIE_SET_TLP_CFG_REQUEST_ID(tlp, v) do{(tlp)->request_id = (v);}while(0)
 #define PCIE_SET_TLP_CFG_REG_NUM(tlp, v) BIT_OFF_SETTO((tlp)->bdf_reg, 0x3f, v, 2)
 #define PCIE_SET_TLP_CFG_EXT_REG_NUM(tlp, v) BIT_OFF_SETTO((tlp)->bdf_reg, 0xf, v, 8)
 #define PCIE_SET_TLP_CFG_BDF(tlp, v) BIT_OFF_SETTO((tlp)->bdf_reg, 0xffff, v, 16)
@@ -112,17 +123,41 @@ typedef struct {
     unsigned char fmt_type;
     unsigned char flag;
     unsigned short len_attr;
-    unsigned int req_tag;
+
+    unsigned short request_id;
+    unsigned char tag;
+    unsigned char dw;
+
     unsigned int addr1;
     unsigned int addr2;
 }PCIE_TLP_MEM_S;
 
+typedef struct {
+    unsigned char fmt_type;
+    unsigned char flag;
+    unsigned short len_attr;
+
+    unsigned short completer_id;
+    unsigned short status_count;
+
+    unsigned short requester_id;
+    unsigned char tag;
+    unsigned char lower_addr;
+}PCIE_TLP_COMPLETE_S;
+
+#define PCIE_TLP_COMP_STATUS(tlp) (((tlp)->status_count >> 13) & 0x7)
+#define PCIE_TLP_COMP_COUNT(tlp) (((tlp)->status_count) & 0xfff)
+#define PCIE_TLP_COMP_BCM(tlp) (((tlp)->status_count >> 12) & 0x1)
+#define PCIE_TLP_COMP_LOWER_ADDR(tlp) (((tlp)->lower_addr) & 0x7f)
+
 void PCIE_BuildCfgTLP(UCHAR fmt, UCHAR type, USHORT bdf, UINT addr, int size, OUT PCIE_TLP_CFG_S *tlp);
-void PCIE_BuildEpCfgReadTLP(USHORT bdf, UINT addr, int size, OUT PCIE_TLP_CFG_S *tlp);
-void PCIE_BuildEpCfgWriteTLP(USHORT bdf, UINT addr, int size, UINT val, OUT PCIE_TLP_CFG_S *tlp);
+void PCIE_BuildCfgReadTLP(int is_ep, USHORT bdf, UINT addr, int size, OUT PCIE_TLP_CFG_S *tlp);
+void PCIE_BuildCfgWriteTLP(int is_ep, USHORT bdf, UINT addr, int size, UINT val, OUT PCIE_TLP_CFG_S *tlp);
 void PCIE_BuildMemTLP(UCHAR fmt, UCHAR type, USHORT bdf, UINT64 addr, BOOL_T is64, int size, OUT PCIE_TLP_MEM_S *tlp);
 void PCIE_BuildEpMemReadTLP(USHORT bdf, UINT addr, BOOL_T is64, int size, OUT PCIE_TLP_MEM_S *tlp);
 void PCIE_BuildEpMemWriteTLP(USHORT bdf, UINT addr, BOOL_T is64, int size, void *data, OUT PCIE_TLP_MEM_S *tlp);
+void PCIE_WriteTlpData(void *data, int data_len, BOOL_T is4dw, OUT PCIE_TLP_S *tlp);
+int PCIE_ReadTlpData(OUT void *data, int data_size, BOOL_T is4dw, PCIE_TLP_S *tlp);
 
 #ifdef __cplusplus
 }

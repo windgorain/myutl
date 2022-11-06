@@ -72,6 +72,15 @@ extern "C" {
 #define BOOL_FALSE FALSE
 #endif
 
+#ifndef false
+#define true 1
+#define false 0
+#endif
+
+#ifndef bool
+typedef char bool;
+#endif
+
 #ifndef STATIC
 #define STATIC static
 #endif
@@ -131,7 +140,7 @@ typedef unsigned long long  UINT64;
 typedef long long           INT64;
 typedef int 				INT;
 typedef unsigned char 		UCHAR;
-typedef char		 		CHAR;
+typedef char			    CHAR;
 typedef char                BOOL_T;
 typedef void*               HANDLE;
 typedef unsigned long       ULONG;  /* 变长的类型,32位系统上4个字节,64位系统8个字节 */
@@ -169,7 +178,8 @@ typedef UINT 		(*UINT_FUNC_5)(VOID *pArg1, VOID *pArg2, VOID *pArg3, VOID *pArg4
 typedef UINT 		(*UINT_FUNC_6)(VOID *pArg1, VOID *pArg2, VOID *pArg3, VOID *pArg4, VOID *pArg5, VOID *pArg6);
 typedef HANDLE 		(*HANDLE_FUNC)(void);
 typedef BOOL_T		(*BOOL_FUNC)(void);
-typedef int         (PF_CMP_FUNC)(void *n1, void *n2, void *ud);
+typedef int         (*PF_CMP_FUNC)(void *n1, void *n2, void *ud);
+typedef int         (*PF_PRINT_FUNC)(char *fmt, ...);
 
 typedef enum{
     /* 通用定义 */
