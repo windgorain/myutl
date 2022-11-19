@@ -38,6 +38,9 @@
 /* 将[begin, end]位设置为1 */
 #define BIT_BUILD_RANGE(begin, end)  ((0xffffffff >> (31 - ((end) - (begin)))) << (begin))
 
+/* 将off, size位设置为1 */
+#define BIT_BUILD_OFF(off, size)  BIT_BUILD_RANGE(off, (size)-1)
+
 /* 翻转指定位 */
 #define BIT_TURN(flag, bits) ((flag) ^= (bits))
 
@@ -50,39 +53,30 @@
 /* 将 [begin, end] 位设置为 v */
 #define BIT_RANGE_SETTO(ulFlag, begin, end, v) BIT_SETTO(ulFlag, BIT_BUILD_RANGE(begin, end), (v)<<(begin))
 
+/* 获取off, size位的值 */
+#define BIT_GET_OFF(v, off, size) (((v) >> off) & BIT_BUILD_OFF(0, size))
+
 #define BIT_TEST BIT_ISSET
 #define BIT_RESET BIT_CLR
 
-/* 仅仅保留最低位, 如0x110, 变为0x010 */
+/* 仅仅保留最低的被设置为1的位, 如0x110, 变为0x010 */
 #define BIT_ONLY_LAST(a) ((a) & (-(a)))
 
 /* 获取最低位的index, 比如 0x1返回0, 0x2返回1, 0x4返回2 */
-static inline int Bit_GetLastIndex(UINT num)
-{
-    int i;
-
-    for (i=0; i<32; i++) {
-        if (num & (1 << i)) { 
-            return i;
-        }
-    }
-
-    return -1;
-}
+int BIT_GetLastIndex(UINT num);
 
 /* 获取最高位的index */
-static inline int Bit_GetFirstIndex(UINT num)
-{
-    int i;
+int BIT_GetFirstIndex(UINT num, UINT from /* 从哪位开始往下看 */);
 
-    for (i=31; i>=0; i--) {
-        if (num & (1 << i)) { 
-            return i;
-        }
-    }
+/* 描述bit字段 */
+typedef struct {
+    uint32_t off;
+    uint32_t size;
+}BIT_DESC_S;
 
-    return -1;
-}
+char * BIT_SPrint(uint32_t v, uint32_t off, uint32_t size, OUT char *buf);
+void BIT_Print(uint32_t v, uint32_t off, uint32_t size, PF_PRINT_FUNC func);
+int BIT_XSPrint(uint32_t v, BIT_DESC_S *desc, int desc_num, OUT char *buf, uint32_t buf_size);
 
 #ifdef __cplusplus
         }

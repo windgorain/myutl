@@ -35,8 +35,10 @@ void S2IP_Switch(S2IP_S *s2ip_ctrl);
 
 /* 三次握手 */
 int S2IP_Hsk(S2IP_S *s2ip_ctrl, PF_S2IP_OUTPUT output_func, void *user_handle);
+
 /* 数据报文 */
-int S2IP_Data(S2IP_S *s2ip_ctrl, void *data, int data_len, PF_S2IP_OUTPUT output_func, void *user_handle);
+int S2IP_Data(S2IP_S *ctrl, void *data, int data_len, BOOL_T ack, PF_S2IP_OUTPUT output_func, void *user_handle);
+
 /* 四次挥手 */
 int S2IP_Bye(S2IP_S *s2ip_ctrl, PF_S2IP_OUTPUT output_func, void *user_handle);
 

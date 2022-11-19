@@ -15,9 +15,9 @@
 typedef HANDLE SEM_HANDLE;
 
 /* 主要用于递归取互斥信号量. 如果不存在递归情况,建议使用计数器信号量, 效率比这个高一倍左右 */
-SEM_HANDLE SEM_MCreate (IN CHAR *pcName);
+SEM_HANDLE SEM_MCreate (const char *pcName);
 /* 当lInitNum为1时, 就相当于不支持递归SEM_P的互斥信号量. 如果使用者不存在递归情况,建议使用它 */
-SEM_HANDLE SEM_CCreate (IN CHAR *pcName, IN INT iInitNum);
+SEM_HANDLE SEM_CCreate (const char *pcName, IN INT iInitNum);
 VOID SEM_Destory(IN SEM_HANDLE hSem);
 BS_STATUS SEM_P (IN SEM_HANDLE hSem, IN BS_WAIT_E eWaitMode, IN UINT ulMilliseconds);
 /* 在取一个信号量的同时，释放另外一个信号量 */

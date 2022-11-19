@@ -19,19 +19,19 @@
 #define DAYS_2_SECONDS(days) ((days) * 24 * 60 * 60)
 
 /* 返回UTC时间 */
-static inline time_t TM_NowInSec()
+static inline time_t TM_NowInSec(void)
 {
 	return time(0);
 }
 
 /* 从系统启动到现在的秒数 */
-ULONG TM_SecondsFromInit();
+ULONG TM_SecondsFromInit(void);
 /* 从系统启动到现在的毫秒数 */
-UINT64 TM_MsFromInit();
+UINT64 TM_MsFromInit(void);
 /* 从系统启动到现在的us数 */
-UINT64 TM_UsFromInit();
+UINT64 TM_UsFromInit(void);
 /* 从系统启动到现在的ns数 */
-UINT64 TM_NsFromInit();
+UINT64 TM_NsFromInit(void);
 /* 转换成如下格式:Fri, 29 Feb 2008 12:20:34  */
 VOID TM_Utc2String(IN time_t ulUtcTime, OUT CHAR *szStringTime);
 /* UTC时间转换成日期时分秒 */
@@ -64,9 +64,9 @@ char * TM_GetTimeString(OUT char* out_datetime, int length, UINT input_time);
 extern unsigned long TM_HZ; /* 一秒的tick数 */
 extern unsigned long TM_MS_HZ; /* 一ms的tick数 */
 
-unsigned long TM_GetTickPerSec();
+unsigned long TM_GetTickPerSec(void);
 
-static inline unsigned long TM_GetTick()
+static inline unsigned long TM_GetTick(void)
 {
     unsigned long now_tick;
     struct tms buf;
@@ -75,11 +75,11 @@ static inline unsigned long TM_GetTick()
 }
 
 #if 1 /* 获取程序当前的CPU 运行 clock, sleep消耗的时间不算 */
-static inline long TM_GetClock() {
+static inline long TM_GetClock(void) {
         return clock();
 }
 
-static inline long TM_GetClockPerSec() {
+static inline long TM_GetClockPerSec(void) {
         return CLOCKS_PER_SEC;
 }
 #endif

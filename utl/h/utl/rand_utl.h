@@ -12,12 +12,12 @@
     extern "C" {
 #endif /* __cplusplus */
 
-UINT RAND_Get();
+UINT RAND_Get(void);
 
-UINT RAND_GetNonZero();
+UINT RAND_GetNonZero(void);
 
 /* 获取/dev/urandom随机数 */
-unsigned long RAND_GetRandom();
+unsigned long RAND_GetRandom(void);
 
 /* 改变熵值 */
 VOID RAND_Entropy(IN UINT uiEntropy);

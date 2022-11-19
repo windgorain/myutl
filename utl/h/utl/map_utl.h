@@ -9,22 +9,54 @@
 #define __MAP_UTL_H_
 
 #include "bs.h"
+#include "utl/hash_utl.h"
+#include "utl/avllib_utl.h"
+#include "utl/rb_tree.h"
 
 #ifdef __cplusplus
     extern "C" {
 #endif /* __cplusplus */
 
 #define MAP_FLAG_DUP_KEY 0x1
+#define MAP_FLAG_PERMIT_DUPLICATE 0x2  /* 允许出现重复key. 只有部分map类型支持 */
 
 typedef struct tagMAP_CTRL_S * MAP_HANDLE;
 
-typedef struct
-{
+typedef struct {
     VOID *pKey;
     VOID *pData;
     UINT uiKeyLen;
+
     UINT dup_key: 1; /* key是mem_dup出来的 */
+    UINT link_alloced: 1; /* link node 是内存申请出来的 */
 }MAP_ELE_S;
+
+typedef struct {
+    HASH_NODE_S stHashNode;
+    MAP_ELE_S stEle;
+}MAP_HASH_NODE_S;
+
+typedef struct {
+    AVL_NODE avl_node;
+    MAP_ELE_S stEle;
+}MAP_AVL_NODE_S;
+
+typedef struct {
+    DLL_NODE_S list_node;
+    MAP_ELE_S stEle;
+}MAP_LIST_NODE_S;
+
+typedef struct {
+    RB_TREE_NODE_S rb_node;
+    MAP_ELE_S stEle;
+}MAP_RBTREE_NODE_S;
+
+typedef union {
+    MAP_HASH_NODE_S hash_node;
+    MAP_AVL_NODE_S avl_node;
+    MAP_LIST_NODE_S list_node;
+    MAP_RBTREE_NODE_S rbtree_node;
+}MAP_LINK_NODE_S;
 
 typedef struct {
     void *memcap;
@@ -36,6 +68,7 @@ typedef void (*PF_MAP_FREE_FUNC)(void *data, void *ud);
 
 typedef void (*PF_MAP_Destroy)(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 typedef void (*PF_MAP_Reset)(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
+typedef int (*PF_MAP_Add_Node)(MAP_HANDLE map, void *pKey, UINT uiKeyLen, void *pData, void *node, UINT flag);
 typedef int (*PF_MAP_Add)(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 typedef MAP_ELE_S* (*PF_MAP_GetEle)(MAP_HANDLE map, void *key, UINT key_len);
 typedef void* (*PF_MAP_Get)(MAP_HANDLE map, void *pKey, UINT uiKeyLen);
@@ -48,6 +81,7 @@ typedef MAP_ELE_S* (*PF_MAP_GetNext)(MAP_HANDLE map, MAP_ELE_S *pstCurrent);
 typedef struct {
     PF_MAP_Destroy destroy_func;
     PF_MAP_Reset reset_func;
+    PF_MAP_Add_Node add_node_func;
     PF_MAP_Add add_func;
     PF_MAP_GetEle get_ele_func;
     PF_MAP_Get get_func;
@@ -94,6 +128,11 @@ static inline UINT MAP_GetCapacity(MAP_HANDLE map) {
 /* pKey当做指针来用,则keylen为指针指向内容的长度; pKey当做数字来用,则keylen填写为0 */
 static inline int MAP_Add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag) {
     return map->funcs->add_func(map, pKey, uiKeyLen, pData, flag);
+}
+
+static inline int MAP_AddNode(MAP_HANDLE map, void *pKey, UINT uiKeyLen,
+        void *pData, MAP_LINK_NODE_S *link_node, UINT flag) {
+    return map->funcs->add_node_func(map, pKey, uiKeyLen, pData, link_node, flag);
 }
 
 static inline MAP_ELE_S * MAP_GetEle(MAP_HANDLE map, void *key, UINT key_len) {

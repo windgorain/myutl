@@ -90,20 +90,20 @@ typedef char bool;
 
 #ifdef IN_WINDOWS
     #define CONSTRUCTOR(f)  \
-        static void f();  \
-        static int __f1(){f();return 0;}  \
+        static void f(void);  \
+        static int __f1(void){f();return 0;}  \
         __pragma(data_seg(".CRT$XIU"))  \
-        static int(*__f2) () = __f1;  \
+        static int(*__f2) (void) = __f1;  \
         __pragma(data_seg())  \
-        static void f()
+        static void f(void)
 
     #define DESTRUCTOR(fin) \
-        static void fin();  \
-        static int __fin1(){fin();return 0;}  \
+        static void fin(void);  \
+        static int __fin1(void){fin();return 0;}  \
         __pragma(data_seg(".CRT$XPU"))  \
-        static int(*__fin2) () = __fin1;  \
+        static int(*__fin2) (void) = __fin1;  \
         __pragma(data_seg())  \
-        static void fin()
+        static void fin(void)
 
     #define PLUG_HIDE
     #define PLUG_API  __declspec(dllexport)
@@ -115,8 +115,8 @@ typedef char bool;
 #endif
 
 #ifdef IN_UNIXLIKE
-#define CONSTRUCTOR(_init)  __attribute__((constructor)) static void _init()
-#define DESTRUCTOR(_final) __attribute__((destructor)) static void _final()
+#define CONSTRUCTOR(_init)  __attribute__((constructor)) static void _init(void)
+#define DESTRUCTOR(_final) __attribute__((destructor)) static void _final(void)
 #define PLUG_API  __attribute__ ((visibility("default")))
 #define PLUG_HIDE __attribute__ ((visibility("hidden"))) 
 #define PLUG_ID    void*
@@ -179,7 +179,7 @@ typedef UINT 		(*UINT_FUNC_6)(VOID *pArg1, VOID *pArg2, VOID *pArg3, VOID *pArg4
 typedef HANDLE 		(*HANDLE_FUNC)(void);
 typedef BOOL_T		(*BOOL_FUNC)(void);
 typedef int         (*PF_CMP_FUNC)(void *n1, void *n2, void *ud);
-typedef int         (*PF_PRINT_FUNC)(char *fmt, ...);
+typedef int         (*PF_PRINT_FUNC)(const char *fmt, ...);
 
 typedef enum{
     /* 通用定义 */

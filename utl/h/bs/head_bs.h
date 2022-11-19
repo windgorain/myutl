@@ -73,16 +73,6 @@ typedef enum
 #define BS_DBG_WARNNING(X)
 #endif
 
-#define SHELL_FONT_COLOR_BLACK   "\033[40;30m"
-#define SHELL_FONT_COLOR_RED     "\033[40;31m"
-#define SHELL_FONT_COLOR_GREEN   "\033[40;32m"
-#define SHELL_FONT_COLOR_YELLOW  "\033[40;33m"
-#define SHELL_FONT_COLOR_BULE    "\033[40;34m"
-#define SHELL_FONT_COLOR_PURPLE  "\033[40;35m"
-#define SHELL_FONT_COLOR_CYAN    "\033[40;36m"
-#define SHELL_FONT_COLOR_WHITE   "\033[40;37m"
-#define SHELL_CLOSE_FONT_COLOR   "\033[0m"
-
 typedef struct
 {
     HANDLE ahUserHandle[4];

@@ -25,7 +25,7 @@ typedef void (*PF_THREAD_UTL_FUNC)(void *user_data);
 THREAD_ID ThreadUtl_Create(PF_THREAD_UTL_FUNC func, UINT pri, UINT stack_size, void *user_data);
 BS_STATUS ThreadUtl_Suspend(THREAD_ID thread_id);
 BS_STATUS ThreadUtl_Resume(THREAD_ID thread_id);
-THREAD_ID ThreadUtl_GetSelfID();
+THREAD_ID ThreadUtl_GetSelfID(void);
 
 #define THREAD_GetSelfID() ThreadUtl_GetSelfID()
 

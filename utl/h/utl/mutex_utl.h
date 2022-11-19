@@ -24,7 +24,7 @@ typedef struct
     UINT uiLine: 15;
     UINT inited: 1;
     UINT count: 16; /* 嵌套次数 */
-    CHAR *pcFile;
+    const char *pcFile;
 }MUTEX_S;
 
 typedef struct {
@@ -45,7 +45,7 @@ VOID MUTEX_InitRecursive(IN MUTEX_S *pstMutex);
 void MUTEX_InitNormal(MUTEX_S *pstMutex);
 
 VOID MUTEX_Final(IN MUTEX_S *pstMutex);
-VOID _MUTEX_P(IN MUTEX_S *pstMutex, IN CHAR *pcFile, IN UINT uiLine);
+void _MUTEX_P(IN MUTEX_S *pstMutex, const char *pcFile, IN UINT uiLine);
 BOOL_T _MUTEX_TryP(IN MUTEX_S *pstMutex, IN CHAR *pcFile, IN UINT uiLine);
 VOID MUTEX_V(IN MUTEX_S *pstMutex);
 UINT MUTEX_GetCount(IN MUTEX_S *pstMutex);

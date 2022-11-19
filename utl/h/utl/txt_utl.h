@@ -151,6 +151,8 @@ extern UCHAR * TXT_FindFirstNonBlank(IN UCHAR *pszStr, IN UINT ulLen);
 
 extern UCHAR *TXT_FindFirstNonSuch(IN UCHAR *pszStr, IN UINT ulLen, IN UCHAR *pszNoSuch, IN UINT ulNoSuchLen);
 
+extern CHAR * TXT_FindOneOf(IN CHAR *pszStr, IN CHAR *pszPattern);
+
 extern BOOL_T TXT_IsInRange(IN CHAR cCh, IN UCHAR *pszStringRange, IN UINT ulLen);
 
 extern UINT TXT_StrToToken(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[], IN UINT uiMaxArgz);
@@ -197,6 +199,11 @@ extern BS_STATUS TXT_FindBracket
 );
 
 extern char * TXT_Str2Translate(char *str, char *trans_char_sets, char *out, int out_size);
+
+/* 将数字转为二进制字符串:
+ * min_len: 最小输出字节数, 如果不足则在前面补0
+ */
+char * TXT_Num2BitString(uint64_t v, int min_len, OUT char *str);
 
 #define TXT_SCAN_N_LINE_BEGIN(pszTxtBuf, uiBufLen, pszLine, uiLineLen) \
     do { \

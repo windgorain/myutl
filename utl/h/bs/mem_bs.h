@@ -16,8 +16,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
-PLUG_API void * MEM_MallocMem(ULONG ulSize, CHAR *pszFileName, UINT ulLine);
-PLUG_API VOID MEM_FreeMem(IN VOID *pMem, IN CHAR *pszFileName, IN UINT ulLine);
+PLUG_API void * MEM_MallocMem(ULONG ulSize, const char *pszFileName, UINT ulLine);
+PLUG_API void MEM_FreeMem(IN VOID *pMem, const char *pszFileName, IN UINT ulLine);
 
 BS_STATUS MEM_ShowStat(IN UINT ulArgc, IN CHAR **argv);
 BS_STATUS MEM_ShowSizeOfMemStat(int argc, char **argv);

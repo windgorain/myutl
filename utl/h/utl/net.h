@@ -39,6 +39,23 @@ extern "C" {
 #define hton3B(x) ntoh3B(x)
 #endif
 
+#ifndef htonll
+static inline uint64_t __my_htonll(uint64_t val)
+{
+	if (1 == htonl(1))
+		return val;
+	return (((uint64_t)htonl(val)) << 32) | htonl(val >> 32);
+}
+ 
+static inline uint64_t __my_ntohll(uint64_t val)
+{
+    return __my_htonll(val);
+}
+
+#define htonll __my_htonll
+#define ntohll __my_ntohll
+#endif
+
 /* 将Prefix转换成主机序的Mask */
 static inline UINT PREFIX_2_MASK(IN UCHAR ucPrefixLen)
 {

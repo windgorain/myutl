@@ -33,8 +33,8 @@
 
 #define MEM_Dup(data, len) MEM_MallocAndCopy(data, len, len)
 
-VOID * mem_Malloc(IN UINT uiSize, IN CHAR *pcFileName, IN UINT uiLine);
-VOID mem_Free(IN VOID *pMem, IN CHAR *pcFileName, IN UINT uiLine);
+void * mem_Malloc(IN UINT uiSize, const char *pcFileName, IN UINT uiLine);
+void mem_Free(IN VOID *pMem, const char *pcFileName, IN UINT uiLine);
 void * _mem_Realloc(void *old_mem, UINT old_size, UINT new_size, char *filename, UINT line);
 
 static inline VOID MEM_Copy(IN VOID *pucDest, IN VOID *pucSrc, IN UINT ulLen)
@@ -53,7 +53,7 @@ static inline VOID MEM_Copy(IN VOID *pucDest, IN VOID *pucSrc, IN UINT ulLen)
     memcpy(pucDest, pucSrc, ulLen);
 }
 
-static inline VOID * _mem_MallocWithZero(IN UINT uiSize, IN CHAR *pszFileName, IN UINT ulLine)
+static inline VOID * _mem_MallocWithZero(IN UINT uiSize, const char *pszFileName, IN UINT ulLine)
 {
     VOID *pMem;
 
