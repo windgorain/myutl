@@ -35,7 +35,7 @@ void ErrCode_Output(PF_PRINT_FUNC output);
 void ErrCode_FatalError(char *format, ...);
 
 /* print file line */
-#define PRINTFL() PRINT_WHITE("%s(%d)", __FILE__, __LINE__)
+#define PRINTFL() PRINT_GREEN("%s(%d)", __FILE__, __LINE__)
 
 /* print file line msg */
 #define PRINTFLM_COLOR(_color, _fmt, ...) PRINT_COLOR(_color, "%s(%d): " _fmt, __FILE__, __LINE__, ##__VA_ARGS__)

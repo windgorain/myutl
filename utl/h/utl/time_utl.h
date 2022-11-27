@@ -58,7 +58,7 @@ char * TM_Tm2SimpleString(struct tm *pstTm, OUT CHAR *szStringTime);
 BS_STATUS TM_Utc2Gmt(IN time_t stTimeSrc, OUT CHAR *szDataStr);
 time_t TM_Gmt2Utc(IN CHAR *pucValue, IN ULONG ulLen);
 
-char * TM_GetTimeString(OUT char* out_datetime, int length, UINT input_time);
+char * TM_GetTimeString(UINT input_time, OUT char *string, int size);
 
 /* HZ */
 extern unsigned long TM_HZ; /* 一秒的tick数 */

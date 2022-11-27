@@ -22,6 +22,9 @@ unsigned long RAND_GetRandom(void);
 /* 改变熵值 */
 VOID RAND_Entropy(IN UINT uiEntropy);
 
+/* 生成一段随机内存 */
+void RAND_Mem(OUT UCHAR *buf, int len);
+
 static inline UINT RAND_FastGet(UINT *seed)
 {
     *seed = *seed * 214013 + 2531011;

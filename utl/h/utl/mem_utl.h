@@ -73,7 +73,7 @@ static inline VOID * _mem_MallocAndCopy
     IN VOID *pSrc,
     IN UINT uiSrcLen,
     IN UINT uiMallocLen,
-    IN CHAR *pcFileName,
+    const CHAR *pcFileName,
     IN UINT uiLine
 )
 {
