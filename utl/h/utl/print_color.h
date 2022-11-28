@@ -1,5 +1,6 @@
 /*================================================================
-*   Created by LiXingang
+*   Created by LiXingang 
+*   Histroy: 从 types.h 2005/2/25 迁移至此
 *   Description: 
 *
 ================================================================*/
@@ -37,6 +38,15 @@ extern "C"
 #define SHELL_FONT_COLOR_WHITE   "\033[37m"
 #define SHELL_FONT_ADD_LINE      "\033[38m"
 #define SHELL_FONT_DEL_LINE      "\033[39m"
+
+#define SHELL_FONT_COLOR_H_BLACK   "\033[90m"
+#define SHELL_FONT_COLOR_H_RED     "\033[91m"
+#define SHELL_FONT_COLOR_H_GREEN   "\033[92m"
+#define SHELL_FONT_COLOR_H_YELLOW  "\033[93m"
+#define SHELL_FONT_COLOR_H_BLUE    "\033[94m"
+#define SHELL_FONT_COLOR_H_PURPLE  "\033[95m"
+#define SHELL_FONT_COLOR_H_CYAN    "\033[96m"
+#define SHELL_FONT_COLOR_H_WHITE   "\033[97m"
 
 #define PRINT_COLOR(_color, _fmt, ...) printf(_color _fmt SHELL_COLOR_CLOSE "\n", ##__VA_ARGS__)   
 
