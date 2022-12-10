@@ -41,6 +41,9 @@ void MSGQUE_Delete(MSGQUE_S *q);
 BS_STATUS MSGQUE_WriteMsg(MSGQUE_S *q, MSGQUE_MSG_S *pstMsg);
 BS_STATUS MSGQUE_ReadMsg(MSGQUE_S *q, OUT MSGQUE_MSG_S *pstMsg);
 UINT MSGQUE_Count(MSGQUE_S *q);
+UINT MSGQUE_FreeCount(MSGQUE_S *q);
+int MSGQUE_Full(MSGQUE_S *q);
+int MSGQUE_Empty(MSGQUE_S *q);
 
 #ifdef __cplusplus
     }

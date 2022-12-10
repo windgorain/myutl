@@ -135,10 +135,10 @@ typedef char bool;
 
 typedef short		        SHORT;
 typedef unsigned short		USHORT;
-typedef unsigned int 		UINT;
+typedef unsigned int 		UINT; /* 32 bits */
 typedef unsigned long long  UINT64;
 typedef long long           INT64;
-typedef int 				INT;
+typedef int 				INT; /* 32 bits */
 typedef unsigned char 		UCHAR;
 typedef char			    CHAR;
 typedef char                BOOL_T;

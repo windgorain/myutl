@@ -6,37 +6,42 @@
 ================================================================*/
 #ifndef _MEM_CAP_H
 #define _MEM_CAP_H
+#include "utl/rcu_utl.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef void * (*PF_MemCap_Malloc)(int size, char *file, int line);
+typedef void * (*PF_MemCap_Malloc)(UINT size, const char *file, int line);
 typedef void   (*PF_MemCap_Free)(void *buf);
+typedef void   (*PF_MemCap_Call)(RCU_NODE_S *rcu_node, PF_RCU_FREE_FUNC rcu_func);
 
 typedef struct {
     PF_MemCap_Malloc cap_malloc;
     PF_MemCap_Free  cap_free;
+    PF_MemCap_Call cap_call;
 }MEM_CAP_S;
 
-static inline void * memcap_defaule_alloc(int size, char *file, int line)
+static inline void * memcap_defaule_alloc(int size, const char *file, int line)
 {
-    return mem_Malloc(size, file, line);
+    return _mem_Malloc(size, file, line);
 }
 
-static inline void memcap_defaule_free(void *buf, char *file, int line)
+static inline void memcap_defaule_free(void *buf, const char *file, int line)
 {
-    mem_Free(buf, file, line);
+    _mem_Free(buf, file, line);
 }
 
-static inline int MemCap_Init(MEM_CAP_S *mem_cap, PF_MemCap_Malloc cap_malloc, PF_MemCap_Free cap_free)
+static inline int MemCap_Init(MEM_CAP_S *mem_cap, PF_MemCap_Malloc cap_malloc,
+        PF_MemCap_Free cap_free, PF_MemCap_Call cap_call)
 {
     mem_cap->cap_malloc = cap_malloc;
     mem_cap->cap_free = cap_free;
+    mem_cap->cap_call = cap_call;
     return 0;
 }
 
-static inline void * _MemCap_Malloc(MEM_CAP_S *mem_cap, int size, char *file, int line)
+static inline void * _MemCap_Malloc(MEM_CAP_S *mem_cap, int size, const char *file, int line)
 {
     if ((! mem_cap) || (! mem_cap->cap_malloc)) {
         return memcap_defaule_alloc(size, file, line);
@@ -44,10 +49,9 @@ static inline void * _MemCap_Malloc(MEM_CAP_S *mem_cap, int size, char *file, in
 
     return mem_cap->cap_malloc(size, file, line);
 }
-
 #define MemCap_Malloc(memcap, size) _MemCap_Malloc(memcap, size, __FILE__, __LINE__)
 
-static inline void _MemCap_Free(MEM_CAP_S *mem_cap, void *buf, char *file, int line)
+static inline void _MemCap_Free(MEM_CAP_S *mem_cap, void *buf, const char *file, int line)
 {
     if ((! mem_cap) || (! mem_cap->cap_free)) {
         return memcap_defaule_free(buf, file, line);
@@ -55,7 +59,6 @@ static inline void _MemCap_Free(MEM_CAP_S *mem_cap, void *buf, char *file, int l
 
     return mem_cap->cap_free(buf);
 }
-
 #define MemCap_Free(memcap, buf) _MemCap_Free(memcap, buf, __FILE__, __LINE__)
 
 static inline void * _MemCap_ZMalloc(MEM_CAP_S *mem_cap, int size, char *file, int line)
@@ -68,8 +71,17 @@ static inline void * _MemCap_ZMalloc(MEM_CAP_S *mem_cap, int size, char *file, i
 
     return buf;
 }
-
 #define MemCap_ZMalloc(memcap, size) _MemCap_ZMalloc(memcap, size, __FILE__, __LINE__)
+
+/* 尝试调用RCU Call */
+static inline void MemCap_Call(MEM_CAP_S *mem_cap, void *rcu_node, PF_RCU_FREE_FUNC func)
+{
+    if ((! mem_cap) || (! mem_cap->cap_call)) {
+        return func(rcu_node);
+    }
+
+    mem_cap->cap_call(rcu_node, func);
+}
 
 static inline void * MemCap_Dup(MEM_CAP_S *mem_cap, void *data, int len)
 {

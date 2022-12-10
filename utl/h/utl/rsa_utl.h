@@ -15,22 +15,18 @@ extern "C"
 {
 #endif
 
-RSA * RSA_DftPrivateKey();
-RSA * RSA_DftPublicKey();
+EVP_PKEY * RSA_DftPrivateKey();
+EVP_PKEY * RSA_DftPublicKey();
 
-RSA *RSA_BuildKey(int bits);
+EVP_PKEY * EVP_BuildKey(int type, UINT bits);
+EVP_PKEY * RSA_BuildKey(UINT bits);
+EVP_PKEY * DSA_BuildKey(UINT bits);
+EVP_PKEY * EC_BuildKey(UINT bits);
 
-/* 私钥加密, 返回加密后的数据长度 */
-int RSA_PrivateEncrypt(IN RSA *pri_key, IN void *in, int in_len, OUT void *out, int out_size);
-
-/* 公钥解密, 返回解密后的数据长度 */
-int RSA_PublicDecrypt(IN RSA *pub_key, IN void *in, int in_len, OUT void *out, int out_size);
-
-/* 公钥加密, 返回加密后的数据长度 */
-int RSA_PublicEncrypt(IN RSA *pub_key, IN void *in, int in_len, OUT void *out, int out_size);
-
-/* 私钥解密, 返回解密后的数据长度 */
-int RSA_PrivateDecrypt(IN RSA *pri_key, IN void *in, int in_len, OUT void *out, int out_size);
+/* 非对称加密, 返回加密后的数据长度 */
+int RSA_Encrypt(IN EVP_PKEY *key, IN void *in, int in_len, OUT void *out, int out_size);
+/* 非对称解密, 返回解密后的数据长度 */
+int RSA_Decrypt(IN EVP_PKEY *key, IN void *in, int in_len, OUT void *out, int out_size);
 
 #ifdef __cplusplus
 }

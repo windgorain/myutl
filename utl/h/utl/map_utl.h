@@ -60,7 +60,7 @@ typedef union {
 
 typedef struct {
     void *memcap;
-    UINT bucket_num; /* used for hash map */
+    UINT bucket_num; /* only used for hash map */
 }MAP_PARAM_S;
 
 typedef BS_WALK_RET_E (*PF_MAP_WALK_FUNC)(IN MAP_ELE_S *pstEle, IN VOID *pUserHandle);
@@ -73,6 +73,7 @@ typedef int (*PF_MAP_Add)(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData
 typedef MAP_ELE_S* (*PF_MAP_GetEle)(MAP_HANDLE map, void *key, UINT key_len);
 typedef void* (*PF_MAP_Get)(MAP_HANDLE map, void *pKey, UINT uiKeyLen);
 typedef void* (*PF_MAP_Del)(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
+typedef void* (*PF_MAP_Del_By_Ele)(IN MAP_HANDLE map, IN MAP_ELE_S *ele);
 typedef void (*PF_MAP_DelAll)(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData);
 typedef UINT (*PF_MAP_Count)(MAP_HANDLE map);
 typedef void (*PF_MAP_Walk)(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, IN VOID *pUserData);
@@ -86,6 +87,7 @@ typedef struct {
     PF_MAP_GetEle get_ele_func;
     PF_MAP_Get get_func;
     PF_MAP_Del del_func;
+    PF_MAP_Del_By_Ele del_by_ele_func;
     PF_MAP_DelAll del_all_func;
     PF_MAP_Count count_func;
     PF_MAP_Walk walk_func;
@@ -109,6 +111,10 @@ MAP_HANDLE MAP_RBTreeCreate(void *memcap /* 可以为NULL */);
 /* List Map */
 MAP_HANDLE MAP_ListCreate(void *memcap /* 可以为NULL */);
 
+static inline void * MAP_GetMemcap(MAP_HANDLE map) {
+    return map->memcap;
+}
+
 static inline void MAP_Destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud) {
     map->funcs->destroy_func(map, free_func, ud);
 }
@@ -130,6 +136,7 @@ static inline int MAP_Add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData
     return map->funcs->add_func(map, pKey, uiKeyLen, pData, flag);
 }
 
+/* 内部无需申请link node, 由外界维护link node */
 static inline int MAP_AddNode(MAP_HANDLE map, void *pKey, UINT uiKeyLen,
         void *pData, MAP_LINK_NODE_S *link_node, UINT flag) {
     return map->funcs->add_node_func(map, pKey, uiKeyLen, pData, link_node, flag);
@@ -155,6 +162,10 @@ static inline void * MAP_Del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
     return map->funcs->del_func(map, pKey, uiKeyLen);
 }
 
+static inline void * MAP_DelByEle(IN MAP_HANDLE map, IN MAP_ELE_S *ele) {
+    return map->funcs->del_by_ele_func(map, ele);
+}
+
 static inline void MAP_DelAll(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData) {
     map->funcs->del_all_func(map, func, pUserData);
 }
@@ -166,7 +177,7 @@ static inline UINT MAP_Count(MAP_HANDLE map) {
 static inline void MAP_Walk(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, IN VOID *pUserData) {
     map->funcs->walk_func(map, pfWalkFunc, pUserData);
 }
- /* pstCurrent如果为NULL表示获取第一个. 只关心其中的pKye和uiKeyLen字段 */
+ /* pstCurrent如果为NULL表示获取第一个. 只使用其中的pKye和uiKeyLen字段 */
 static inline MAP_ELE_S * MAP_GetNext(MAP_HANDLE map, MAP_ELE_S *pstCurrent) {
     return map->funcs->getnext_func(map, pstCurrent);
 }

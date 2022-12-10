@@ -354,6 +354,22 @@ int MEM_ReplaceChar(void *data, int len, UCHAR src, UCHAR dst)
     return count;
 }
 
+/* 将内存中的src字符替换为dst, 只替换一个. 返回替换了多少个字符 */
+int MEM_ReplaceOneChar(void *data, int len, UCHAR src, UCHAR dst)
+{
+    int i;
+    UCHAR *tmp = data;
+
+    for (i=0; i<len; i++) {
+        if (tmp[i] == src) {
+            tmp[i] = dst;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 /* 交换两块内存的内容 */
 void MEM_Exchange(void *buf1, void *buf2, int len)
 {

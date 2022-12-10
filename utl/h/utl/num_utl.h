@@ -36,6 +36,9 @@
 
 #define NUM_ALIGN(v, mul) NUM_UP_ALIGN(v, mul)
 
+/* 计算距离对齐还差多少长度 */
+#define NUM_ALIGN_DIFF(v, mul)  (NUM_ALIGN(v, mul) - (v))
+
 /**
  * 计算一个接近v且是mul整数倍的数字
  * 结果可能大于或小于v

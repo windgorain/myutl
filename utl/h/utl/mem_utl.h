@@ -1,3 +1,9 @@
+/******************************************************************************
+* Copyright (C), Xingang.Li
+* Author:      Xingang.Li  Version: 1.0  Date: 2007-10-25
+* Description: 
+* History:     
+******************************************************************************/
 
 #ifndef _MEM_UTL_H
 #define _MEM_UTL_H
@@ -15,16 +21,19 @@
 #define SUPPORT_MEM_MANAGED
 #endif
 
-#define MEM_Malloc(uiSize)  mem_Malloc(uiSize, __FILE__,  __LINE__)
-#define MEM_Free(pMem)  mem_Free((VOID*)(pMem), __FILE__, __LINE__)
+#define MEM_Malloc(uiSize)  _mem_Malloc(uiSize, __FILE__,  __LINE__)
+#define MEM_Free(pMem)  _mem_Free((VOID*)(pMem), __FILE__, __LINE__)
 #define MEM_ZMalloc(ulSize)  _mem_MallocWithZero(ulSize, __FILE__,  __LINE__)
 #define MEM_MallocAndCopy(pSrc,uiSrcLen,uiMallocLen) _mem_MallocAndCopy(pSrc,uiSrcLen,uiMallocLen,__FILE__,__LINE__)
+
 #define MEM_ZMallocAndCopy(pSrc,uiSrcLen,uiMallocLen) ({ \
         char *_mem = MEM_MallocAndCopy(pSrc,uiSrcLen, uiMallocLen); \
         if (_mem && (uiMallocLen > uiSrcLen)) \
             memset(_mem + uiSrcLen, 0, uiMallocLen - uiSrcLen); \
         (void*)_mem; })
+
 #define MEM_Realloc(pSrc,uiSrcLen,uiMallocLen) _mem_Realloc(pSrc,uiSrcLen,uiMallocLen,__FILE__,__LINE__)
+
 #define MEM_ZRealloc(pSrc,uiSrcLen,uiMallocLen) ({ \
         char *_mem = MEM_Realloc(pSrc,uiSrcLen, uiMallocLen); \
         if (_mem && (uiMallocLen > uiSrcLen)) \
@@ -33,8 +42,8 @@
 
 #define MEM_Dup(data, len) MEM_MallocAndCopy(data, len, len)
 
-void * mem_Malloc(IN UINT uiSize, const char *pcFileName, IN UINT uiLine);
-void mem_Free(IN VOID *pMem, const char *pcFileName, IN UINT uiLine);
+void * _mem_Malloc(IN UINT uiSize, const char *pcFileName, IN UINT uiLine);
+void _mem_Free(IN VOID *pMem, const char *pcFileName, IN UINT uiLine);
 void * _mem_Realloc(void *old_mem, UINT old_size, UINT new_size, char *filename, UINT line);
 
 static inline VOID MEM_Copy(IN VOID *pucDest, IN VOID *pucSrc, IN UINT ulLen)
@@ -60,7 +69,7 @@ static inline VOID * _mem_MallocWithZero(IN UINT uiSize, const char *pszFileName
     (VOID)pszFileName;
     (VOID)ulLine;
 
-    pMem = mem_Malloc(uiSize, pszFileName, ulLine);
+    pMem = _mem_Malloc(uiSize, pszFileName, ulLine);
     if (pMem) {
         Mem_Zero(pMem, uiSize);
     }
@@ -85,7 +94,7 @@ static inline VOID * _mem_MallocAndCopy
 
     uiCopyLen = MIN(uiSrcLen, uiMallocLen);
 
-    pMem = mem_Malloc(uiMallocLen, pcFileName, uiLine);
+    pMem = _mem_Malloc(uiMallocLen, pcFileName, uiLine);
     if (NULL == pMem)
     {
         return NULL;
@@ -99,21 +108,16 @@ static inline VOID * _mem_MallocAndCopy
     return pMem;
 }
 
-void * MEM_RcuMalloc(IN UINT uiSize);
+void * _mem_rcu_malloc(IN UINT uiSize, const char *file, int line);
+#define MEM_RcuMalloc(size) _mem_rcu_malloc(size, __FILE__, __LINE__)
+
+void * _mem_rcu_zmalloc(IN UINT uiSize, const char *file, int line);
+#define MEM_RcuZMalloc(size) _mem_rcu_zmalloc(size, __FILE__, __LINE__)
+
+void * _mem_rcu_dup(void *mem, int size, const char *file, int line);
+#define MEM_RcuDup(mem, size) _mem_rcu_dup(mem, size, __FILE__, __LINE__)
+
 void MEM_RcuFree(IN VOID *pMem);
-
-static inline VOID* MEM_RcuZMalloc(IN UINT uiSize)
-{
-    VOID *pMem;
-
-    pMem = MEM_RcuMalloc(uiSize);
-    if (NULL != pMem)
-    {
-        Mem_Zero(pMem, uiSize);
-    }
-
-    return pMem;
-}
 
 void * MEM_Find(IN VOID *pMem, IN UINT ulMemLen, IN VOID *pMemToFind, IN UINT ulMemToFindLen);
 
@@ -162,6 +166,9 @@ void MEM_Print(UCHAR *pucMem, int len, PF_MEM_PRINT_FUNC print_func/* NULL使用
 
 /* 将内存中的src字符替换为dst, 返回替换了多少个字符 */
 int MEM_ReplaceChar(void *data, int len, UCHAR src, UCHAR dst);
+
+/* 将内存中的src字符替换为dst, 返回替换了多少个字符 */
+int MEM_ReplaceOneChar(void *data, int len, UCHAR src, UCHAR dst);
 
 /* 交换两块内存的内容 */
 void MEM_Exchange(void *buf1, void *buf2, int len);

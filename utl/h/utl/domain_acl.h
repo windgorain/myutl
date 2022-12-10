@@ -14,7 +14,7 @@
 
 #include "utl/address_pool_utl.h"
 #include "utl/port_pool_utl.h"
-#include "utl/domain_group_util.h"
+#include "utl/domain_group_utl.h"
 
 typedef HANDLE DOMAINACL_HANDLE;
 typedef HANDLE DOMAINACL_LIST_HANDLE;
@@ -55,9 +55,9 @@ typedef struct{
 }DOMAINACL_SINGLE_KEY_S;
 
 typedef struct{
-    ADDRESS_POOL_LIST_S *pstSipPool;
-    PORT_POOL_LIST_S *pstDportPool;
-    DOMAIN_GROUP_LIST_S* pstDomainGroup;
+    LIST_RULE_LIST_S *pstSipList;
+    LIST_RULE_LIST_S *pstDportList;
+    LIST_RULE_LIST_S *pstDomainGroup;
 }DOMAINACL_POOL_KEY_S;
 
 typedef struct{
@@ -112,7 +112,7 @@ BS_STATUS DOMAINACL_AddListRef(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiListID);
 BS_STATUS DOMAINACL_DelListRef(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiListID);
 UINT DOMAINACL_ListGetRef(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiListID);
 UINT DOMAINACL_GetListByName(IN DOMAINACL_HANDLE hIpAcl, IN CHAR *pcListName);
-UINT DOMAINACL_GetNextList(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiCurrentListID/* 0表示获取第一个 */);
+UINT DOMAINACL_GetNextListID(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiCurrentListID/* 0表示获取第一个 */);
 CHAR * DOMAINACL_GetListNameByID(IN DOMAINACL_HANDLE hIpAcl, IN UINT ulListID);
 BS_ACTION_E DOMAINACL_GetDefaultActionByID(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiListID);
 BS_STATUS DOMAINACL_SetDefaultActionByID(IN DOMAINACL_HANDLE hIpAcl, IN UINT uiListID, BS_ACTION_E enAction);

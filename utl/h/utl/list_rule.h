@@ -14,89 +14,88 @@
     extern "C" {
 #endif /* __cplusplus */
 
-typedef HANDLE LIST_RULE_HANDLE;
+#define LIST_RULE_LIST_NAME_SIZE 64
 
-typedef struct
-{
+
+typedef struct {
     NAP_HANDLE hListNap;
     void *memcap;
 }LIST_RULE_CTRL_S;
 
-typedef struct
-{
-    CHAR *pcListName;
-    UINT uiRefCount;
-    BS_ACTION_E default_action;
+typedef LIST_RULE_CTRL_S* LIST_RULE_HANDLE;
+
+typedef struct {
+    char list_name[LIST_RULE_LIST_NAME_SIZE];
+    UCHAR default_action;
+    UINT list_id;
+    UINT uiRefCount; //引用计数
     RULE_LIST_S stRuleList;
+    union {
+        UCHAR user_data[0];
+        void *user_handle[0];
+    };
 }LIST_RULE_LIST_S;
 
-typedef struct
-{
+typedef struct {
     LIST_RULE_LIST_S *pstListRule;
 }LIST_RULE_HEAD_S;
 
+typedef void (*PF_LIST_RULE_WALK_LIST_FUNC)(LIST_RULE_LIST_S *list, void *ud);
+typedef void (*PF_LIST_RULE_WALK_RULE_FUNC)(LIST_RULE_LIST_S *list, RULE_NODE_S *rule, void *ud);
+
 BS_STATUS ListRule_Init(INOUT LIST_RULE_CTRL_S *pstCtx, void *memcap);
 void ListRule_Finit(INOUT LIST_RULE_CTRL_S *pstCtx, PF_RULE_FREE pfFunc, VOID *pUserHandle);
-
 LIST_RULE_HANDLE ListRule_Create(void *memcap);
 VOID ListRule_Destroy(IN LIST_RULE_HANDLE hListRule, IN PF_RULE_FREE pfFunc, IN VOID *pUserHandle);
 void ListRule_Reset(IN LIST_RULE_HANDLE hListRule, IN PF_RULE_FREE pfFunc, IN VOID *pUserHandle);
 
-LIST_RULE_LIST_S *ListRule_CreateList(IN LIST_RULE_HANDLE hListRule, IN CHAR *pcListName);
-VOID ListRule_DestroyList(IN LIST_RULE_HANDLE hListRule, LIST_RULE_LIST_S *pstList, IN PF_RULE_FREE pfFunc, IN VOID *pUserHandle);
-UINT ListRule_AddList(IN LIST_RULE_HANDLE hListRule, IN CHAR *pcListName);
-VOID ListRule_DelList
-(
-    IN LIST_RULE_HANDLE hListRule,
-    IN UINT uiListID,
-    IN PF_RULE_FREE pfFunc,
-    IN VOID *pUserHandle
-);
-BS_STATUS ListRule_ReplaceList(IN LIST_RULE_HANDLE hListRule, 
-                               IN UINT uiListID, IN PF_RULE_FREE pfFunc, IN VOID *pUserHandle, 
-                               IN LIST_RULE_LIST_S *pstListNew);
+LIST_RULE_LIST_S * ListRule_CreateList(IN LIST_RULE_HANDLE hListRule, IN CHAR *list_name, int user_data_size);
+VOID ListRule_DestroyList(IN LIST_RULE_HANDLE hListRule, LIST_RULE_LIST_S *pstList, IN PF_RULE_FREE pfFunc, IN VOID *uh);
+UINT ListRule_AttachList(LIST_RULE_HANDLE ctx, LIST_RULE_LIST_S *list);
+LIST_RULE_LIST_S * ListRule_DetachList(LIST_RULE_HANDLE ctx, UINT list_id);
+UINT ListRule_AddList(IN LIST_RULE_HANDLE hListRule, IN CHAR *list_name, int user_data_size);
+void ListRule_DelList(LIST_RULE_HANDLE ctx, LIST_RULE_LIST_S *list, PF_RULE_FREE pfFunc, void *ud);
+void ListRule_DelListID(LIST_RULE_HANDLE hListRule, UINT uiListID, PF_RULE_FREE pfFunc, void *ud);
+int ListRule_ReplaceList(LIST_RULE_HANDLE hListRule, UINT uiListID, PF_RULE_FREE pfFunc, void *ud, LIST_RULE_LIST_S *pstListNew);
 
-/* 增加List的引用计数 */
-BS_STATUS ListRule_AddListRef(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
-/* 减少List的引用计数 */
-BS_STATUS ListRule_DelListRef(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
-/* 获取List的引用计数 */
+BS_STATUS ListRule_IncListRef(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
+BS_STATUS ListRule_DecListRef(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
 UINT ListRule_GetListRef(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
+BOOL_T ListRule_IsAnyListRefed(IN LIST_RULE_HANDLE ctx);
 BS_ACTION_E ListRule_GetDefaultActionByID(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
 BS_STATUS ListRule_SetDefaultActionByID(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID, BS_ACTION_E enAciton);
 UINT ListRule_GetListIDByName(IN LIST_RULE_HANDLE hListRule, IN CHAR *pcListName);
 LIST_RULE_LIST_S* ListRule_GetListByID(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
 LIST_RULE_LIST_S* ListRule_GetListByName(IN LIST_RULE_HANDLE hListRule, IN CHAR *pcListName);
-UINT ListRule_GetNextList(IN LIST_RULE_HANDLE hListRule, IN UINT ulCurrentListID/* 0表示获取第一个 */);
+LIST_RULE_LIST_S * ListRule_GetNextList(IN LIST_RULE_HANDLE ctx, IN LIST_RULE_LIST_S *curr/* NULL表示获取第一个 */);
+UINT ListRule_GetNextListID(IN LIST_RULE_HANDLE hListRule, IN UINT ulCurrentListID/* 0表示获取第一个 */);
 CHAR * ListRule_GetListNameByID(IN LIST_RULE_HANDLE hListRule, IN UINT ulListID);
 
 BS_STATUS ListRule_AddRule2List(LIST_RULE_LIST_S *pstList, IN UINT uiRuleID, IN RULE_NODE_S *pstRule);
-BS_STATUS ListRule_AddRule
-(
-    IN LIST_RULE_HANDLE hCtx,
-    IN UINT uiListID,
-    IN UINT uiRuleID,
-    IN RULE_NODE_S *pstRule
-);
+int ListRule_AddRule(IN LIST_RULE_HANDLE hCtx, IN UINT uiListID, IN UINT uiRuleID, IN RULE_NODE_S *pstRule);
 RULE_NODE_S * ListRule_DelRule(IN LIST_RULE_HANDLE hCtx, IN UINT uiListID, IN UINT uiRuleID);
 RULE_NODE_S * ListRule_GetRule(IN LIST_RULE_HANDLE hCtx, IN UINT uiListID, IN UINT uiRuleID);
 RULE_NODE_S *ListRule_GetLastRule(IN LIST_RULE_HANDLE hCtx, IN UINT uiListID);
 BS_STATUS ListRule_IncreaseID(IN LIST_RULE_HANDLE hCtx, IN UINT uiListID, IN UINT uiStart, IN UINT uiEnd, IN UINT uiStep);
 /* 移动rule */
-BS_STATUS ListRule_MoveRule
-(
-    IN LIST_RULE_HANDLE hCtx,
-    IN UINT uiListID,
-    IN UINT uiOldRuleID,
-    IN UINT uiNewRuleID
-);
-RULE_NODE_S * ListRule_GetNextRule
-(
-    IN LIST_RULE_HANDLE hCtx,
-    IN UINT uiListID,
-    IN UINT uiCurrentRuleID/* RULE_ID_INVALID 表示从头开始 */
-);
+BS_STATUS ListRule_MoveRule(LIST_RULE_HANDLE hCtx, UINT uiListID, UINT uiOldRuleID, UINT uiNewRuleID);
+RULE_NODE_S * ListRule_GetNextRule(LIST_RULE_HANDLE hCtx, UINT uiListID, UINT uiCurrentRuleID);
 BS_STATUS ListRule_ResetID(IN LIST_RULE_HANDLE hCtx, IN UINT uiListID, IN UINT uiStep);
+
+void ListRule_WalkList(LIST_RULE_HANDLE hCtx, PF_LIST_RULE_WALK_LIST_FUNC walk_list, void *ud);
+void ListRule_WalkRule(LIST_RULE_LIST_S *list, PF_LIST_RULE_WALK_RULE_FUNC walk_rule, void *ud);
+void ListRule_Walk(LIST_RULE_HANDLE hCtx, PF_LIST_RULE_WALK_LIST_FUNC walk_list,
+        PF_LIST_RULE_WALK_RULE_FUNC walk_rule, void *ud);
+
+static inline void * ListRule_GetMemcap(LIST_RULE_HANDLE ctx) {
+    return ctx->memcap;
+}
+
+static inline void * ListRule_GetUserHandle(IN LIST_RULE_LIST_S *list, int index)
+{
+    return list->user_handle[index];
+}
+
 
 #ifdef __cplusplus
     }

@@ -11,10 +11,8 @@
 /* 根据数据长度获取base64反转换后的字符串长度,不含'/0' */
 #define BASE64_CLEAR_LEN(ulBase64Len)  ((((ulBase64Len) + 3) / 4) * 3)
 
-#define BASE64_INVALD 0xFFFFFFFF
-
-UINT BASE64_Encode(IN UCHAR *pucData, IN UINT uiDataLen, OUT CHAR *pcOut);
-UINT BASE64_Decode(IN CHAR *pcInput, IN UINT uiDataLen, OUT UCHAR *pucOutput);
+int BASE64_Encode(IN UCHAR *pucData, IN UINT uiDataLen, OUT CHAR *pcOut);
+int BASE64_Decode(IN CHAR *pcInput, IN UINT uiDataLen, OUT UCHAR *pucOutput);
 
 #ifdef __cplusplus
     }

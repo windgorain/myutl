@@ -13,7 +13,7 @@
 #endif /* __cplusplus */
 
 #define NAP_INVALID_ID    0 /* 无效ID */
-#define NAP_INVALID_INDEX ((UINT)-1)/* 无效index */
+#define NAP_INVALID_INDEX ((UINT)(INT)-1)/* 无效index */
 
 typedef VOID* NAP_HANDLE;
 
@@ -34,13 +34,10 @@ typedef struct {
 
 NAP_HANDLE NAP_Create(NAP_PARAM_S *p);
 
-/* 序列号,会在每次申请节点时进行变化 */
-BS_STATUS NAP_EnableSeq
-(
-    IN HANDLE hNAPHandle,
-    IN UINT   ulSeqMask, /* 0表示自动计算Seq, 只在低32位内进行自动计算 */
-    IN UINT   uiSeqCount /* 创建多少个序列数 */
-);
+/* 序列号,会在每次申请节点时进行变化
+ulSeqMask: 0表示自动计算Seq, 只在低32位内进行自动计算 
+uiSeqCount :创建多少个序列数 */
+BS_STATUS NAP_EnableSeq(HANDLE hNAPHandle, UINT ulSeqMask, UINT uiSeqCount);
 UINT NAP_GetNodeSize(IN NAP_HANDLE hNapHandle);
 /* 申请一个Node */
 VOID * NAP_Alloc(IN NAP_HANDLE hNapHandle);
@@ -62,7 +59,7 @@ VOID * NAP_GetNodeByIndex(IN NAP_HANDLE hNAPHandle, IN UINT uiIndex);
 UINT NAP_GetIDByNode(IN NAP_HANDLE hNAPHandle, IN VOID *pstNode);
 UINT NAP_GetIDByIndex(IN NAP_HANDLE hNAPHandle, UINT index);
 UINT NAP_GetIndexByID(IN NAP_HANDLE hNAPHandle, UINT id);
-UINT NAP_GetIndexByID(IN NAP_HANDLE hNAPHandle, UINT id);
+UINT NAP_GetIndexByNode(IN NAP_HANDLE hNAPHandle, void *node);
 VOID NAP_Destory(IN NAP_HANDLE hNAPHandle);
 void * NAP_GetMemCap(NAP_HANDLE hNAPHandle);
 /* 相比于NAP_GetNextID, 其性能会更高 */

@@ -27,7 +27,7 @@ BS_STATUS LICENSE_X_SetKeyValue(IN CFF_HANDLE hCff, IN char *lic_index, IN char 
 /* 对license进行签名 */
 int LICENSE_X_Sign(IN CFF_HANDLE hCff, IN char *lic_index, IN void *pri_key);
 /* 验证license的签名, return: 0:succes; <0: failed */
-int LICENSE_X_VerifySignature(IN CFF_HANDLE hCff, IN char *lic_index, IN void *pub_key);
+int LICENSE_X_VerifySignature(IN CFF_HANDLE hCff, IN char *lic_index, IN EVP_PKEY *pub_key);
 BOOL_T LICENSE_X_CheckHostID(IN CFF_HANDLE hCff, IN char *lic_index, IN char *hostid);
 char * LICENSE_X_GetModule(IN CFF_HANDLE hCff, IN char *lic_index);
 char * LICENSE_X_GetHostID(IN CFF_HANDLE hCff, IN char *lic_index);
@@ -44,7 +44,7 @@ typedef enum {
 }LICENSE_VERIFY_RET;
 /* 验证License的有效性, 检查项包括:
   1.是否指定module; 2.是否过期; 3.是否verify通过;*/
-int LICENSE_X_Verify(IN CFF_HANDLE hCff, IN char *lic_index, IN char *module, IN RSA *pub_key);
+LICENSE_VERIFY_RET LICENSE_X_Verify(CFF_HANDLE hCff, char *lic_index, char *module, EVP_PKEY *pub_key);
 /* 获取特性限制 */
 UINT LICENSE_X_GetLimition(IN CFF_HANDLE hCff, IN char *lic_index, IN char *feature);
 UINT64 LICENSE_X_GetCreateTime(IN CFF_HANDLE hCff, IN char *lic_index);
@@ -57,7 +57,7 @@ char * LICENSE_X_GetKeyValue(IN CFF_HANDLE hCff, IN char *lic_index, IN char *ke
 
 
 char * LICENSE_VerifyResultInfo(IN int result);
-BOOL_T LICENSE_IsEnabled(IN CFF_HANDLE hCff, IN char *module, IN char *hostid, IN char *feature, IN RSA *pub_key);
+BOOL_T LICENSE_IsEnabled(CFF_HANDLE hCff, char *module, char *hostid, char *feature, EVP_PKEY *pub_key);
 void LICENSE_ShowTip(IN CFF_HANDLE hCff, IN PF_LICENSE_PRINT_FUNC print_func, IN void *user_data);
 
 #ifdef __cplusplus

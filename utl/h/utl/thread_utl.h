@@ -18,7 +18,7 @@ typedef pthread_t THREAD_ID;
 typedef ULONG THREAD_ID;
 #endif
 
-#define THREAD_INVALID_ID 0
+#define THREAD_ID_INVALID 0
 
 typedef void (*PF_THREAD_UTL_FUNC)(void *user_data);
 

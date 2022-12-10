@@ -60,8 +60,7 @@ static inline uint64_t __my_ntohll(uint64_t val)
 static inline UINT PREFIX_2_MASK(IN UCHAR ucPrefixLen)
 {
     /* 很多CPU只取右移的低5bit, 所以右移32相当于右移0了. 所以32要特殊处理 */
-    if (ucPrefixLen == 32)
-    {
+    if (ucPrefixLen == 32) {
         return 0xffffffff;
     }
 
@@ -78,10 +77,8 @@ static inline UCHAR MASK_2_PREFIX(IN UINT uiMask/* 主机序 */)
 {
     UINT i;
 
-    for (i=0; i<32; i++)
-    {
-        if ((uiMask & (1 << (31 - i))) == 0)
-        {
+    for (i=0; i<32; i++) {
+        if ((uiMask & (1 << (31 - i))) == 0) {
             return i;
         }
     }
@@ -92,8 +89,7 @@ static inline UCHAR MASK_2_PREFIX(IN UINT uiMask/* 主机序 */)
 /* 判断是否一个合法Mask */
 static inline BOOL_T MASK_IS_VALID(IN UINT uiMask/* 主机序 */)
 {
-    if (uiMask == PREFIX_2_MASK(MASK_2_PREFIX(uiMask)))
-    {
+    if (uiMask == PREFIX_2_MASK(MASK_2_PREFIX(uiMask))) {
         return TRUE;
     }
 
@@ -113,16 +109,12 @@ static inline VOID IpMask_2_Range(IN UINT uiIp, IN UINT uiMask, OUT UINT *puiBeg
 /* 判断IP是否是子网边界 */
 static inline BOOL_T IP_IsSubNetEdge(IN UINT uiIP, IN UINT uiMask)
 {
-    if ((uiIP & uiMask) == uiIP)
-    {
+    if ((uiIP & uiMask) == uiIP) {
         return TRUE;
     }
-
-    if ((uiIP | (~uiMask)) == uiIP)
-    {
+    if ((uiIP | (~uiMask)) == uiIP) {
         return TRUE;
     }
-
     return FALSE;
 }
 
@@ -139,11 +131,9 @@ static inline UINT SubNet_2_Mask(IN UINT uiSubNetSelf, IN UINT uiSubNetBroadIP)
 static inline BOOL_T IP_IsSubNetEdge2(IN UINT uiStart/* 主机序 */, IN UINT uiEnd/* 主机序 */)
 {
     UINT uiMask = SubNet_2_Mask(uiStart, uiEnd);
-    if(MASK_IS_VALID(uiMask))
-    {
+    if(MASK_IS_VALID(uiMask)) {
         return TRUE;
     }
-
     return FALSE;
 }
 
@@ -153,12 +143,9 @@ static inline UINT IP_GetMiniMask(IN UINT uiStartIP/* 主机序 */, IN UINT uiEn
     UINT uiPrefix;
     UINT uiMask;
 
-    for (uiPrefix=31; uiPrefix>0; uiPrefix--)
-    {
+    for (uiPrefix=31; uiPrefix>0; uiPrefix--) {
         uiMask = PREFIX_2_MASK(uiPrefix);
-
-        if ((uiStartIP & uiMask) == (uiEndIP & uiMask))
-        {
+        if ((uiStartIP & uiMask) == (uiEndIP & uiMask)) {
             return uiMask;
         }
     }
@@ -176,12 +163,10 @@ static inline UINT Range_GetFirstMask(IN UINT uiBeginIP/* 主机序 */, IN UINT 
     UINT uiStart;
     UINT uiStop;
 
-    for (uiPrefix=0; uiPrefix<=32; uiPrefix++)
-    {
+    for (uiPrefix=0; uiPrefix<=32; uiPrefix++) {
         uiMask = PREFIX_2_MASK(uiPrefix);
         IpMask_2_Range(uiBeginIP, uiMask, &uiStart, &uiStop);
-        if ((uiStart >= uiBeginIP) && (uiStop <= uiEndIP))
-        {
+        if ((uiStart >= uiBeginIP) && (uiStop <= uiEndIP)) {
             break;
         }
     }
@@ -194,10 +179,8 @@ static inline UINT IP_GetCommonPrefix(IN UINT uiIP1/* 主机序 */, IN UINT uiIP
 {
     UINT i;
 
-    for (i=0; i<32; i++)
-    {
-        if ((uiIP1 & (0x1 << (32- i))) != (uiIP2 & (0x1 << (32- i))))
-        {
+    for (i=0; i<32; i++) {
+        if ((uiIP1 & (0x1 << (32- i))) != (uiIP2 & (0x1 << (32- i)))) {
             return i;
         }
     }
