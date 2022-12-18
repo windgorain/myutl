@@ -6,9 +6,10 @@
 #ifndef _RSA_UTL_H
 #define _RSA_UTL_H
 
-#include<openssl/rsa.h>
-#include<openssl/pem.h>
-#include<openssl/err.h>
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -23,10 +24,10 @@ EVP_PKEY * RSA_BuildKey(UINT bits);
 EVP_PKEY * DSA_BuildKey(UINT bits);
 EVP_PKEY * EC_BuildKey(UINT bits);
 
-/* 非对称加密, 返回加密后的数据长度 */
-int RSA_Encrypt(IN EVP_PKEY *key, IN void *in, int in_len, OUT void *out, int out_size);
-/* 非对称解密, 返回解密后的数据长度 */
-int RSA_Decrypt(IN EVP_PKEY *key, IN void *in, int in_len, OUT void *out, int out_size);
+int RSA_PublicEncrypt(IN EVP_PKEY *key, IN void *in, int in_size, OUT void *out, int out_size);
+int RSA_PrivateDecrypt(IN EVP_PKEY *key, IN void *in, int in_size, OUT void *out, int out_size);
+int RSA_PrivateEncrypt(IN EVP_PKEY *key, IN void *in, int in_size, OUT void *out, int out_size);
+int RSA_PublicDecrypt(IN EVP_PKEY *key, IN void *in, int in_size, OUT void *out, int out_size);
 
 #ifdef __cplusplus
 }

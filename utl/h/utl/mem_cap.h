@@ -61,7 +61,7 @@ static inline void _MemCap_Free(MEM_CAP_S *mem_cap, void *buf, const char *file,
 }
 #define MemCap_Free(memcap, buf) _MemCap_Free(memcap, buf, __FILE__, __LINE__)
 
-static inline void * _MemCap_ZMalloc(MEM_CAP_S *mem_cap, int size, char *file, int line)
+static inline void * _MemCap_ZMalloc(MEM_CAP_S *mem_cap, int size, const char *file, int line)
 {
     void *buf = _MemCap_Malloc(mem_cap, size, file, line);
 

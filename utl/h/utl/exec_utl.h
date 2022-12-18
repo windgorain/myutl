@@ -19,7 +19,7 @@ HANDLE EXEC_Create(PF_EXEC_OUT_STRING_FUNC pfOutStringFunc,
 BS_STATUS EXEC_Delete(IN HANDLE hExecHandle);
 void EXEC_SetUD(HANDLE hExec, int index, HANDLE ud);
 HANDLE EXEC_GetUD(HANDLE hExec, int index);
-BS_STATUS EXEC_OutInfo(const char *pcFmt, ...);
+BS_STATUS EXEC_OutInfo(const char *fmt, ...);
 BS_STATUS EXEC_OutString(IN CHAR *pszInfo);
 void EXEC_OutDataHex(UCHAR *pucMem, int len);
 void EXEC_OutErrCodeInfo();

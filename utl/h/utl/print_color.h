@@ -48,7 +48,8 @@ extern "C"
 #define SHELL_FONT_COLOR_H_CYAN    "\033[96m"
 #define SHELL_FONT_COLOR_H_WHITE   "\033[97m"
 
-#define PRINT_COLOR(_color, _fmt, ...) printf(_color _fmt SHELL_COLOR_CLOSE "\n", ##__VA_ARGS__)   
+#define PRINT_COLOR(_color, _fmt, ...) printf(_color _fmt SHELL_COLOR_CLOSE, ##__VA_ARGS__)   
+#define PRINT_COLOR_LN(_color, _fmt, ...) printf(_color _fmt SHELL_COLOR_CLOSE "\n", ##__VA_ARGS__)   
 
 #define PRINT_BLACK(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_BLACK, _fmt, ##__VA_ARGS__)   
 #define PRINT_RED(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_RED, _fmt, ##__VA_ARGS__)   
@@ -59,6 +60,32 @@ extern "C"
 #define PRINT_CYAN(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_CYAN, _fmt, ##__VA_ARGS__)   
 #define PRINT_WHITE(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_WHITE, _fmt, ##__VA_ARGS__)   
 
+#define PRINT_HBLACK(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_BLACK, _fmt, ##__VA_ARGS__)   
+#define PRINT_HRED(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_RED, _fmt, ##__VA_ARGS__)   
+#define PRINT_HGREEN(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_GREEN, _fmt, ##__VA_ARGS__)   
+#define PRINT_HYELLOW(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_YELLOW, _fmt, ##__VA_ARGS__)   
+#define PRINT_HBLUE(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_BLUE, _fmt, ##__VA_ARGS__)   
+#define PRINT_HPURPLE(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_PURPLE, _fmt, ##__VA_ARGS__)   
+#define PRINT_HCYAN(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_CYAN, _fmt, ##__VA_ARGS__)   
+#define PRINT_HWHITE(_fmt, ...) PRINT_COLOR(SHELL_FONT_COLOR_H_WHITE, _fmt, ##__VA_ARGS__)   
+
+void PrintColor_Black(const char *fmt, ...);
+void PrintColor_Red(const char *fmt, ...);
+void PrintColor_Green(const char *fmt, ...);
+void PrintColor_Yellow(const char *fmt, ...);
+void PrintColor_Blue(const char *fmt, ...);
+void PrintColor_Purple(const char *fmt, ...);
+void PrintColor_Cyan(const char *fmt, ...);
+void PrintColor_White(const char *fmt, ...);
+
+void PrintColor_HBlack(const char *fmt, ...);
+void PrintColor_HRed(const char *fmt, ...);
+void PrintColor_HGreen(const char *fmt, ...);
+void PrintColor_HYellow(const char *fmt, ...);
+void PrintColor_HBlue(const char *fmt, ...);
+void PrintColor_HPurple(const char *fmt, ...);
+void PrintColor_HCyan(const char *fmt, ...);
+void PrintColor_HWhite(const char *fmt, ...);
 
 #ifdef __cplusplus
 }

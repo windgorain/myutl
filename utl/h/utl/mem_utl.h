@@ -161,7 +161,7 @@ void MEM_ZeroByUlong(void *data, int count);
 
 int MEM_Sprint(IN UCHAR *pucMem, IN UINT uiLen, OUT char *buf, int buf_size);
 
-typedef void (*PF_MEM_PRINT_FUNC)(char *str);
+typedef void (*PF_MEM_PRINT_FUNC)(const char *fmt, ...);
 void MEM_Print(UCHAR *pucMem, int len, PF_MEM_PRINT_FUNC print_func/* NULL使用缺省printf */);
 
 /* 将内存中的src字符替换为dst, 返回替换了多少个字符 */

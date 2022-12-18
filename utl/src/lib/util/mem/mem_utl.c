@@ -151,6 +151,7 @@ int MEM_CaseCmp(UCHAR *pucMem1, UINT uiMem1Len, UCHAR *pucMem2, UINT uiMem2Len)
     return -1;
 }
 
+/* 打印内存字面值到buf中 */
 int MEM_Sprint(IN UCHAR *pucMem, IN UINT uiLen, OUT char *buf, int buf_size)
 {
     int tmp_len1, tmp_len2;
@@ -189,11 +190,6 @@ int MEM_Sprint(IN UCHAR *pucMem, IN UINT uiLen, OUT char *buf, int buf_size)
     return copyed_len;
 }
 
-static void mem_print(char *str)
-{
-    printf("%s", str);
-}
-
 void MEM_Print(UCHAR *pucMem, int len, PF_MEM_PRINT_FUNC print_func/* NULL使用缺省printf */)
 {
     int tmp_len1, tmp_len2;
@@ -202,7 +198,7 @@ void MEM_Print(UCHAR *pucMem, int len, PF_MEM_PRINT_FUNC print_func/* NULL使用
     PF_MEM_PRINT_FUNC func = print_func;
 
     if (! func) {
-        func = mem_print;
+        func = (void*)printf;
     }
 
     while (len > 0) {

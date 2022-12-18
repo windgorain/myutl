@@ -45,15 +45,15 @@
     }while(0)
 
 #define TXT_ARGS_PRINT_LEN	1023
-#define TXT_ARGS_PRINT(outStringFunc, user_data)    \
+#define TXT_ARGS_PRINT(print_func, user_data)    \
     do {    \
         va_list args;   \
         char __msg[TXT_ARGS_PRINT_LEN + 1];  \
                         \
-        va_start(args, pcFmt);    \
-        BS_Vsnprintf(__msg, sizeof(__msg), pcFmt, args);   \
+        va_start(args, fmt);    \
+        BS_Vsnprintf(__msg, sizeof(__msg), fmt, args);   \
         va_end(args);           \
-        outStringFunc(__msg, user_data);                 \
+        print_func(__msg, user_data);                 \
     }while(0)
 
 extern BS_STATUS TXT_Lower(INOUT CHAR *pucTxtBuf);
