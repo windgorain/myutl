@@ -1,5 +1,7 @@
 #ifndef __VECTOR_STR_H__
 #define __VECTOR_STR_H__
+
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -8,46 +10,38 @@
 #define DEFAULT_VECTOR_STRING_CAPACITY  16
 #define DEFAULT_VECTOR_STRING_EXPAND_FACTOR  16
 
-typedef VECTOR_S * VECTOR_STR_HDL;
-
-static inline VECTOR_STR_HDL VectorStr_Create(int isize, int esize)
+static inline VECTOR_S * VectorStr_Create(int init_size, int ele_size)
 {   
     VECTOR_PARAM_S p = {0};
 
-    p.ele_size = esize;
-    p.init_size = (isize != 0) ? isize: DEFAULT_VECTOR_STRING_CAPACITY;
+    p.ele_size = ele_size;
+    p.init_size = (init_size != 0) ? init_size: DEFAULT_VECTOR_STRING_CAPACITY;
     p.resize_factor = DEFAULT_VECTOR_STRING_EXPAND_FACTOR;
 
     return VECTOR_Create(&p);
 }
 
-static inline void VectorStr_Destroy(VECTOR_STR_HDL sa)
+static inline void VectorStr_Destroy(VECTOR_S *sa)
 {
     VECTOR_Destroy(sa);
 }
 
-static inline UINT VectorStr_Count(VECTOR_STR_HDL sa)
+static inline UINT VectorStr_Count(VECTOR_S *sa)
 {
     return VECTOR_Count(sa);
 }
 
-static inline char * VectorStr_Get(VECTOR_STR_HDL sa, UINT pos)
+static inline char * VectorStr_Get(VECTOR_S *sa, UINT pos)
 {
     return VECTOR_Get(sa, pos);
 }
 
-static inline bool VectorStr_Append(VECTOR_STR_HDL sa, char *new_str)
+static inline int VectorStr_Append(VECTOR_S *sa, char *new_str)
 {
     if (! new_str) {
-        return FALSE;
+        RETURN(BS_ERR);
     }
-
-    if (VECTOR_AddBySize(sa, new_str, strlen(new_str)+1) != 0) {
-        return FALSE;
-    }
-
-    return TRUE;
+    return VECTOR_AddBySize(sa, new_str, strlen(new_str) + 1);
 }
-
 
 #endif

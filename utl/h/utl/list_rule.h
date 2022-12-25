@@ -67,7 +67,7 @@ BS_STATUS ListRule_SetDefaultActionByID(IN LIST_RULE_HANDLE hListRule, IN UINT u
 UINT ListRule_GetListIDByName(IN LIST_RULE_HANDLE hListRule, IN CHAR *pcListName);
 LIST_RULE_LIST_S* ListRule_GetListByID(IN LIST_RULE_HANDLE hListRule, IN UINT uiListID);
 LIST_RULE_LIST_S* ListRule_GetListByName(IN LIST_RULE_HANDLE hListRule, IN CHAR *pcListName);
-LIST_RULE_LIST_S * ListRule_GetNextList(IN LIST_RULE_HANDLE ctx, IN LIST_RULE_LIST_S *curr/* NULL表示获取第一个 */);
+LIST_RULE_HEAD_S * ListRule_GetNextList(IN LIST_RULE_HANDLE ctx, IN LIST_RULE_HEAD_S *curr/* NULL表示获取第一个 */);
 UINT ListRule_GetNextListID(IN LIST_RULE_HANDLE hListRule, IN UINT ulCurrentListID/* 0表示获取第一个 */);
 CHAR * ListRule_GetListNameByID(IN LIST_RULE_HANDLE hListRule, IN UINT ulListID);
 

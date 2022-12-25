@@ -178,7 +178,7 @@ static inline void MAP_Walk(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, I
     map->funcs->walk_func(map, pfWalkFunc, pUserData);
 }
  /* pstCurrent如果为NULL表示获取第一个. 只使用其中的pKye和uiKeyLen字段 */
-static inline MAP_ELE_S * MAP_GetNext(MAP_HANDLE map, MAP_ELE_S *pstCurrent) {
+static inline MAP_ELE_S * MAP_GetNextEle(MAP_HANDLE map, MAP_ELE_S *pstCurrent) {
     return map->funcs->getnext_func(map, pstCurrent);
 }
 
@@ -190,6 +190,17 @@ static inline int MAP_AddStringKey(MAP_HANDLE map, char *key, void *pData, UINT 
 static inline void * MAP_GetStringKey(MAP_HANDLE map, char *key)
 {
     return MAP_Get(map, key, strlen(key));
+}
+
+/* 返回first节点的data值 */
+static inline void * MAP_GetFirst(MAP_HANDLE map)
+{
+    MAP_ELE_S *ele;
+    ele = MAP_GetNextEle(map, NULL);
+    if (! ele) {
+        return NULL;
+    }
+    return ele->pData;
 }
 
 #ifdef __cplusplus

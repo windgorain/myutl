@@ -7,9 +7,7 @@
 #define DEFAULT_VECTOR_INT_SIZE 16
 #define DEFAULT_VECTOR_FACTOR_SIZE 32
 
-typedef VECTOR_S * VECTOR_INT_HDL; 
-
-static inline VECTOR_INT_HDL VectorInt_Create(int32_t isize)
+static inline VECTOR_S * VectorInt_Create(int isize)
 {
     VECTOR_PARAM_S p = {0};
 
@@ -20,27 +18,20 @@ static inline VECTOR_INT_HDL VectorInt_Create(int32_t isize)
     return VECTOR_Create(&p);
 }
 
-static inline void VectorInt_Destroy(VECTOR_INT_HDL vec)
+static inline int VectorInt_Append(VECTOR_S *vec, int val)
 {
-    VECTOR_Destroy(vec);
-    return;
+    return VECTOR_Add(vec, &val);
 }
 
-static inline BOOL_T VectorInt_Append(VECTOR_INT_HDL vec, int val)
-{
-    int ret = VECTOR_Add(vec, &val);
-    return (ret == BS_OK) ? TRUE: FALSE;
-}
-
-static inline int VectorInt_Get(VECTOR_INT_HDL vec, int pos)
+static inline int VectorInt_Get(VECTOR_S *vec, int pos)
 {
     int val = 0;
     VECTOR_Copy(vec, pos, &val);
     return val;
 }
 
-BOOL_T VectorInt_IsExist(VECTOR_INT_HDL vec, int val);
-void VectorInt_Sort(VECTOR_INT_HDL vec);
-int VectorInt_DelByVal(VECTOR_INT_HDL vec, int32_t val);
+BOOL_T VectorInt_IsExist(VECTOR_S *vec, int val);
+void VectorInt_Sort(VECTOR_S *vec);
+int VectorInt_DelByVal(VECTOR_S *vec, int val);
 
 #endif
