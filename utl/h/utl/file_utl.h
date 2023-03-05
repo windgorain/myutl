@@ -28,8 +28,7 @@
 #define S_ISSOCK(m)	(((m) & S_IFMT) == S_IFSOCK)
 #endif
 
-typedef struct
-{
+typedef struct {
     UINT64 uiFileLen;   /* 文件长度 */
     UCHAR *pucFileData; /* 文件数据. 其内存长度比文件长度多1,最后添了一个'\0' */
 }FILE_MEM_S;
@@ -147,8 +146,10 @@ static inline FILE * FOPEN(IN CHAR *pcFileName, IN CHAR *pcMode)
 
 #endif
 
-#define FILE_SET_CURRENT_DIRECTORY(szPath) chdir(szPath)
-
+static inline int FILE_ChangeCurrentDir(char * path)
+{
+    return chdir(path);
+}
 
 #define FILE_PATH_TO_UNIX(pszFilePath)  \
     do {  \

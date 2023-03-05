@@ -17,6 +17,9 @@
 #define NUM_IN_RANGE(ulNum,ulMin,ulMax)  \
     (((ULONG)(ulNum) >= (ULONG)(ulMin)) && ((ULONG)(ulNum) <= (ULONG)(ulMax))) 
 
+#define NUM_IN_START_COUNT(ulNum,ulMin,ulCount)  \
+        NUM_IN_RANGE(ulNum, ulMin, ((ulMin) + (ulCount)) -1)
+
 #define NUM_INC_SKIP_ZERO(num) \
     do{(num)++; if((num) == 0){(num)++;}}while(0)
 
@@ -29,10 +32,10 @@
     ((ulArea1Max) <= (ulArea2Min) ? FALSE : ((ulArea2Max) <= (ulArea1Min) ? FALSE: TRUE))
 
 /* 计算一个大于等于v且是mul整数倍的最小数字 */
-#define NUM_UP_ALIGN(v, mul) ((((v) + (typeof(v))(mul) - 1) / ((typeof(v))(mul))) * (typeof(v))(mul))
+#define NUM_UP_ALIGN(v, mul) ((((v) + (mul) - 1) / ((mul))) * (mul))
 
 /* 计算一个小于等于v且是mul整数倍的最大数字 */
-#define NUM_DOWN_ALIGN(v, mul) ((v / ((typeof(v))(mul))) * (typeof(v))(mul))
+#define NUM_DOWN_ALIGN(v, mul) ((v / (mul)) * (mul))
 
 #define NUM_ALIGN(v, mul) NUM_UP_ALIGN(v, mul)
 

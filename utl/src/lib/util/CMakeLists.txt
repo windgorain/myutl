@@ -243,14 +243,7 @@ IF(USE_KLC)
 aux_source_directory(./klc SRC)
 ENDIF()
 
-add_library(util ${SRC})
-set_property(TARGET util PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_compile_definitions(util PRIVATE USE_BS)
-
-
-#INSTALL(TARGETS util ARCHIVE DESTINATION /usr/local/lib/utl/)
-#INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/h DESTINATION /usr/local/include/utl)
-
+#not use bs
 add_library(sutil ${SRC})
 set_property(TARGET sutil PROPERTY POSITION_INDEPENDENT_CODE ON)
 

@@ -72,6 +72,10 @@ extern "C" {
 #define BOOL_FALSE FALSE
 #endif
 
+#ifndef UINT32_MAX
+#define UINT32_MAX (0xffffffff)
+#endif
+
 #ifndef false
 #define true 1
 #define false 0
@@ -156,6 +160,13 @@ typedef char S8;
 typedef short S16;
 typedef int S32;
 typedef long long S64;
+
+typedef U8 u8;
+typedef U16 u16;
+typedef U32 u32;
+typedef U64 u64;
+typedef S32 s32;
+typedef S64 s64;
 
 typedef struct {
     char *pcData;

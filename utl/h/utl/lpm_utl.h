@@ -98,6 +98,7 @@ static inline int LPM_SetLevel(LPM_S *lpm, int level, int first_bit_num) {
     return lpm->funcs->set_level_func(lpm, level, first_bit_num);
 }
 
+/* return: 0. look up ok; <0: look up failed */
 static inline int LPM_Lookup(LPM_S *lpm, UINT ip/*host order*/, UINT64 *next_hop)
 {
     return lpm->funcs->lookup_func(lpm, ip, next_hop);
