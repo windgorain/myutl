@@ -73,12 +73,12 @@ extern "C"
 #  define Q_OS_QNX   
 #elif defined(_SEQUENT_)   
 #  define Q_OS_DYNIX   
-#elif defined(_SCO_DS)                   /* SCO OpenServer 5 + GCC */   
+#elif defined(_SCO_DS)                      
 #  define Q_OS_SCO   
-#elif defined(__USLC__)                  /* all SCO platforms + UDK or OUDK */   
+#elif defined(__USLC__)                     
 #  define Q_OS_UNIXWARE   
 #  define Q_OS_UNIXWARE7   
-#elif defined(__svr4__) && defined(i386) /* Open UNIX 8 + GCC */   
+#elif defined(__svr4__) && defined(i386)    
 #  define Q_OS_UNIXWARE   
 #  define Q_OS_UNIXWARE7   
 #else   
@@ -114,4 +114,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif //OS_DEF_H_
+#endif 

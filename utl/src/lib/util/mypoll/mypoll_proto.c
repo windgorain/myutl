@@ -70,7 +70,7 @@ BS_STATUS _Mypoll_Proto_Add
 
     if (((pstProto->uiFlag & MYPOLL_PROTO_FLAG_AT_ONCE) == 0)
         && ((pstMyPoll->uiFlag & _MYPOLL_FLAG_PROCESSING_EVENT) == 0)) {
-        /* 不能立即生效的情况，需要触发一次调度 */
+        
         Socket_Write((UINT)pstMyPoll->iSocketSrc, (char*)"1", 1, 0);
     }
 
@@ -95,7 +95,7 @@ BS_STATUS _Mypoll_Proto_Set
 
     if (((pstProto->uiFlag & MYPOLL_PROTO_FLAG_AT_ONCE) == 0)
         && ((pstMyPoll->uiFlag & _MYPOLL_FLAG_PROCESSING_EVENT) == 0)) {
-        /* 不能立即生效的情况，需要触发一次调度 */
+        
         Socket_Write((UINT)pstMyPoll->iSocketSrc, (char*)"1", 1, 0);
     }
 

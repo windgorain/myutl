@@ -14,7 +14,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 PLUG_API void * MEM_MallocMem(ULONG ulSize, const char *pszFileName, UINT ulLine);
 PLUG_API void MEM_FreeMem(IN VOID *pMem, const char *pszFileName, IN UINT ulLine);
@@ -28,8 +28,8 @@ BS_STATUS MemDebug_ShowLineConflict(int argc, char **argv);
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__MEM_H_*/
+#endif 
 
 

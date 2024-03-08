@@ -6,7 +6,7 @@
 #include "bs.h"
 #include "utl/bit_opt.h"
 
-/* bit序转换映射表 */
+
 static const unsigned char g_bit_order_map[] = 
 {
   0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0, 0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0, 
@@ -27,13 +27,13 @@ static const unsigned char g_bit_order_map[] =
   0x0F, 0x8F, 0x4F, 0xCF, 0x2F, 0xAF, 0x6F, 0xEF, 0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
 
-/* 转换bit序 */
+
 uint8_t BIT_ChangeOrder(uint8_t v)
 {
     return g_bit_order_map[v];
 }
 
-/* 获取最低位的index, 比如 0x1返回0, 0x2返回1, 0x4返回2 */
+
 int BIT_GetLastIndex(UINT num)
 {
     int i;
@@ -47,8 +47,8 @@ int BIT_GetLastIndex(UINT num)
     return -1;
 }
 
-/* 获取最高位的index */
-int BIT_GetFirstIndex(UINT num, UINT from /* 从哪位开始往下看 */)
+
+int BIT_GetFirstIndex(UINT num, UINT from )
 {
     int i;
 
@@ -65,24 +65,21 @@ int BIT_GetFirstIndex(UINT num, UINT from /* 从哪位开始往下看 */)
     return -1;
 }
 
-/* sprint bit位 */
+
 char * BIT_SPrint(uint32_t v, uint32_t off, uint32_t size, OUT char *buf)
 {
     uint32_t tmp = BIT_GET_OFF(v, off, size);
     return TXT_Num2BitString(tmp, size, buf);
 }
 
-/* print bit位 */
+
 void BIT_Print(uint32_t v, uint32_t off, uint32_t size, PF_PRINT_FUNC func)
 {
     char info[65];
     func("%s", BIT_SPrint(v, off, size, info));
 }
 
-/* sprint多个名字和bit位
-   出错返回 <0 的值
-   >=0 返回构建后的字符串长度
- */
+
 int BIT_XSPrint(uint32_t v, BIT_DESC_S *desc, int desc_num, OUT char *buf, uint32_t buf_size)
 {
     int i;

@@ -10,11 +10,11 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef HANDLE MYPOLL_HANDLE;
 
-/* mypoll 事件 */
+
 #ifdef IN_LINUX
 #include <sys/epoll.h>
 #define MYPOLL_EVENT_IN  EPOLLIN
@@ -61,8 +61,8 @@ VOID MyPoll_Restart(IN MYPOLL_HANDLE hMypoll);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__MYPOLL_UTL_H_*/
+#endif 
 
 

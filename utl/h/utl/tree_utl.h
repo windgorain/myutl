@@ -10,14 +10,14 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef HANDLE TREE_HANDLE;
 
 typedef struct TREE_NODE_ST
 {
-    DLL_NODE_S stLinkNode;  /* 兄弟节点 */
-    DLL_HEAD_S stChildNode; /* 孩子结点 */
+    DLL_NODE_S stLinkNode;  
+    DLL_HEAD_S stChildNode; 
 }TREE_NODE_S;
 
 typedef struct {
@@ -39,7 +39,7 @@ BS_STATUS TREE_AddNode(IN TREE_NODE_S *pstParent, IN TREE_NODE_S *pstChildNode);
 BS_STATUS TREE_RemoveNode(IN TREE_NODE_S *pstNode);
 TREE_NODE_S * TREE_GetParent(IN TREE_NODE_S *pstNode);
 
-/* 深度优先遍历. 父优先. root节点也遍历 */
+
 BS_WALK_RET_E TREE_DepthParentFirstWalk
 (
     IN TREE_NODE_S *pstRoot,
@@ -47,7 +47,7 @@ BS_WALK_RET_E TREE_DepthParentFirstWalk
     IN VOID *pUserHandle
 );
 
-/* 深度优先遍历. 子优先.root 节点也遍历 */
+
 BS_WALK_RET_E TREE_DepthChildFirstWalk
 (
     IN TREE_NODE_S *pstRoot,
@@ -55,11 +55,7 @@ BS_WALK_RET_E TREE_DepthChildFirstWalk
     IN VOID *pUserHandle
 );
 
-/* 
-就像走路一样,经过每个节点，有去有回。
- 不像是深度遍历只取不回的跳跃遍历.
- root节点也遍历.每个节点都有来回两次.
- */
+
 BS_WALK_RET_E TREE_DepthBackWalk
 (
     IN TREE_NODE_S *pstRoot,
@@ -69,8 +65,8 @@ BS_WALK_RET_E TREE_DepthBackWalk
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__TREE_UTL_H_*/
+#endif 
 
 

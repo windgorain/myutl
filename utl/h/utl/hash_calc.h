@@ -112,4 +112,4 @@ static inline UINT APHash(UCHAR *data, int len)
 #ifdef __cplusplus
 }
 #endif
-#endif //HASH_CALC_H_
+#endif 

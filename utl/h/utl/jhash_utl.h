@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define JHASH_INITVAL		0xdeadbeef
 
@@ -64,8 +64,8 @@ static inline UINT JHASH_Word(UINT a, UINT initval)
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__JHASH_UTL_H_*/
+#endif 
 
 

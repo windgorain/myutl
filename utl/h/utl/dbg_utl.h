@@ -10,9 +10,9 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
-/* 一些常见的debug flag */
+
 #define DBG_UTL_FLAG_PROCESS (1UL << 31)
 
 #define DBG_UTL_HEADER_FMT "[%s:%s:%s] "
@@ -26,7 +26,7 @@ typedef struct
 }DBG_UTL_DEF_S;
 
 typedef struct {
-    const char *product_name; /* NULL表示结束 */
+    const char *product_name; 
     UINT *debug_flags;
     DBG_UTL_DEF_S *debug_defs;
     int max_module_id;
@@ -56,8 +56,8 @@ extern void DBG_UTL_OutputHeader(IN DBG_UTL_CTRL_S *pstCtrl, IN UINT uiDbgID, IN
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__DBG_UTL_H_*/
+#endif 
 
 

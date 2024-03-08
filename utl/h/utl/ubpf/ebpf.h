@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http:
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-/* eBPF definitions */
+
 
 #define EBPF_CLS_MASK 0x07
 #define EBPF_ALU_OP_MASK 0xf0
@@ -42,7 +42,7 @@
 #define EBPF_SIZE_B 0x10
 #define EBPF_SIZE_DW 0x18
 
-/* Other memory modes are not yet supported */
+
 #define EBPF_MODE_IMM 0x00
 #define EBPF_MODE_MEM 0x60
 
@@ -114,7 +114,7 @@
 #define EBPF_OP_STXDW (EBPF_CLS_STX|EBPF_MODE_MEM|EBPF_SIZE_DW)
 #define EBPF_OP_LDDW  (EBPF_CLS_LD|EBPF_MODE_IMM|EBPF_SIZE_DW)
 
-/* added by lixg */
+
 #define EBPF_XADD 0xc0
 #define EPBF_OP_LOCK_STXW (EBPF_CLS_STX | EBPF_XADD | EBPF_SIZE_W)
 #define EPBF_OP_LOCK_STXDW (EBPF_CLS_STX | EBPF_XADD | EBPF_SIZE_DW)

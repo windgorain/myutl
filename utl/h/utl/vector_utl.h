@@ -13,11 +13,11 @@ extern "C"
 typedef struct tagVECTOR_S {
     void *memcap;
 	char *array;
-	UINT count; /* 当前元素个数 */
-	UINT size;  /* 当前容量 */
-	UINT ele_size; /* 元素大小 */
+	UINT count; 
+	UINT size;  
+	UINT ele_size; 
 	UINT resize_factor;
-	UINT sorted:1; /* 已经排序 */
+	UINT sorted:1; 
 }VECTOR_S;
 
 typedef struct {
@@ -31,7 +31,7 @@ int VECTOR_Init(VECTOR_S *vec, VECTOR_PARAM_S *p);
 void VECTOR_Finit(VECTOR_S *vec);
 VECTOR_S * VECTOR_Create(VECTOR_PARAM_S *p);
 void VECTOR_Destroy(VECTOR_S *vec);
-/* 可以用于填充比预定义的size小的vale */
+
 int VECTOR_AddBySize(VECTOR_S *vec, void *val, int val_size);
 int VECTOR_Add(VECTOR_S *vec, void *val);
 int VECTOR_AddN(VECTOR_S *vec, void *val, UINT num);
@@ -56,4 +56,4 @@ static inline UINT VECTOR_Count(VECTOR_S *vec)
 #ifdef __cplusplus
 }
 #endif
-#endif //VECTOR_UTL_H_
+#endif 

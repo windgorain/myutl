@@ -11,7 +11,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define ERR_INFO_SIZE 256
 
@@ -36,10 +36,10 @@ void ErrCode_PrintErrInfo(void);
 void ErrCode_Output(PF_PRINT_FUNC output);
 void ErrCode_FatalError(char *format, ...);
 
-/* print file line */
+
 #define PRINTFL() PRINTLN_GREEN("%s(%d)", __FILE__, __LINE__)
 
-/* print file line msg */
+
 #define PRINTFLM_COLOR(_color, _fmt, ...) PRINT_COLOR(_color, "[%s:%s:%d] " _fmt, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 #define PRINTFLM_COLOR_LN(_color, _fmt, ...) PRINTLN_COLOR(_color, "[%s:%s:%d] " _fmt, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
@@ -93,8 +93,8 @@ static inline int _err_code_set(int code, char *info, char *file, const char *fu
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__ERR_CODE_H_*/
+#endif 
 
 

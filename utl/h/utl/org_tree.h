@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef HANDLE ORG_TREE_HANDLE;
 
@@ -21,8 +21,8 @@ VOID OrgTree_Destroy(IN ORG_TREE_HANDLE hOrgTree);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__ORG_TREE_H_*/
+#endif 
 
 

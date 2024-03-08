@@ -10,15 +10,15 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #ifndef NULL
 #define NULL 0
 #endif
 
-#define	IN      /*IN*/
-#define	OUT     /*OUT*/
-#define	INOUT   /*INOUT*/
+#define	IN      
+#define	OUT     
+#define	INOUT   
 
 #ifndef noinline
 #define noinline __attribute__((noinline))
@@ -49,17 +49,17 @@ extern "C" {
 #define MIN(a,b)  ((a)<(b) ? (a) : (b))
 #endif
 
-/* 出错返回-1 */
+
 #define SNPRINTF(buf,size, ...) ({ \
         int _nlen = snprintf((buf), (size), ##__VA_ARGS__); \
         if (_nlen >= (size)) _nlen = -1; \
         _nlen; })
 
-/* 计算宏定义中可变参数个数 */
+
 #define _BS_ARG_N(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,N,...) N
 #define BS_ARG_COUNT(...) _BS_ARG_N(__VA_ARGS__,10,9,8,7,6,5,4,3,2,1,0)
 
-/* 获取可变参数中的第几个参数 */
+
 #define _BS_ARG_GET1(a1,...) (a1)
 #define _BS_ARG_GET2(a1,a2,...) (a2)
 #define _BS_ARG_GET3(a1,a2,a3,...) (a3)
@@ -151,16 +151,16 @@ extern "C" {
 
 typedef short		        SHORT;
 typedef unsigned short		USHORT;
-typedef unsigned int 		UINT; /* 32 bits */
+typedef unsigned int 		UINT; 
 typedef unsigned long long  UINT64;
 typedef long long           INT64;
-typedef int 				INT; /* 32 bits */
+typedef int 				INT; 
 typedef unsigned char 		UCHAR;
 typedef char			    CHAR;
 typedef char                BOOL_T;
 typedef void*               HANDLE;
-typedef unsigned long       ULONG;  /* 变长的类型,32位系统上4个字节,64位系统8个字节 */
-typedef long                LONG;   /* 变长的类型,32位系统上4个字节,64位系统8个字节 */
+typedef unsigned long       ULONG;  
+typedef long                LONG;   
 typedef UINT                VRF_INDEX;
 
 typedef unsigned char       U8;
@@ -197,7 +197,7 @@ typedef int         (*PF_CMP_FUNC)(void *n1, void *n2, void *ud);
 typedef int         (*PF_PRINT_FUNC)(const char *fmt, ...);
 
 typedef enum{
-    /* 通用定义 */
+    
 	BS_OK = 0,
 	BS_ERR = -1,
 	BS_NO_SUCH = -2,
@@ -233,13 +233,13 @@ typedef enum{
 	BS_NOT_MATCHED = -32,
 	BS_VERIFY_FAILED = -33,
 	BS_NOT_INIT = -34,
-	BS_REF_NOT_ZERO = -35, /* 引用计数不为0 */
+	BS_REF_NOT_ZERO = -35, 
     BS_BUSY = -36,
     BS_PARSE_FAILED = -37,
 	BS_REACH_MAX = -38,
     BS_STOLEN = -39,
 
-    /* 模块私有定义,在BS_PRIVATE_BASE 基础上增加 */
+    
     BS_PRIVATE_BASE = -100
 }BS_STATUS;
 
@@ -269,9 +269,9 @@ typedef enum {
 }BS_ACTION_E;
 
 typedef enum {
-    BS_MATCH = 0,   /* 完全匹配 */
-    BS_PART_MATCH,  /* 部分匹配 */
-    BS_NOT_MATCH    /* 不匹配 */
+    BS_MATCH = 0,   
+    BS_PART_MATCH,  
+    BS_NOT_MATCH    
 }BS_MATCH_RET_E;
 
 typedef enum
@@ -333,8 +333,8 @@ typedef struct
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
-#endif /*azHead.h*/
+#endif 
+#endif 
 
 
 

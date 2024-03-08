@@ -14,7 +14,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define PKI_CERT_FILENAME_MAX 255UL
 #define PKI_CERT_COMMON_NAME_MAX 100UL
@@ -30,7 +30,7 @@
 #define PKI_CERT_MD5_LENTH      16UL
 #define PKI_CERT_SUBJECTNAME_RANDOM_LENTH   PKI_CERT_MD5_LENTH
 
-/* pkcs12格式封装的默认参数 */
+
 #define PKI_NIDCERT_DEFAULT                0
 #define PKI_NIDKEY_DEFAULT                 0
 #define PKI_MACITER_DEFAULT                (PKCS12_DEFAULT_ITER)
@@ -68,19 +68,19 @@ typedef enum tagPkiSigAlgorithm
 
 typedef struct tagPkiDomainConfigure
 {    
-    CHAR szCertFileName[PKI_CERT_FILENAME_MAX + 1];          /* 证书文件名称 */
-    CHAR szCertSubjectName[PKI_CERT_COMMON_NAME_MAX + 1];          /* 证书subject name */
-    CHAR szCertIssuerName[PKI_CERT_COMMON_NAME_MAX + 1];          /* 证书issuer name */
+    CHAR szCertFileName[PKI_CERT_FILENAME_MAX + 1];          
+    CHAR szCertSubjectName[PKI_CERT_COMMON_NAME_MAX + 1];          
+    CHAR szCertIssuerName[PKI_CERT_COMMON_NAME_MAX + 1];          
     CHAR szBasicConstraints[PKI_CERT_BASIC_CONSTRAINTS_MAX + 1];
     CHAR szPassword[PKI_KEY_PASSWORD_LENGTH_MAX + 1];
     CHAR szFriendlyname[PKI_CERT_FRIENDLY_NAME_MAX + 1];
-    UINT uiSerialNumber;                                /* 证书序列号 */
-    UINT uiValidity;                                    /* 证书有效天数 */ 
-    UINT uiSigAlgorithm;                                 /* 签名算法 */
-    PKI_HASH_ALGMETHOD_E enHash;                         /* hash算法 */
-    UINT uiModulus;                                      /* 密钥模数 */
-    UINT uiKeyUsage;                                     /* 密钥用途 */
-    UINT uiCertVersion;                                  /* 证书版本 */
+    UINT uiSerialNumber;                                
+    UINT uiValidity;                                     
+    UINT uiSigAlgorithm;                                 
+    PKI_HASH_ALGMETHOD_E enHash;                         
+    UINT uiModulus;                                      
+    UINT uiKeyUsage;                                     
+    UINT uiCertVersion;                                  
     UINT uiNidCert;
     UINT uiNidKey;
     UINT uiMacIter;
@@ -91,7 +91,7 @@ VOID PKI_InitDftConfig(OUT PKI_DOMAIN_CONFIGURE_S *pstConf);
 
 ULONG PKI_GetSelfSignCertAndKey
 (
-    IN PKI_DOMAIN_CONFIGURE_S *pstPkiDomainConf, /* 当此参数为NULL时,使用默认配置 */
+    IN PKI_DOMAIN_CONFIGURE_S *pstPkiDomainConf, 
     OUT X509 **ppstX509Cert, 
     OUT EVP_PKEY **ppstEvpPkey
 );
@@ -117,8 +117,8 @@ void X509Cert_AltNameForEach(X509 *cert, pf_X509Cert_AltNameForEachCB func, void
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__PKI_UTL_H_*/
+#endif 
 
 

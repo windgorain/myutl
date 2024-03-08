@@ -10,19 +10,19 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 UINT RAND_Get(void);
 
 UINT RAND_GetNonZero(void);
 
-/* 获取/dev/urandom随机数 */
+
 unsigned long RAND_GetRandom(void);
 
-/* 改变熵值 */
+
 VOID RAND_Entropy(IN UINT uiEntropy);
 
-/* 生成一段随机内存 */
+
 void RAND_Mem(OUT UCHAR *buf, int len);
 
 static inline UINT RAND_FastGet(UINT *seedp)
@@ -35,8 +35,8 @@ static inline UINT RAND_FastGet(UINT *seedp)
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__RAND_UTL_H_*/
+#endif 
 
 

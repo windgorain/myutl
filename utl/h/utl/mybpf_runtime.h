@@ -15,7 +15,7 @@ extern "C"
 #endif
 
 enum {
-    MYBPF_HP_TCMD = 0, /* trigger cmd */
+    MYBPF_HP_TCMD = 0, 
     MYBPF_HP_XDP,
 
     MYBPF_HP_MAX
@@ -37,4 +37,4 @@ MYBPF_RUNTIME_S * MYBPF_GetDftRuntime(void);
 #ifdef __cplusplus
 }
 #endif
-#endif //MYBPF_RUNTIME_H_
+#endif 

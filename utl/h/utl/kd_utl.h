@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef HANDLE KD_HANDLE;
 
@@ -28,7 +28,7 @@ KD_HANDLE KD_Create();
 VOID KD_Destory(IN KD_HANDLE hKDHandle);
 LSTR_S * KD_GetKeyData(IN KD_HANDLE hKDHandle, IN CHAR *pcKey);
 BS_STATUS KD_SetKeyData(IN KD_HANDLE hKDHandle, IN CHAR *pcKey, IN LSTR_S *pstData);
-/* 相比KD_SetKeyData, 它不会为Data申请内存，而是直接将hHandle指针挂在LSTR里面,此时LSTR的uiLen字段为0 */
+
 BS_STATUS KD_SetKeyHandle(IN KD_HANDLE hKDHandle, IN CHAR *pcKey, IN HANDLE hHandle);
 HANDLE KD_GetKeyHandle(IN KD_HANDLE hKDHandle, IN CHAR *pcKey);
 KD_S * KD_GetNext(IN KD_HANDLE hKDHandle, IN KD_S *pstCurrent);
@@ -37,8 +37,8 @@ VOID KD_Walk(IN KD_HANDLE hKDHandle, IN PF_KD_WALK_FUNC pfFunc, IN HANDLE hUserH
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__KD_UTL_H_*/
+#endif 
 
 

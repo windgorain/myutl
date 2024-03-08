@@ -12,7 +12,7 @@ extern "C"
 #endif
 
 BS_STATUS ETH_GetEthHeadInfoByMbuf(IN MBUF_S *pstMbuf, OUT ETH_PKT_INFO_S *pstHeadInfo);
-/* 将非eth标准报文转换为eth标准报文 */
+
 int ETH_ToEthPkt(void *data, int len, OUT void **new_data, OUT int *new_len);
 BOOL_T ETH_IsMulticastPktByMbuf(IN MBUF_S *pstMbuf);
 BS_STATUS ETH_PadPacket(IN MBUF_S *pstMBuf, IN BOOL_T bHaveEthHead);
@@ -20,4 +20,4 @@ BS_STATUS ETH_PadPacket(IN MBUF_S *pstMBuf, IN BOOL_T bHaveEthHead);
 #ifdef __cplusplus
 }
 #endif
-#endif //ETH_MBUF_H_
+#endif 

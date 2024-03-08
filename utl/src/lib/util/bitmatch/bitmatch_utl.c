@@ -20,10 +20,10 @@ static inline UCHAR * bitmatch_get_bits(BITMATCH_S *ctrl, int tbl_index, int pos
 
     BS_DBGASSERT(tbl_index < ctrl->tab_number);
 
-    /* 先定位tbl_index所对应的表的起始地址 */
+    
     bits = ctrl->data + ((ctrl->max_rule_num / 8) * tbl_index * 256);
 
-    /* 再定位pos所对应的位图表 */
+    
     bits += ((ctrl->max_rule_num / 8) * tbl_index * pos);
 
     return bits;
@@ -97,7 +97,7 @@ void BITMATCH_DelRule(BITMATCH_S *ctrl, UINT tbl_index, UCHAR range_min, UCHAR r
     }
 }
 
-/* data的长度必须是ctrl->tab_number字节数 */
+
 int BITMATCH_Match(BITMATCH_S *ctrl, void *data, OUT void *matched_bits)
 {
     int i;

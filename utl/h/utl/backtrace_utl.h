@@ -21,4 +21,4 @@ void CoreDump_Enable(void);
 #ifdef __cplusplus
 }
 #endif
-#endif //BACKTRACE_UTL_H_
+#endif 

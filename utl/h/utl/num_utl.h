@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define STR_LEN(string) (sizeof(string) - 1)
 
@@ -23,29 +23,26 @@
 #define NUM_INC_SKIP_ZERO(num) \
     do{(num)++; if((num) == 0){(num)++;}}while(0)
 
-/* 判断区间是否重叠, 不包含边界 */
+
 #define NUM_AREA_IS_OVERLAP(ulArea1Min, ulArea1Max, ulArea2Min, ulArea2Max) \
     ((ulArea1Max) < (ulArea2Min) ? FALSE : ((ulArea2Max) < (ulArea1Min) ? FALSE: TRUE))
 
-/* 判断区间是否重叠, 包含边界 */
+
 #define NUM_AREA_IS_OVERLAP2(ulArea1Min, ulArea1Max, ulArea2Min, ulArea2Max) \
     ((ulArea1Max) <= (ulArea2Min) ? FALSE : ((ulArea2Max) <= (ulArea1Min) ? FALSE: TRUE))
 
-/* 计算一个大于等于v且是mul整数倍的最小数字 */
+
 #define NUM_UP_ALIGN(v, mul) ((((v) + (mul) - 1) / ((mul))) * (mul))
 
-/* 计算一个小于等于v且是mul整数倍的最大数字 */
+
 #define NUM_DOWN_ALIGN(v, mul) ((v / (mul)) * (mul))
 
 #define NUM_ALIGN(v, mul) NUM_UP_ALIGN(v, mul)
 
-/* 计算距离对齐还差多少长度 */
+
 #define NUM_ALIGN_DIFF(v, mul)  (NUM_ALIGN(v, mul) - (v))
 
-/**
- * 计算一个接近v且是mul整数倍的数字
- * 结果可能大于或小于v
- */
+
 #define NUM_NEAR_ALIGN(v, mul)				\
 	({							\
 		typeof(v) ceil = NUM_UP_ALIGN(v, mul);	\
@@ -53,12 +50,12 @@
 		(ceil - v) > (v - floor) ? floor : ceil;	\
 	})
 
-/* 判断一个数字是否2的指数幂 */
+
 #define NUM_IS2N(_num) (((_num) > 0) && (((_num) & ((_num)-1))==0))
-/* 判断一个数字是否2的指数幂减一 */
+
 #define NUM_IS2NDEC1(_num) (((_num) > 0) && (((_num) & ((_num)+1))==0))
 
-/* 获取不小于x的2的指数幂*/
+
 static inline UINT NUM_To2N(UINT x)
 {
     x--;
@@ -72,7 +69,7 @@ static inline UINT NUM_To2N(UINT x)
     return x + 1;
 }
 
-/* 计算环形下标位置 */
+
 #define NUM_CYCLE_INDEX_ADD(uiIndex, uiInc, uiMaxCount)   \
     do {    \
         (uiIndex) = (uiIndex) + (uiInc); \
@@ -83,7 +80,7 @@ static inline UINT NUM_To2N(UINT x)
     } while(0)
 
 
-/* n=n/base,  return n%base */
+
 static inline ULONG NUM_DoDiv(IN ULONG *pulNum, IN ULONG ulBase)
 {
     ULONG ulRet;
@@ -94,7 +91,7 @@ static inline ULONG NUM_DoDiv(IN ULONG *pulNum, IN ULONG ulBase)
     return ulRet;
 }
 
-/* 计算表示一个数字需要几个bit位 */
+
 static inline UCHAR NUM_NeedBits(IN UINT uiNum)
 {
     INT i;
@@ -123,7 +120,7 @@ static inline INT NUM_Cmp(IN UINT uiNum1, IN UINT uiNum2)
     return 0;
 }
 
-/*  将一个 32 位数据循环左移 shift 位*/
+
 static inline unsigned int NUM_Rol32(unsigned int word, unsigned int shift)
 {
 	return (word << (shift & 31)) | (word >> ((-shift) & 31));
@@ -131,8 +128,8 @@ static inline unsigned int NUM_Rol32(unsigned int word, unsigned int shift)
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__NUM_UTL_H_*/
+#endif 
 
 

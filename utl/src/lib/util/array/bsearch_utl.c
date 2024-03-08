@@ -12,7 +12,7 @@ static int _bsearch_dft_cmp(void *d1, void *d2, void *ud)
     return memcmp(d1, d2, ele_size);
 }
 
-void * BSEARCH_Do(void* base, int items_num, int ele_size, void *key, PF_CMP_FUNC cmp_func/* 可以为NULL */, void *ud)
+void * BSEARCH_Do(void* base, int items_num, int ele_size, void *key, PF_CMP_FUNC cmp_func, void *ud)
 {
     BS_DBGASSERT(base && items_num > 0 && ele_size > 0);
 

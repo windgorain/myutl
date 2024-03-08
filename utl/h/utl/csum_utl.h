@@ -27,7 +27,7 @@ static inline UINT _csum_get_16b_sum(USHORT * data, int len)
     return checksum;
 }
 
-/*计算IP头校验和 */
+
 static inline USHORT CSUM_IpHeader(USHORT *data, int ip_header_len)
 {
     UINT checksum;
@@ -42,4 +42,4 @@ static inline USHORT CSUM_IpHeader(USHORT *data, int ip_header_len)
 #ifdef __cplusplus
 }
 #endif
-#endif //CSUM_UTL_H_
+#endif 

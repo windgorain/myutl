@@ -12,13 +12,13 @@ extern "C"
 {
 #endif
 
-#define UMAP_UPDATE_ANY		    0 /* create new element or update existing */
-#define UMAP_UPDATE_NOEXIST	    1 /* create new element if it didn't exist */
-#define UMAP_UPDATE_EXIST	    2 /* update existing element */
+#define UMAP_UPDATE_ANY		    0 
+#define UMAP_UPDATE_NOEXIST	    1 
+#define UMAP_UPDATE_EXIST	    2 
 
-#define UMAP_ELF_MAP_MIN_SIZE 20 /* 最小的map size, 包含 type, size_key, size_value, max_elem, flag */
+#define UMAP_ELF_MAP_MIN_SIZE 20 
 
-/* 和bpf的map声明结构保持一致 */
+
 typedef struct {
 	unsigned int type;
 	unsigned int size_key;
@@ -78,4 +78,4 @@ void UMAP_DumpMap(UFD_S *ctx, int map_fd, PF_PRINT_FUNC print_func);
 #ifdef __cplusplus
 }
 #endif
-#endif //UMAP_UTL_H_
+#endif 

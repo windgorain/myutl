@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define SPINLOCK_INIT_VALUE {0,0}
 
@@ -29,8 +29,8 @@ BOOL_T SpinLock_TryLock(IN SPINLOCK_S *pstLock);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__SPINLOCK_UTL_H_*/
+#endif 
 
 

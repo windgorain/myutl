@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -22,8 +22,8 @@
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__HEAD_H_*/
+#endif 
 
 

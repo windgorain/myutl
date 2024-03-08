@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef VOID (*PF_CFGUTL_DEAL_FUNC)(IN UINT ulArgc, IN CHAR **argv, IN UINT ulUserHandle);
 
@@ -25,8 +25,8 @@ VOID CFGUTL_Open(IN CHAR *pszFileName, IN CFGUTL_REG_TBL_S *pstRegTbl, IN UINT u
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__CFG_UTL_H_*/
+#endif 
 
 

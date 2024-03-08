@@ -21,17 +21,17 @@ typedef struct {
     char sec_name[128];
     char prog_name[64];
     void *loader_node;
-    UINT attached; /* attached位,每位标志一个attach点 */
+    UINT attached; 
     int fd;
-    int insn_len; /* prog insn 字节数 */
-    void *insn; /* prog insn */
+    int insn_len; 
+    void *insn; 
 }MYBPF_PROG_NODE_S;
 
 typedef struct xdp_buff {
 	void *data;
 	void *data_end;
 	void *data_meta;
-	/* Below access go through struct xdp_rxq_info */
+	
 	UINT ingress_ifindex; 
 	UINT rx_queue_index; 
 }MYBPF_XDP_BUFF_S;
@@ -56,4 +56,4 @@ int MYBPF_PROG_FixupExtCalls(void *insts, int len);
 #ifdef __cplusplus
 }
 #endif
-#endif //MYBPF_PROG_H_
+#endif 

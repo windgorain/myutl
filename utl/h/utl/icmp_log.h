@@ -33,4 +33,4 @@ void ICMPLOG_Input(ICMP_LOG_S *config, VOID *ippkt, UINT pktlen, NET_PKT_TYPE_E 
 #ifdef __cplusplus
 }
 #endif
-#endif //ICMP_LOG_H_
+#endif 

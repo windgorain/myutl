@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
  BS_STATUS _Mypoll_Proto_Init(IN _MYPOLL_CTRL_S *pstMyPoll);
 VOID _MyPoll_Proto_Fini(IN _MYPOLL_CTRL_S *pstMyPoll);
@@ -40,8 +40,8 @@ extern MYPOLL_PROTO_S * Mypoll_Select_GetProtoTbl(void);
 extern MYPOLL_PROTO_S * Mypoll_Epoll_GetProtoTbl(void);
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__MYPOLL_PROTO_H_*/
+#endif 
 
 

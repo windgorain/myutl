@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #include "utl/tree_utl.h"
 
@@ -52,8 +52,8 @@ BS_WALK_RET_E PathTree_DepthBackWalk
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__PATHTREE_UTL_H_*/
+#endif 
 
 

@@ -22,4 +22,4 @@ int BITMATCH_Match(BITMATCH_S *ctrl, void *data, OUT void *matched_bits);
 #ifdef __cplusplus
 }
 #endif
-#endif //BITMATCH_UTL_H_
+#endif 

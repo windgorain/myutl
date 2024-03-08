@@ -15,4 +15,4 @@ int LOADDBS_Load(const char *filepath, const char *conf_path);
 #ifdef __cplusplus
 }
 #endif
-#endif //LOAD_DBS_H_
+#endif 

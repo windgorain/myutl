@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http:
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ struct ubpf_vm {
 #endif
 };
 
-/* The various JIT targets.  */
+
 int ubpf_translate_arm64(struct ubpf_vm *vm, uint8_t * buffer, size_t * size, char **errmsg);
 int ubpf_translate_x86_64(struct ubpf_vm *vm, uint8_t * buffer, size_t * size, char **errmsg);
 int ubpf_translate_null(struct ubpf_vm *vm, uint8_t * buffer, size_t * size, char **errmsg);

@@ -18,14 +18,14 @@ typedef struct {
 }MYBPF_MAPS_SEC_S;
 
 typedef struct ebpf_inst {
-	UCHAR opcode;		/* opcode */
-	UCHAR dst_reg:4;	/* dest register */
-	UCHAR src_reg:4;	/* source register */
-	short off;	    	/* signed offset */
-	int imm;	    	/* signed immediate constant */
+	UCHAR opcode;		
+	UCHAR dst_reg:4;	
+	UCHAR src_reg:4;	
+	short off;	    	
+	int imm;	    	
 }MYBPF_INSN_S;
 
 #ifdef __cplusplus
 }
 #endif
-#endif //MYBPF_UTL_H_
+#endif 

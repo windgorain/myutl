@@ -16,7 +16,7 @@ static inline char * QEMU_Bdf2String(USHORT bdf, OUT char *buf, int buf_size)
     return buf;
 }
 
-/* bus:dev.func */
+
 static inline int QEMU_String2Bdf(char *bdf_string)
 {
     char *strs[2];
@@ -47,4 +47,4 @@ static inline int QEMU_String2Bdf(char *bdf_string)
 #ifdef __cplusplus
 }
 #endif
-#endif //QEMU_FUNC_H_
+#endif 

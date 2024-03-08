@@ -43,4 +43,4 @@ int NetLink_Do(PF_NETLINK_DO do_func, int cmd, void *data, int data_len);
 #ifdef __cplusplus
 }
 #endif
-#endif //NETLINK_UTL_H_
+#endif 

@@ -29,4 +29,4 @@ int MYBPF_XdpInput(MYBPF_RUNTIME_S *runtime, MYBPF_XDP_BUFF_S *xdp_buf);
 #ifdef __cplusplus
 }
 #endif
-#endif //MYBPF_HOOKPOINT_H_
+#endif 

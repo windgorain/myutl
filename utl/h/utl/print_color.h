@@ -12,12 +12,12 @@ extern "C"
 #endif
 
 #define SHELL_COLOR_CLOSE "\033[0m"
-#define SHELL_COLOR_HIGH  "\033[1m" /* 高亮 */
-#define SHELL_COLOR_LOW   "\033[2m" /* 低亮 */
-#define SHELL_COLOR_LINE  "\033[4m" /* 下划线 */
-#define SHELL_COLOR_FLASH "\033[5m" /* 闪烁 */
-#define SHELL_COLOR_REFLECT "\033[7m" /* 反显 */
-#define SHELL_COLOR_BLANKING "\033[8m" /* 消隐 */
+#define SHELL_COLOR_HIGH  "\033[1m" 
+#define SHELL_COLOR_LOW   "\033[2m" 
+#define SHELL_COLOR_LINE  "\033[4m" 
+#define SHELL_COLOR_FLASH "\033[5m" 
+#define SHELL_COLOR_REFLECT "\033[7m" 
+#define SHELL_COLOR_BLANKING "\033[8m" 
 
 #define SHELL_BG_COLOR_BLACK   "\033[40m"
 #define SHELL_BG_COLOR_RED     "\033[41m"
@@ -112,4 +112,4 @@ void PrintColor_HWhite(const char *fmt, ...);
 #ifdef __cplusplus
 }
 #endif
-#endif //PRINT_COLOR_H_
+#endif 
