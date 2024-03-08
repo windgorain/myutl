@@ -17,7 +17,6 @@
 #include "bs/mem_bs.h"
 #include "utl/mem_utl.h"
 #include "utl/backtrace_utl.h"
-#include "utl/rcu_utl.h"
 #include "utl/dll_utl.h"
 
 #include "stub_bs.h"

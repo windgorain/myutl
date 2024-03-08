@@ -1,18 +1,19 @@
 /*================================================================
-*   Created by LiXingang
+*   Created by LiXingang, Copyright LiXingang
 *   Description: 
 *
 ================================================================*/
-#ifndef _QSORT_UTL_H
-#define _QSORT_UTL_H
+#ifndef _UBPF_CONFIG_H
+#define _UBPF_CONFIG_H
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-void QSORT_Do(void *base, int num, int width, PF_CMP_FUNC cmp_func, void *ud);
+#define UBPF_HAS_ELF_H 1
+
 
 #ifdef __cplusplus
 }
 #endif
-#endif //QSORT_UTL_H_
+#endif //UBPF_CONFIG_H_
