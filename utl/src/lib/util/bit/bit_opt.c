@@ -34,21 +34,7 @@ uint8_t BIT_ChangeOrder(uint8_t v)
 }
 
 
-int BIT_GetLastIndex(UINT num)
-{
-    int i;
-
-    for (i=0; i<32; i++) {
-        if (num & (1 << i)) { 
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-
-int BIT_GetFirstIndex(UINT num, UINT from )
+int BIT_GetHighIndexFrom(UINT num, UINT from )
 {
     int i;
 
@@ -100,4 +86,30 @@ int BIT_XSPrint(uint32_t v, BIT_DESC_S *desc, int desc_num, OUT char *buf, uint3
     return 0;
 }
 
+static const unsigned char g_bit_pop_table[256] =
+{
+0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+};
+
+
+UINT BIT_GetCount1(UINT u)
+{
+    return g_bit_pop_table[u & 0xFF] + g_bit_pop_table[(u >> 8) & 0xFF]
+        + g_bit_pop_table[(u >> 16) & 0xFF] + g_bit_pop_table[(u >> 24) & 0xFF];
+}
 

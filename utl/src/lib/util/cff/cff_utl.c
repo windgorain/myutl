@@ -83,10 +83,10 @@ _CFF_S * _cff_Open(IN CHAR *pcFileName, IN UINT uiFlag)
         return NULL;
     }
 
-    pstCff->pcFileContent = (CHAR*)pstCff->pstFileMemMap->pucFileData;
+    pstCff->pcFileContent = (CHAR*)pstCff->pstFileMemMap->data;
 
     
-    if (pstCff->pstFileMemMap->uiFileLen >= 3)
+    if (pstCff->pstFileMemMap->len >= 3)
     {
         if ((pstCff->pcFileContent[0] == (CHAR)0xef)
             && (pstCff->pcFileContent[1] == (CHAR)0xbb)
@@ -616,14 +616,14 @@ UINT CFF_GetTagNum(IN CFF_HANDLE hCffHandle)
     return CFF_X_GetTagNum(hCffHandle, &stTreParam);
 }
 
-static BS_WALK_RET_E cff_WalkTagFunc(IN MKV_MARK_S *pstMarkRoot, IN MKV_MARK_S *pstMark, IN USER_HANDLE_S *pstUserHandle)
+static int cff_WalkTagFunc(IN MKV_MARK_S *pstMarkRoot, IN MKV_MARK_S *pstMark, IN USER_HANDLE_S *pstUserHandle)
 {
     PF_CFF_TAG_WALK_FUNC pfFunc;
     
     pfFunc = (PF_CFF_TAG_WALK_FUNC) (pstUserHandle->ahUserHandle[1]);
     pfFunc(pstUserHandle->ahUserHandle[0], pstMark->pucMarkName, pstUserHandle->ahUserHandle[2]);
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 VOID CFF_WalkTag(IN CFF_HANDLE hCffHandle, IN PF_CFF_TAG_WALK_FUNC pfFunc, IN HANDLE hUsrHandle)
@@ -638,14 +638,14 @@ VOID CFF_WalkTag(IN CFF_HANDLE hCffHandle, IN PF_CFF_TAG_WALK_FUNC pfFunc, IN HA
     MKV_WalkMarkInMark(&pstCff->stCfgRoot, (PF_MKV_MARK_WALK_FUNC)cff_WalkTagFunc, &stUserHandle);
 }
 
-static BS_WALK_RET_E cff_WalkPropFunc(IN MKV_MARK_S *pstMarkRoot, IN MKV_KEY_S *pstProp, IN USER_HANDLE_S *pstUserHandle)
+static int cff_WalkPropFunc(IN MKV_MARK_S *pstMarkRoot, IN MKV_KEY_S *pstProp, IN USER_HANDLE_S *pstUserHandle)
 {
     PF_CFF_PROP_WALK_FUNC pfFunc;
     
     pfFunc = (PF_CFF_PROP_WALK_FUNC) (pstUserHandle->ahUserHandle[1]);
     pfFunc(pstUserHandle->ahUserHandle[0], pstMarkRoot->pucMarkName, pstProp->pucKeyName, pstUserHandle->ahUserHandle[2]);
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 VOID CFF_WalkProp(IN CFF_HANDLE hCffHandle, IN CHAR *pcTag, IN PF_CFF_PROP_WALK_FUNC pfFunc, IN HANDLE hUsrHandle)

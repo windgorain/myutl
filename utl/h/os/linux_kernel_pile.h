@@ -55,7 +55,7 @@ static inline void atomic64_add(s64 i, atomic64_t *v)
     ATOM_FETCH_ADD(&v->counter, i);
 }
 
-static inline long atomic64_fetch_add(long i, atomic64_t *v)
+static inline s64 atomic64_fetch_add(long i, atomic64_t *v)
 {
     return ATOM_FETCH_ADD(&v->counter, i);
 }

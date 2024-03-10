@@ -18,65 +18,71 @@
 
 static int _rbtree_preorder_walk(RB_TREE_NODE_S * tree, PF_RBTREE_WALK walk_func, void *ud)
 {
+    int ret;
+
     if (! tree) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
-    if (BS_WALK_STOP == walk_func(tree, ud)) {
-        return BS_WALK_STOP;
+    if ((ret= walk_func(tree, ud)) < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == _rbtree_preorder_walk(tree->left, walk_func, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = _rbtree_preorder_walk(tree->left, walk_func, ud)) < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == _rbtree_preorder_walk(tree->right, walk_func, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = _rbtree_preorder_walk(tree->right, walk_func, ud)) < 0) {
+        return BS_STOP;
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static int _rbtree_inorder_walk(RB_TREE_NODE_S * tree, PF_RBTREE_WALK walk_func, void *ud)
 {
+    int ret;
+
     if (! tree) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
-    if (BS_WALK_STOP == _rbtree_inorder_walk(tree->left, walk_func, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = _rbtree_inorder_walk(tree->left, walk_func, ud)) < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == walk_func(tree, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = walk_func(tree, ud)) < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == _rbtree_inorder_walk(tree->right, walk_func, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = _rbtree_inorder_walk(tree->right, walk_func, ud)) < 0) {
+        return ret;
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static int _rbtree_postorder_walk(RB_TREE_NODE_S * tree, PF_RBTREE_WALK walk_func, void *ud)
 {
+    int ret;
+
     if (! tree) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
-    if (BS_WALK_STOP == _rbtree_postorder_walk(tree->left, walk_func, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = _rbtree_postorder_walk(tree->left, walk_func, ud)) < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == _rbtree_postorder_walk(tree->right, walk_func, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = _rbtree_postorder_walk(tree->right, walk_func, ud)) < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == walk_func(tree, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = walk_func(tree, ud)) < 0) {
+        return ret;
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static inline RB_TREE_NODE_S * _rbtree_search(RB_TREE_NODE_S * x, void *key, PF_RBTREE_CMP cmp_func)

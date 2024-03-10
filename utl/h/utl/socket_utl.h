@@ -24,6 +24,7 @@
 
 #ifdef IN_WINDOWS
 #define SOCKET_E_AGAIN      -WSAEWOULDBLOCK
+#define EAGAIN SOCKET_E_AGAIN
 #endif
 
 #ifdef IN_UNIXLIKE
@@ -33,6 +34,7 @@
 extern int _Socket_Create(int iFamily, UINT ulType, const char *filename, int line);
 extern BS_STATUS Socket_Close(IN INT iSocketId);
 extern int Socket_Connect(IN INT iSocketId, IN UINT ulIp, IN USHORT usPort);
+extern int Socket_Connect2(int fd, UINT ulIp, USHORT usPort);
 extern int Socket_UDPClient(UINT ip, USHORT port);
 extern int Socket_UnixSocketClient(char *path, int type, int flags);
 extern BOOL_T Socket_IsIPv4(IN CHAR *pcIpOrName);
@@ -63,6 +65,7 @@ extern int _Socket_Accept(int fd, OUT struct sockaddr *pstAddr, INOUT INT *piLen
 #define Socket_Accept(a,b,c) _Socket_Accept(a,b,c,__FILE__,__LINE__)
 
 extern INT Socket_Write(IN INT iSocketId, IN VOID *data, IN UINT ulLen, IN UINT ulFlag);
+extern int Socket_Write2(int fd, void *data, U32 len, U32 flag);
 extern int Socket_WriteString(int fd, char *buf, unsigned int flag);
 
 extern BS_STATUS Socket_WriteUntilFinish(IN INT iSocketId, IN UCHAR *pucBuf, IN UINT ulLen, IN UINT ulFlag);
@@ -71,14 +74,7 @@ extern BS_STATUS Socket_WriteUntilFinish(IN INT iSocketId, IN UCHAR *pucBuf, IN 
 extern INT Socket_Read(IN INT iSocketId, OUT void *buf, IN UINT uiBufLen, IN UINT uiFlag);
 
 
-extern BS_STATUS Socket_Read2
-(
-	IN INT iSocketId,
-	OUT void *buf,
-	IN UINT uiLen,
-	OUT UINT *puiReadLen,
-	IN UINT ulFlag
-);
+extern BS_STATUS Socket_Read2(int iSocketId, OUT void *buf, UINT uiLen, OUT UINT *puiReadLen, UINT ulFlag);
 
 extern BS_STATUS Socket_SendTo
 (

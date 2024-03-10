@@ -98,7 +98,7 @@ int PCI_DMA_ProcessMrd(PCIE_TLP_MEM_S *tlp, int len,
 
     
     if (last_be) {
-        last_drop = 3 - BIT_GetFirstIndex(last_be, 3);
+        last_drop = 3 - BIT_GetHighIndexFrom(last_be, 3);
     }
 
     byte_count = length;

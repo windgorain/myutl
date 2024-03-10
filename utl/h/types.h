@@ -32,6 +32,11 @@ extern "C" {
     #endif
 #endif
 
+
+#ifndef __always_inline 
+#define __always_inline inline
+#endif
+
 #ifndef CHAR_BIT
 #define CHAR_BIT 8
 #endif
@@ -50,27 +55,21 @@ extern "C" {
 #endif
 
 
-#define SNPRINTF(buf,size, ...) ({ \
-        int _nlen = snprintf((buf), (size), ##__VA_ARGS__); \
-        if (_nlen >= (size)) _nlen = -1; \
-        _nlen; })
+#define _BS_ARG_N(a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,N,...) N
+#define BS_ARG_COUNT(...) _BS_ARG_N(0,##__VA_ARGS__,10,9,8,7,6,5,4,3,2,1,0)
 
 
-#define _BS_ARG_N(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,N,...) N
-#define BS_ARG_COUNT(...) _BS_ARG_N(__VA_ARGS__,10,9,8,7,6,5,4,3,2,1,0)
-
-
-#define _BS_ARG_GET1(a1,...) (a1)
-#define _BS_ARG_GET2(a1,a2,...) (a2)
-#define _BS_ARG_GET3(a1,a2,a3,...) (a3)
-#define _BS_ARG_GET4(a1,a2,a3,a4,...) (a4)
-#define _BS_ARG_GET5(a1,a2,a3,a4,a5,...) (a5)
-#define _BS_ARG_GET6(a1,a2,a3,a4,a5,a6,...) (a6)
-#define _BS_ARG_GET7(a1,a2,a3,a4,a5,a6,a7,...) (a7)
-#define _BS_ARG_GET8(a1,a2,a3,a4,a5,a6,a7,a8,...) (a8)
-#define _BS_ARG_GET9(a1,a2,a3,a4,a5,a6,a7,a8,a9,...) (a9)
-#define _BS_ARG_GET10(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,...) (a10)
-#define BS_ARG_GET(N,...) _BS_ARG_GET##N(__VA_ARGS__,0,0,0,0,0,0,0,0,0,0)
+#define _BS_ARG_GET1(a0,a1,...) (a1)
+#define _BS_ARG_GET2(a0,a1,a2,...) (a2)
+#define _BS_ARG_GET3(a0,a1,a2,a3,...) (a3)
+#define _BS_ARG_GET4(a0,a1,a2,a3,a4,...) (a4)
+#define _BS_ARG_GET5(a0,a1,a2,a3,a4,a5,...) (a5)
+#define _BS_ARG_GET6(a0,a1,a2,a3,a4,a5,a6,...) (a6)
+#define _BS_ARG_GET7(a0,a1,a2,a3,a4,a5,a6,a7,...) (a7)
+#define _BS_ARG_GET8(a0,a1,a2,a3,a4,a5,a6,a7,a8,...) (a8)
+#define _BS_ARG_GET9(a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,...) (a9)
+#define _BS_ARG_GET10(a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,...) (a10)
+#define BS_ARG_GET(N,...) _BS_ARG_GET##N(0,##__VA_ARGS__,0,0,0,0,0,0,0,0,0,0)
 
 #ifndef TRUE
 #define TRUE 1
@@ -90,11 +89,6 @@ extern "C" {
 
 #ifndef UINT32_MAX
 #define UINT32_MAX (0xffffffff)
-#endif
-
-#ifndef false
-#define true 1
-#define false 0
 #endif
 
 #ifndef STATIC
@@ -177,13 +171,25 @@ typedef struct {
     UINT uiLen;
 }LSTR_S;
 
+
 typedef struct {
-    UCHAR *pucData;
-    UINT uiLen;
+    UCHAR *data;
+    UINT len;
 }LDATA_S;
+
+
+typedef struct {
+    UCHAR *data; 
+    UINT64 len;   
+}LLDATA_S;
+
+typedef LLDATA_S FILE_MEM_S;
+
 #define BS_DATA_ZERO(_pstData) do {(_pstData)->pucData = NULL; (_pstData)->uiLen = 0;} while(0)
 
+
 typedef VOID 		(*VOID_FUNC)(void);
+typedef int         (*INT_FUNC)(void);
 typedef UINT 		(*UINT_FUNC)(void);
 typedef UINT 		(*UINT_FUNC_1)(VOID *pArg1);
 typedef UINT 		(*UINT_FUNC_2)(VOID *pArg1, VOID *pArg2);
@@ -193,7 +199,10 @@ typedef UINT 		(*UINT_FUNC_5)(VOID *pArg1, VOID *pArg2, VOID *pArg3, VOID *pArg4
 typedef UINT 		(*UINT_FUNC_6)(VOID *pArg1, VOID *pArg2, VOID *pArg3, VOID *pArg4, VOID *pArg5, VOID *pArg6);
 typedef HANDLE 		(*HANDLE_FUNC)(void);
 typedef BOOL_T		(*BOOL_FUNC)(void);
-typedef int         (*PF_CMP_FUNC)(void *n1, void *n2, void *ud);
+typedef int         (*PF_CMP_FUNC)(const void *k, const void *n);
+typedef int         (*PF_CMP_EXT_FUNC)(const void *k, const void *n, void *ud);
+typedef void        (*PF_DEL_FUNC)(void *n, void *ud);
+typedef void        (*PF_WALK_FUNC)(void *n, void *ud);
 typedef int         (*PF_PRINT_FUNC)(const char *fmt, ...);
 
 typedef enum{
@@ -254,11 +263,6 @@ extern CHAR * ErrInfo_Get(IN BS_STATUS eRet);
 #define ERROR_FAILED BS_ERR
 #endif
 
-typedef enum{
-    BS_WALK_CONTINUE = 0,
-    BS_WALK_STOP
-}BS_WALK_RET_E;
-
 typedef enum {
 	BS_ACTION_UNDEF = 0,
     BS_ACTION_DENY,
@@ -283,10 +287,17 @@ typedef enum
 #define BS_WAIT_FOREVER	0
 
 #define BS_OFFSET(type,item) ((ULONG)&(((type *) 0)->item))
+#define BS_END_OFFSET(type,item) (BS_OFFSET(type,item) + sizeof(((type *)0)->item))
 #define BS_ENTRY(pAddr, item, type) ((type *) ((UCHAR*)(pAddr) - BS_OFFSET (type, item)))
+
 
 #ifndef offsetof
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+#endif
+
+
+#ifndef offsetofend
+# define offsetofend(TYPE, FIELD) (offsetof(TYPE, FIELD) + sizeof(((TYPE *)0)->FIELD))
 #endif
 
 #ifndef container_of
@@ -326,10 +337,19 @@ typedef enum
 #define BS_DBG_WARNNING(X)
 #endif
 
-typedef struct
-{
+typedef struct {
     HANDLE ahUserHandle[4];
 }USER_HANDLE_S;
+
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+
+#if __has_attribute(__fallthrough__)
+#define fallthrough                    __attribute__((__fallthrough__))
+#else
+#define fallthrough                    do {} while (0)  
+#endif
 
 #ifdef __cplusplus
 }

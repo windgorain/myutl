@@ -8,6 +8,7 @@
 
 #include <libelf.h>
 #include <gelf.h>
+#include "utl/elf_def.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -44,15 +45,6 @@ typedef struct {
     ELF_SECTION_S rodata_sec[ELF_MAX_GLOBAL_DATA_SEC_NUM];
 }ELF_GLOBAL_DATA_S;
 
-typedef struct {
-    char *sec_name;
-    char *func_name;
-    UINT sec_offset; 
-    UINT prog_offset; 
-    UINT size; 
-    int  sec_id; 
-}ELF_PROG_INFO_S;
-
 int ELF_Open(char *path, OUT ELF_S *elf);
 void ELF_Close(ELF_S *elf);
 
@@ -78,9 +70,9 @@ int ELF_GetProgsCount(ELF_S *elf);
 int ELF_CopyProgs(ELF_S *elf, OUT void *mem, int mem_size);
 void * ELF_DupProgs(ELF_S *elf);
 int ELF_GetProgsInfo(ELF_S *elf, OUT ELF_PROG_INFO_S *progs, int max_prog_count);
-void ELF_ClearProgsInfo(ELF_PROG_INFO_S *progs, int prog_count);
+int ELF_GetSecProgsInfoCount(ELF_PROG_INFO_S *info, int prog_count, char *sec_name);
 
-typedef int (*PF_ELF_WALK_PROG)(void *data, int offset, int len, char *sec_name, char *func_name, void *ud);
+typedef int (*PF_ELF_WALK_PROG)(void *data, ELF_PROG_INFO_S *info, void *ud);
 int ELF_WalkProgs(ELF_S *elf, PF_ELF_WALK_PROG walk_func, void *ud);
 
 #ifdef __cplusplus

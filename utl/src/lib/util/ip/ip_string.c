@@ -16,7 +16,43 @@
 #include "utl/ip_string.h"
 
 
-BS_STATUS IPString_ParseIpPrefix(CHAR *pcIpPrefixString, OUT IP_PREFIX_S *pstIpPrefix)
+int IPString_ParseIpPort(CHAR *ip_port_string, OUT IP_PORT_S *out)
+{
+    LSTR_S stIP;
+    LSTR_S stPort;
+    char szTmp[32];
+    U16 port = 0;
+    U32 ip = 0;
+
+    TXT_StrSplit(ip_port_string, ':', &stIP, &stPort);
+
+    LSTR_Strim(&stIP, TXT_BLANK_CHARS, &stIP);
+    LSTR_Strim(&stPort, TXT_BLANK_CHARS, &stPort);
+
+    if ((stIP.uiLen > 15) || (stPort.uiLen > 5)) {
+        return BS_BAD_PARA;
+    }
+
+    if (stIP.uiLen > 0) {
+        LSTR_Strlcpy(&stIP, sizeof(szTmp), szTmp);
+        if (! Socket_IsIPv4(szTmp)){
+            return BS_BAD_PARA;
+        }
+        ip = Socket_Ipsz2IpHost(szTmp);
+    }
+
+    if (stPort.uiLen > 0) {
+        port = atoi(stPort.pcData);
+    }
+
+    out->ip = ip;
+    out->port = port;
+
+    return 0;
+}
+
+
+int IPString_ParseIpPrefix(CHAR *pcIpPrefixString, OUT IP_PREFIX_S *pstIpPrefix)
 {
     LSTR_S stIP;
     LSTR_S stPrefix;
@@ -53,7 +89,7 @@ BS_STATUS IPString_ParseIpPrefix(CHAR *pcIpPrefixString, OUT IP_PREFIX_S *pstIpP
 }
 
 
-BS_STATUS IPString_IpPrefixString2IpMask(CHAR *pcIpPrefixString, OUT IP_MAKS_S *pstIpMask)
+int IPString_IpPrefixString2IpMask(CHAR *pcIpPrefixString, OUT IP_MASK_S *pstIpMask)
 {
     BS_STATUS enRet;
     IP_PREFIX_S stPrefix;
@@ -70,7 +106,7 @@ BS_STATUS IPString_IpPrefixString2IpMask(CHAR *pcIpPrefixString, OUT IP_MAKS_S *
 }
 
 
-BS_STATUS IPString_ParseIpMask(CHAR *pcIpMaskString, OUT IP_MAKS_S *pstIpMask)
+BS_STATUS IPString_ParseIpMask(CHAR *pcIpMaskString, OUT IP_MASK_S *pstIpMask)
 {
     LSTR_S stIP;
     LSTR_S stMask;
@@ -97,7 +133,7 @@ BS_STATUS IPString_ParseIpMask(CHAR *pcIpMaskString, OUT IP_MAKS_S *pstIpMask)
 
 
 
-UINT IPString_ParseIpMaskList(IN CHAR *pcIpMaskString, IN CHAR cSplitChar, IN UINT uiIpMaskMaxNum, OUT IP_MAKS_S *pstIpMasks)
+UINT IPString_ParseIpMaskList(IN CHAR *pcIpMaskString, IN CHAR cSplitChar, IN UINT uiIpMaskMaxNum, OUT IP_MASK_S *pstIpMasks)
 {
     CHAR *pcIpMask;
     UINT uiNum = 0;
@@ -125,7 +161,7 @@ CHAR * IPString_IP2String(IN UINT ip, OUT CHAR *str)
     return str;
 }
 
-INT IPString_IpMask2String_OutIpPrefix(IN IP_MAKS_S *pstIpMask, IN INT iStrLen, OUT CHAR *str)
+INT IPString_IpMask2String_OutIpPrefix(IN IP_MASK_S *pstIpMask, IN INT size, OUT CHAR *str)
 {
     int len;
     UCHAR *pucData;
@@ -136,10 +172,12 @@ INT IPString_IpMask2String_OutIpPrefix(IN IP_MAKS_S *pstIpMask, IN INT iStrLen, 
     pucData = (VOID *)&uiIpNet;
     ucPrefix = MASK_2_PREFIX(pstIpMask->uiMask);
 
-    len = scnprintf(str, iStrLen, "%u.%u.%u.%u", pucData[0], pucData[1], pucData[2], pucData[3]);
-    len += scnprintf(str+len, iStrLen-len, "/%hhu", ucPrefix);
+    len = SNPRINTF(str, size, "%u.%u.%u.%u", pucData[0], pucData[1], pucData[2], pucData[3]);
+    if (len < 0) {
+        return len;
+    }
 
-    return len;
+    return SNPRINTF(str+len, size - len, "/%hhu", ucPrefix);
 }
 
 CHAR * IPString_IPHeader2String(IN VOID *ippkt, OUT CHAR *info, IN UINT infosize)

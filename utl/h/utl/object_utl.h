@@ -22,7 +22,7 @@ typedef struct {
     UINT uiObjSize; 
 }OBJECT_PARAM_S;
 
-typedef BS_WALK_RET_E (*OBJECT_WALK_FUNC)(IN HANDLE hAggregate, IN UINT64 ulObjectId, IN USER_HANDLE_S *pstUserHandle);
+typedef int (*OBJECT_WALK_FUNC)(IN HANDLE hAggregate, IN UINT64 ulObjectId, IN USER_HANDLE_S *pstUserHandle);
 HANDLE OBJECT_CreateAggregate(OBJECT_PARAM_S *p);
 VOID OBJECT_DestroyAggregate(IN HANDLE hAggregate);
 VOID OBJECT_EnableSeq(IN HANDLE hAggregate, IN UINT64 ulMask, IN UINT uiCount);

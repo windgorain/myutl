@@ -24,6 +24,7 @@ static BS_STATUS map_list_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *p
 static MAP_ELE_S * map_list_get_ele(MAP_HANDLE map, void *key, UINT key_len);
 static void * map_list_get(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
 static void * map_list_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
+static void * map_list_del_node(MAP_HANDLE map, void *n);
 static void * map_list_del_by_ele(IN MAP_HANDLE map, IN MAP_ELE_S *ele);
 static void map_list_del_all(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData);
 static UINT map_list_count(MAP_HANDLE map);
@@ -34,6 +35,7 @@ static MAP_FUNC_S g_map_list_funcs = {
     .destroy_func = map_list_destroy,
     .reset_func = map_list_reset,
     .add_node_func = map_list_add_node,
+    .del_node_func = map_list_del_node,
     .add_func = map_list_add,
     .get_ele_func = map_list_get_ele,
     .get_func = map_list_get,
@@ -269,6 +271,13 @@ static void * map_list_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
     return _map_list_del_node(map, pstNode);
 }
 
+
+static void * map_list_del_node(MAP_HANDLE map, void *n)
+{
+    MAP_LIST_NODE_S *pstNode = n;
+    return _map_list_del_node(map, pstNode);
+}
+
 static void map_list_del_all(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData)
 {
     _MAP_LIST_S *list_map = map->impl_map;
@@ -302,7 +311,7 @@ static void map_list_walk(MAP_HANDLE map, PF_MAP_WALK_FUNC pfWalkFunc, VOID *pUs
     MAP_LIST_NODE_S *node, *next;
 
     DLL_SAFE_SCAN(&list_map->list, node, next) {
-        if (BS_WALK_STOP == pfWalkFunc(&node->stEle, pUserData)) {
+        if (pfWalkFunc(&node->stEle, pUserData) < 0) {
             break;
         }
     }

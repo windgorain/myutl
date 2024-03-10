@@ -13,7 +13,7 @@
 #define STKSIZ (8*sizeof(void*) - 2) 
 
 
-static void _qsort_shortsort(char *lo, char *hi, size_t width, PF_CMP_FUNC cmp_func, void *ud)
+static void _qsort_shortsort(char *lo, char *hi, size_t width, PF_CMP_FUNC cmp_func)
 {
     char *p, *max;
 
@@ -22,7 +22,7 @@ static void _qsort_shortsort(char *lo, char *hi, size_t width, PF_CMP_FUNC cmp_f
 
         
         for (p = lo+width; p <= hi; p += width) {
-            if (cmp_func(p, max, ud) > 0) {
+            if (cmp_func(p, max) > 0) {
                 max = p;
             }
         }
@@ -34,7 +34,7 @@ static void _qsort_shortsort(char *lo, char *hi, size_t width, PF_CMP_FUNC cmp_f
     }
 }
 
-void QSORT_Do(void *base, int num, int width, PF_CMP_FUNC cmp_func, void *ud)
+void QSORT_Do(void *base, int num, int width, PF_CMP_FUNC cmp_func)
 {
     char *lo, *hi;              
     char *mid;                  
@@ -61,7 +61,7 @@ recurse:
 
     
     if (size <= CUTOFF) {
-        _qsort_shortsort(lo, hi, width, cmp_func, ud);
+        _qsort_shortsort(lo, hi, width, cmp_func);
     }
     else {
         
@@ -70,13 +70,13 @@ recurse:
         mid = lo + (size / 2) * width;
 
         
-        if (cmp_func(lo, mid, ud) > 0) {
+        if (cmp_func(lo, mid) > 0) {
             MEM_Swap(lo, mid, width);
         }
-        if (cmp_func(lo, hi, ud) > 0) {
+        if (cmp_func(lo, hi) > 0) {
             MEM_Swap(lo, hi, width);
         }
-        if (cmp_func(mid, hi, ud) > 0) {
+        if (cmp_func(mid, hi) > 0) {
             MEM_Swap(mid, hi, width);
         }
 
@@ -92,14 +92,14 @@ recurse:
             if (mid > loguy) {
                 do  {
                     loguy += width;
-                } while (loguy < mid && cmp_func(loguy, mid, ud) <= 0);
+                } while (loguy < mid && cmp_func(loguy, mid) <= 0);
             }
 
             
             if (mid <= loguy) {
                 do  {
                     loguy += width;
-                } while (loguy <= hi && cmp_func(loguy, mid, ud) <= 0);
+                } while (loguy <= hi && cmp_func(loguy, mid) <= 0);
             }
  
            
@@ -107,7 +107,7 @@ recurse:
             
             do  {
                 higuy -= width;
-            } while (higuy > mid && cmp_func(higuy, mid, ud) > 0);
+            } while (higuy > mid && cmp_func(higuy, mid) > 0);
  
            
             if (higuy < loguy)
@@ -128,12 +128,12 @@ recurse:
         if (mid < higuy) {
             do  {
                 higuy -= width;
-            } while (higuy > mid && cmp_func(higuy, mid, ud) == 0);
+            } while (higuy > mid && cmp_func(higuy, mid) == 0);
         }
         if (mid >= higuy) {
             do  {
                 higuy -= width;
-            } while (higuy > lo && cmp_func(higuy, mid, ud) == 0);
+            } while (higuy > lo && cmp_func(higuy, mid) == 0);
         }
 
         

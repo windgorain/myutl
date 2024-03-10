@@ -10,6 +10,8 @@ extern "C"
 {
 #endif
 
+#define SUBCMD_FLAG_HIDE_HELP 0x1 
+
 typedef int (*PF_SUBCMD_FUNC)(int argc, char **argv);
 
 typedef struct {
@@ -19,6 +21,7 @@ typedef struct {
 }SUB_CMD_NODE_S;
 
 int SUBCMD_Do(SUB_CMD_NODE_S *subcmd, int argc, char **argv);
+int SUBCMD_DoExt(SUB_CMD_NODE_S *subcmd, int argc, char **argv, int flag);
 
 #ifdef __cplusplus
 }

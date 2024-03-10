@@ -33,8 +33,8 @@ typedef struct {
 
 IDTBL_S * IDTBL_ArrayCreate(UINT max_id);
 IDTBL_S * IDTBL_Array_Realloc_Create(IDTBL_S *old);
-IDTBL_S * IDTBL_HashCreate();
-IDTBL_S * IDTBL_AvlCreate();
+IDTBL_S * IDTBL_HashCreate(UINT bucket_num);
+IDTBL_S * IDTBL_AvlCreate(UINT max_id);
 
 static inline int IDTBL_Add(IDTBL_S *id_tbl, UINT64 id, void *data)
 {

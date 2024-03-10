@@ -67,17 +67,84 @@
 #define BIT_ONLY_LAST(a) ((a) & (-(a)))
 
 
+static inline UINT BIT_Count1(UINT u)
+{
+    u = (u & 0x55555555) + ((u >> 1) & 0x55555555);
+    u = (u & 0x33333333) + ((u >> 2) & 0x33333333);
+    u = (u & 0x0F0F0F0F) + ((u >> 4) & 0x0F0F0F0F);
+    u = (u & 0x00FF00FF) + ((u >> 8) & 0x00FF00FF);
+    u = (u & 0x0000FFFF) + ((u >> 16) & 0x0000FFFF);
+    return u;
+}
+
+
 typedef struct {
-    uint32_t off;
-    uint32_t size;
+    U32 off;
+    U32 size;
 }BIT_DESC_S;
 
-int BIT_GetLastIndex(UINT num);
-int BIT_GetFirstIndex(UINT num, UINT from );
-char * BIT_SPrint(uint32_t v, uint32_t off, uint32_t size, OUT char *buf);
-void BIT_Print(uint32_t v, uint32_t off, uint32_t size, PF_PRINT_FUNC func);
-int BIT_XSPrint(uint32_t v, BIT_DESC_S *desc, int desc_num, OUT char *buf, uint32_t buf_size);
-uint8_t BIT_ChangeOrder(uint8_t v);
+
+static inline int BIT_GetLowIndex(UINT num)
+{
+    int i;
+
+    for (i=0; i<32; i++) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+static inline int BIT_GetHighIndex(UINT num)
+{
+    int i;
+
+    for (i=31; i>=0; i--) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+static inline int BIT_GetLowIndex64(U64 num)
+{
+    int i;
+
+    for (i=0; i<64; i++) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+static inline int BIT_GetHighIndex64(U64 num)
+{
+    int i;
+
+    for (i=63; i>=0; i--) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int BIT_GetHighIndexFrom(UINT num, UINT from );
+char * BIT_SPrint(U32 v, U32 off, U32 size, OUT char *buf);
+void BIT_Print(U32 v, U32 off, U32 size, PF_PRINT_FUNC func);
+int BIT_XSPrint(U32 v, BIT_DESC_S *desc, int desc_num, OUT char *buf, U32 buf_size);
+U8 BIT_ChangeOrder(U8 v);
+UINT BIT_GetCount1(UINT u);
 
 #ifdef __cplusplus
         }

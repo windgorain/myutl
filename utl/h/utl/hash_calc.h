@@ -23,10 +23,10 @@ static inline UINT BKDRHash(UCHAR *data, int len)
     return hash;
 }
 
-static inline UINT DJBHash(UCHAR *data, int len)
+static inline UINT DJBHash(const UCHAR *data, int len)
 {
     UINT hash = 5381;
-    UCHAR *end = data + len;
+    UCHAR *end = (void*)(data + len);
 
     while(data < end) {
         hash += (hash << 5) + (*data++);

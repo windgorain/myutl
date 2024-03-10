@@ -56,7 +56,7 @@ typedef BS_STATUS (*PF_SES_SEND_PKT)(IN MBUF_S *pstMbuf, IN VOID *pUserContext);
 typedef BS_STATUS (*PF_SES_RECV_PKT)(IN UINT uiSesID, IN MBUF_S *pstMbuf);
 typedef BS_STATUS (*PF_SES_DFT_EVENT_NOTIFY)(IN UINT uiSesID, IN UINT uiEvent);
 typedef BS_STATUS (*PF_SES_EVENT_NOTIFY)(IN UINT uiSesID, IN UINT uiEvent, IN USER_HANDLE_S *pstUserHandle);
-typedef BS_WALK_RET_E (*PF_SES_WALK_FUNC)(IN UINT uiSesID, IN HANDLE hUserHandle);
+typedef int (*PF_SES_WALK_FUNC)(IN UINT uiSesID, IN HANDLE hUserHandle);
 
 typedef VOID (*PF_SES_CLOSE_NOTIFY_FUNC)(IN UINT uiSesID, IN HANDLE *phPropertys, IN USER_HANDLE_S *pstUserHandle);
 

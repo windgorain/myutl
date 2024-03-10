@@ -112,7 +112,7 @@ int X509Cert_SetPublicKey(X509 *cert, void *pkey);
 int X509Cert_Sign(X509 *cert, void *ca_key);
 char * X509Cert_GetSubjectName(X509 *pstCert, char *info, int info_size);
 void X509Cert_DelExt(X509 *cert, int nid);
-typedef BS_WALK_RET_E (*pf_X509Cert_AltNameForEachCB)(ASN1_STRING *alt_name, void *user_data);
+typedef int (*pf_X509Cert_AltNameForEachCB)(ASN1_STRING *alt_name, void *user_data);
 void X509Cert_AltNameForEach(X509 *cert, pf_X509Cert_AltNameForEachCB func, void *user_data);
 
 #ifdef __cplusplus

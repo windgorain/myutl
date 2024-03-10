@@ -23,12 +23,10 @@ enum {
 
 typedef struct {
     MAP_HANDLE loader_map;
-    UFD_S *ufd_ctx;
-
     DLL_HEAD_S hp_list[MYBPF_HP_MAX];
 }MYBPF_RUNTIME_S;
 
-int MYBPF_RuntimeInit(OUT MYBPF_RUNTIME_S *runtime, UINT ufd_capacity);
+int MYBPF_RuntimeInit(OUT MYBPF_RUNTIME_S *runtime);
 void MYBPF_RuntimeFini(OUT MYBPF_RUNTIME_S *runtime);
 BOOL_T MYBPF_RuntimeIsInited(MYBPF_RUNTIME_S *runtime);
 

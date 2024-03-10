@@ -69,7 +69,7 @@ BS_STATUS CDOMAIN_GetUserHandleFromDomain
 );
 
 
-typedef BS_WALK_RET_E (*PF_CDOMAIN_WALK_CDOMAIN_FUNC)(IN HANDLE hInstance, IN CHAR * pszDomainName, IN HANDLE hUserHandle);
+typedef int (*PF_CDOMAIN_WALK_CDOMAIN_FUNC)(IN HANDLE hInstance, IN CHAR * pszDomainName, IN HANDLE hUserHandle);
 
 
 VOID CDOMAIN_WalkDomain
@@ -146,8 +146,8 @@ BS_STATUS CDOMAIN_GetUserHandleFromUser
 
 
 
-typedef BS_WALK_RET_E (*PF_CDOMAIN_WALK_USER_IN_CDOMAIN_FUNC)
-    (IN HANDLE hInstance, IN CHAR * pszDomainName, IN CHAR *pszUserName, IN HANDLE hUserHandle);
+typedef int (*PF_CDOMAIN_WALK_USER_IN_CDOMAIN_FUNC) (HANDLE hInstance,
+        CHAR *pszDomainName, CHAR *pszUserName, HANDLE hUserHandle);
 
 
 VOID CDOMAIN_WalkUserInDomain
@@ -175,9 +175,8 @@ VOID CDOMAIN_WalkSAdminInDomain
 
 
 
-typedef BS_WALK_RET_E (*PF_CDOMAIN_WALK_GROUP_OF_USER_FUNC)
-    (IN HANDLE hInstance, IN CHAR * pszDomainName, IN CHAR *pszUserName, IN CHAR *pszUerGroupName, IN HANDLE hUserHandle);
-
+typedef int (*PF_CDOMAIN_WALK_GROUP_OF_USER_FUNC)(HANDLE hInstance, CHAR *pszDomainName,
+        CHAR *pszUserName, CHAR *pszUerGroupName, HANDLE hUserHandle);
 
 
 

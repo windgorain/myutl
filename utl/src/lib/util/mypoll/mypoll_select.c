@@ -136,7 +136,7 @@ static void _mypoll_select_SetOdd(_MYPOLL_CTRL_S *pstMyPoll, int odd)
     }
 }
 
-static BS_WALK_RET_E mypoll_select_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
+static int mypoll_select_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
 {
     _MYPOLL_SELECT_CTRL_S *pstCtrl = pstMyPoll->pProtoHandle;
     fd_set stReadFds, stWriteFds, stExecptFds;
@@ -145,10 +145,9 @@ static BS_WALK_RET_E mypoll_select_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
     int count;
     UINT uiEvent;
     MYPOLL_FDINFO_S *pstFdInfo;
-    BS_WALK_RET_E eRet = BS_WALK_STOP;
+    int ret = BS_STOP;
 
-    while (1)
-    {
+    while (1) {
         BIT_CLR(pstCtrl->pstMyPollCtrl->uiFlag, _MYPOLL_FLAG_RESTART | _MYPOLL_FLAG_PROCESSING_EVENT);
         ATOM_BARRIER();
         stReadFds = pstCtrl->socketReadFds;
@@ -167,29 +166,24 @@ static BS_WALK_RET_E mypoll_select_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
 
         BIT_SET(pstCtrl->pstMyPollCtrl->uiFlag, _MYPOLL_FLAG_PROCESSING_EVENT);
 
-        for (i=0; i<=pstCtrl->iMaxSocketId; i++)
-        {
+        for (i=0; i<=pstCtrl->iMaxSocketId; i++) {
             
             if (pstCtrl->pstMyPollCtrl->uiFlag & _MYPOLL_FLAG_RESTART) {
                 break;
             }
 
             uiEvent = 0;
-            if (FD_ISSET(i, &stReadFds))
-            {
+            if (FD_ISSET(i, &stReadFds)) {
                 uiEvent |= MYPOLL_EVENT_IN;
             }
-            if (FD_ISSET(i, &stWriteFds))
-            {
+            if (FD_ISSET(i, &stWriteFds)) {
                 uiEvent |= MYPOLL_EVENT_OUT;
             }
-            if (FD_ISSET(i, &stExecptFds))
-            {
+            if (FD_ISSET(i, &stExecptFds)) {
                 uiEvent |= MYPOLL_EVENT_ERR;
             }
 
-            if (uiEvent == 0)
-            {
+            if (uiEvent == 0) {
                 continue;
             }
 
@@ -202,14 +196,14 @@ static BS_WALK_RET_E mypoll_select_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
                 continue;
             }
 
-            eRet = pstFdInfo->pfNotifyFunc(i, uiEvent, &(pstFdInfo->stUserHandle));
-            if (BS_WALK_CONTINUE != eRet) {
-                return eRet;
+            ret = pstFdInfo->pfNotifyFunc(i, uiEvent, &(pstFdInfo->stUserHandle));
+            if (ret < 0) {
+                return ret;
             }
         }
     }
 
-    return eRet;
+    return ret;
 }
 
 static MYPOLL_PROTO_S g_stMypollSelectProto = 

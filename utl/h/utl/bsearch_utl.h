@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-void * BSEARCH_Do(void* base, int items_num, int ele_size, void *key, PF_CMP_FUNC cmp_func, void *ud);
+void * BSEARCH_Do(void* base, int items_num, int ele_size, void *key, PF_CMP_FUNC cmp_func);
 
 #ifdef __cplusplus
 }

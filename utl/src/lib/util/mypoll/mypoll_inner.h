@@ -68,7 +68,7 @@ typedef VOID (*PF_Mypoll_Proto_Del)
     IN _MYPOLL_CTRL_S *pstMyPoll,
     IN INT iSocketId
 );
-typedef BS_WALK_RET_E (*PF_Mypoll_Proto_Run)(IN _MYPOLL_CTRL_S *pstMyPoll);
+typedef int (*PF_Mypoll_Proto_Run)(IN _MYPOLL_CTRL_S *pstMyPoll);
 
 typedef struct
 {

@@ -219,23 +219,24 @@ static _CMD_EXP_PATTERN_PARSE_S g_astCmdExpParse[] =
 
 static THREAD_LOCAL void * g_cmd_exp_thread_env = NULL;
 
-typedef BS_WALK_RET_E (*PF_CMD_EXP_VIEW_WALK)(_CMD_EXP_VIEW_S *view_node, void *ud);
+typedef int (*PF_CMD_EXP_VIEW_WALK)(_CMD_EXP_VIEW_S *view_node, void *ud);
 
 static int cmdexp_WalkView(_CMD_EXP_VIEW_S *pstViewTree, PF_CMD_EXP_VIEW_WALK walk_func, void *ud)
 {
+    int ret;
     _CMD_EXP_VIEW_S *pstNode;
 
-    if (BS_WALK_STOP == walk_func(pstViewTree, ud)) {
-        return BS_WALK_STOP;
+    if ((ret = walk_func(pstViewTree, ud)) < 0) {
+        return ret;
     }
 
     DLL_SCAN(&(pstViewTree->stSubViewList), pstNode) {
-        if (BS_WALK_STOP == cmdexp_WalkView(pstNode, walk_func, ud)) {
-            return BS_WALK_STOP;
+        if ((ret = cmdexp_WalkView(pstNode, walk_func, ud)) < 0) {
+            return ret;
         }
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static _CMD_EXP_VIEW_S * cmdexp_FindViewFromViewTree(_CMD_EXP_VIEW_S *pstViewTree, char *pcViewName)
@@ -262,7 +263,7 @@ static _CMD_EXP_VIEW_S *cmdexp_FindView(CMD_EXP_S *cmdexp, CHAR *pcViewName)
     return cmdexp_FindViewFromViewTree(&cmdexp->stRootView, pcViewName);
 }
 
-static BS_WALK_RET_E cmdexp_reg_cmd_by_view_pattern(_CMD_EXP_VIEW_S *view_node, void *ud)
+static int cmdexp_reg_cmd_by_view_pattern(_CMD_EXP_VIEW_S *view_node, void *ud)
 {
     int rc;
     int ovector[3];
@@ -273,12 +274,12 @@ static BS_WALK_RET_E cmdexp_reg_cmd_by_view_pattern(_CMD_EXP_VIEW_S *view_node, 
     int view_name_len = strlen(view_name);
 
     if((rc=pcre_exec(node->pcre, NULL, (const char*)view_name, view_name_len, 0, 0, ovector, 3)) <=0) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
     cmdexp_RegCmd(cmdexp, view_name, node->cmd_param.pcCmd, &node->cmd_param, 0);
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 

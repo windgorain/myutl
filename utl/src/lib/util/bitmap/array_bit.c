@@ -60,18 +60,6 @@ INT64 ArrayBit_GetFreeAfter(UINT *data, INT64 bit_size, INT64 curr)
 }
 
 
-INT64 ArrayBit_GetBusy(UINT *data, INT64 bit_size)
-{
-    INT64 index;
-
-    ARRAYBIT_SCAN_BUSY_BEGIN(data, bit_size, index) {
-        return index;
-    }ARRAYBIT_SCAN_END();
-
-    return -1;
-}
-
-
 INT64 ArrayBit_GetBusyFrom(UINT *data, INT64 bit_size, INT64 from)
 {
     INT64 i, j;
@@ -118,7 +106,7 @@ void ArrayBit_WalkFree(UINT *data, INT64 bit_size, PF_ARRAY_BIT_WALK walk_func, 
     INT64 index;
 
     ARRAYBIT_SCAN_FREE_BEGIN(data, bit_size, index) {
-        if (BS_WALK_STOP == walk_func(index, ud)) {
+        if (walk_func(index, ud) < 0) {
             return;
         }
     }ARRAYBIT_SCAN_END();
@@ -129,7 +117,7 @@ void ArrayBit_WalkBusy(UINT *data, INT64 bit_size, PF_ARRAY_BIT_WALK walk_func, 
     INT64 index;
 
     ARRAYBIT_SCAN_BUSY_BEGIN(data, bit_size, index) {
-        if (BS_WALK_STOP == walk_func(index, ud)) {
+        if (walk_func(index, ud) < 0) {
             return;
         }
     }ARRAYBIT_SCAN_END();
@@ -160,31 +148,3 @@ UINT64 ArrayBit_GetBusyCount(UINT *data, INT64 bit_size)
 }
 
 
-void ArrayBit_And(UINT *data1, UINT *data2, int uint_count, OUT UINT *data3)
-{
-    int i;
-
-    for (i=0; i<uint_count; i++) {
-        data3[i] = data1[i] & data2[i];
-    }
-}
-
-
-void ArrayBit_Or(UINT *data1, UINT *data2, int uint_count, OUT UINT *data3)
-{
-    int i;
-
-    for (i=0; i<uint_count; i++) {
-        data3[i] = data1[i] | data2[i];
-    }
-}
-
-
-void ArrayBit_Xor(UINT *data1, UINT *data2, int uint_count, OUT UINT *data3)
-{
-    int i;
-
-    for (i=0; i<uint_count; i++) {
-        data3[i] = data1[i] ^ data2[i];
-    }
-}

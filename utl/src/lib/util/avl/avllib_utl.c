@@ -596,28 +596,28 @@ void * avlRemoveInsert (AVL_TREE * pRoot, void *pNewNode, void *key, PF_AVL_CMP_
 
 
 
-BS_WALK_RET_E avlTreeWalk(AVL_TREE * pRoot, PF_AVL_WALK_FUNC walk_func, void *ud)
+int avlTreeWalk(AVL_TREE * pRoot, PF_AVL_WALK_FUNC walk_func, void *ud)
 {
-    BS_WALK_RET_E ret;
+    int ret;
 
     if  ((NULL == pRoot) || (NULL == *pRoot)) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
     if  (!(NULL == (*pRoot)->left)) {
         ret = avlTreeWalk((AVL_TREE *)(&((*pRoot)->left)), walk_func, ud);
-        if (ret != BS_WALK_CONTINUE) {
+        if (ret < 0) {
             return ret;
         }
     }
 
     ret = walk_func(*pRoot, ud);
-    if (ret != BS_WALK_CONTINUE) {
+    if (ret < 0) {
         return ret;
     }
 
     if  (NULL == (*pRoot)->right) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
     return avlTreeWalk((AVL_TREE *)(&((*pRoot)->right)), walk_func, ud);

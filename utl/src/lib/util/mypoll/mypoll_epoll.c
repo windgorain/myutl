@@ -164,16 +164,16 @@ static void _mypoll_epoll_SetOdd(_MYPOLL_CTRL_S *pstMyPoll, struct epoll_event *
     }
 }
 
-static BS_WALK_RET_E mypoll_epoll_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
+static int mypoll_epoll_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
 {
     _MYPOLL_EPOLL_CTRL_S *pstCtrl = pstMyPoll->pProtoHandle;
     INT i;
     MYPOLL_FDINFO_S *pstFdInfo;
-    BS_WALK_RET_E eRet = BS_WALK_STOP;
     struct epoll_event events[64];
     int count;
     int fd;
     int odd;
+    int ret = BS_STOP;
 
     while (1)
     {
@@ -207,14 +207,14 @@ static BS_WALK_RET_E mypoll_epoll_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
                 continue;
             }
 
-            eRet = pstFdInfo->pfNotifyFunc(fd, events[i].events, &(pstFdInfo->stUserHandle));
-            if (BS_WALK_CONTINUE != eRet) {
-                return eRet;
+            ret = pstFdInfo->pfNotifyFunc(fd, events[i].events, &(pstFdInfo->stUserHandle));
+            if (ret < 0) {
+                return ret;
             }
         }
     }
 
-    return eRet;
+    return ret;
 }
 
 static MYPOLL_PROTO_S g_stMypollEpollProto = 

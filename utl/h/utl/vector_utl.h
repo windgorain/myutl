@@ -36,10 +36,10 @@ int VECTOR_AddBySize(VECTOR_S *vec, void *val, int val_size);
 int VECTOR_Add(VECTOR_S *vec, void *val);
 int VECTOR_AddN(VECTOR_S *vec, void *val, UINT num);
 int VECTOR_Append(VECTOR_S *vec_dst, VECTOR_S *vec_src);
-void VECTOR_Sort(VECTOR_S *vec, PF_CMP_FUNC cmp_func, void *ud);
+void VECTOR_Sort(VECTOR_S *vec, PF_CMP_FUNC cmp_func);
 void VECTOR_Remove(VECTOR_S *vec, UINT pos);
-void VECTOR_Delete(VECTOR_S *vec, void *value, PF_CMP_FUNC cmp_func, void *ud);
-int VECTOR_Find(VECTOR_S *vec, void *value, PF_CMP_FUNC cmp_func, void *ud);
+void VECTOR_Delete(VECTOR_S *vec, void *value, PF_CMP_FUNC cmp_func);
+int VECTOR_Find(VECTOR_S *vec, void *value, PF_CMP_FUNC cmp_func);
 void * VECTOR_Get(VECTOR_S *vec, int idx);
 int VECTOR_Copy(VECTOR_S *vec, int idx, OUT void *val);
 

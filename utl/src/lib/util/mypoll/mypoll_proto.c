@@ -113,10 +113,9 @@ VOID _Mypoll_Proto_Del
     pstProto->pfDel(pstMyPoll, iSocketId);
 }
 
-BS_WALK_RET_E _Mypoll_Proto_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
+int _Mypoll_Proto_Run(IN _MYPOLL_CTRL_S *pstMyPoll)
 {
     MYPOLL_PROTO_S *pstProto = pstMyPoll->pProto;
-
     return pstProto->pfRun(pstMyPoll);
 }
 

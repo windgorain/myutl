@@ -16,7 +16,7 @@
 
 typedef HANDLE USER_TREE_HANDLE;
 
-typedef BS_WALK_RET_E (*PF_UserTree_Walk_Func)(IN USER_TREE_HANDLE hUserTree, IN UINT64 uiID, IN HANDLE hUserHandle);
+typedef int (*PF_UserTree_Walk_Func)(IN USER_TREE_HANDLE hUserTree, IN UINT64 uiID, IN HANDLE hUserHandle);
 
 USER_TREE_HANDLE UserTree_Create();
 VOID UserTree_Destroy(IN USER_TREE_HANDLE hUserTree);

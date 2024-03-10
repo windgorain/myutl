@@ -218,6 +218,9 @@ int ELF_GetSecByName(ELF_S *elf, char *sec_name, OUT ELF_SECTION_S *sec)
         }
     }
 
+    sec->shname = NULL;
+    sec->data = NULL;
+
     return -1;
 }
 
@@ -488,17 +491,17 @@ void * ELF_DupProgs(ELF_S *elf)
     return mem;
 }
 
-static int _elf_prog_info_cmp(void *n1, void *n2, void *ud)
+static int _elf_prog_info_cmp(const void *n1, const void *n2)
 {
-    ELF_PROG_INFO_S *p1 = n1;
-    ELF_PROG_INFO_S *p2 = n2;
+    const ELF_PROG_INFO_S *p1 = n1;
+    const ELF_PROG_INFO_S *p2 = n2;
 
     return (int)p1->prog_offset - (int)p2->prog_offset;
 }
 
 static void _elf_sort_progs_info(ELF_PROG_INFO_S *progs, int prog_count)
 {
-    QSORT_Do(progs, prog_count, sizeof(ELF_PROG_INFO_S), _elf_prog_info_cmp, NULL);
+    QSORT_Do(progs, prog_count, sizeof(ELF_PROG_INFO_S), _elf_prog_info_cmp);
 }
 
 static int _elf_get_progs_info(ELF_S *elf, OUT ELF_PROG_INFO_S *progs, int max_prog_count)
@@ -544,17 +547,24 @@ int ELF_GetProgsInfo(ELF_S *elf, OUT ELF_PROG_INFO_S *progs, int max_prog_count)
     return count;
 }
 
-void ELF_ClearProgsInfo(ELF_PROG_INFO_S *progs, int prog_count)
+int ELF_GetSecProgsInfoCount(ELF_PROG_INFO_S *info, int prog_count, char *sec_name)
 {
-    for (int i=0; i<prog_count; i++) {
-        MEM_ExistFree(progs[i].func_name);
-        MEM_ExistFree(progs[i].sec_name);
+    int i;
+    int count = 0;
+
+    for (i=0; i<prog_count; i++) {
+        if (strcmp(info[i].sec_name, sec_name) == 0) {
+            count ++;
+        }
     }
+
+    return count;
 }
 
 int ELF_WalkProgs(ELF_S *elf, PF_ELF_WALK_PROG walk_func, void *ud)
 {
     ELF_SECTION_S sec;
+    ELF_PROG_INFO_S info = {0};
     void *iter = NULL;
     char *func_name;
     int ret = 0;
@@ -567,12 +577,18 @@ int ELF_WalkProgs(ELF_S *elf, PF_ELF_WALK_PROG walk_func, void *ud)
         }
 
         int func_count = ELF_SecSymbolCount(elf, sec.sec_id, STT_FUNC);
-        int offset = 0;
         for (i=0; i<func_count; i++) {
             func_name = ELF_GetSecSymbolName(elf, sec.sec_id, STT_FUNC, i);
             Elf64_Sym *sym = ELF_GetSecSymbol(elf, sec.sec_id, STT_FUNC, i);
-            ret = walk_func(sec.data->d_buf + sym->st_value, sec_offset + offset,
-                    sym->st_size, sec.shname, func_name, ud);
+
+            info.sec_offset = sec_offset;
+            info.prog_offset = sec_offset + sym->st_value;
+            info.size = sym->st_size;
+            info.sec_name = sec.shname;
+            info.func_name = func_name;
+            info.sec_id = sec.sec_id;
+
+            ret = walk_func(sec.data->d_buf + sym->st_value, &info, ud);
             if (ret < 0) {
                 break;
             }

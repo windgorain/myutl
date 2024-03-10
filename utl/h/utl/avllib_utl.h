@@ -29,7 +29,7 @@ typedef AVL_NODE * AVL_TREE;
 
 typedef VOID (*PF_AVL_FREE_FUNC)(IN VOID *pNode, IN VOID *pUserHandle);
 typedef int (*PF_AVL_CMP_FUNC)(IN void *key, IN void *node);
-typedef BS_WALK_RET_E (*PF_AVL_WALK_FUNC)(void *node, void *ud);
+typedef int (*PF_AVL_WALK_FUNC)(void *node, void *ud);
 typedef void (*PF_AVL_PRINT_FUNC)(void *nodep);
 
 
@@ -54,7 +54,7 @@ void * avlRemoveInsert (AVL_TREE * pRoot, void *pNewNode, void *key, PF_AVL_CMP_
 
 void * avlDelete(AVL_TREE *root, void *key, PF_AVL_CMP_FUNC cmp_func);
 
-BS_WALK_RET_E avlTreeWalk(AVL_TREE *pRoot, PF_AVL_WALK_FUNC walk_func, void *ud);
+int avlTreeWalk(AVL_TREE *pRoot, PF_AVL_WALK_FUNC walk_func, void *ud);
 
 BS_STATUS avlTreePrint(AVL_TREE * pRoot, PF_AVL_PRINT_FUNC print_func);
 

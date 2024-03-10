@@ -14,13 +14,18 @@ extern "C"
 #endif
 
 typedef struct {
+    U64 p[5];
+}MYBPF_PARAM_S;
+
+typedef struct {
     int tail_call_index;
     PF_PRINT_FUNC print_func;
 }MYBPF_VM_S;
 
 typedef struct {
     uint64_t bpf_ret;
-    void *start_addr; 
+    void *begin_addr; 
+    void *end_addr; 
     void *mybpf_prog; 
     void *insts; 
     void *mem;        
@@ -34,13 +39,12 @@ typedef struct {
 
 int MYBPF_SetTailCallIndex(MYBPF_VM_S *vm, unsigned int idx);
 BOOL_T MYBPF_Validate(MYBPF_VM_S *vm, void *insn, UINT num_insts);
-int MYBPF_Run(MYBPF_VM_S *vm, MYBPF_CTX_S *ctx, UINT64 p1, UINT64 p2, UINT64 p3, UINT64 p4, UINT64 p5);
-int MYBPF_RunP3(MYBPF_VM_S *vm, MYBPF_CTX_S *ctx, UINT64 p1, UINT64 p2, UINT64 p3);
+int MYBPF_Run(MYBPF_VM_S *vm, MYBPF_CTX_S *ctx, MYBPF_PARAM_S *p);
 
 
-int MYBPF_DefultRun(MYBPF_CTX_S *ctx, U64 r1, U64 r2, U64 r3, U64 r4, U64 r5);
+int MYBPF_DefultRun(MYBPF_CTX_S *ctx, MYBPF_PARAM_S *p);
 
-int MYBPF_DefultRunCode(void *code, OUT UINT64 *bpf_ret, U64 r1, U64 r2, U64 r3, U64 r4, U64 r5);
+int MYBPF_DefultRunCode(void *begin_addr, void *end_addr, void *entry, OUT UINT64 *bpf_ret, MYBPF_PARAM_S *p);
 
 #ifdef __cplusplus
 }

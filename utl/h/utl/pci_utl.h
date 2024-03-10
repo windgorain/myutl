@@ -175,7 +175,7 @@ void PCIE_ChangeTlpOrder(INOUT void *tlp);
 static inline UINT PCIE_FirstBe2LowAddr(UINT addr, UCHAR first_be)
 {
     UINT low_addr = addr & 0x7f;
-    low_addr += BIT_GetLastIndex(first_be);
+    low_addr += BIT_GetLowIndex(first_be);
     return low_addr;
 }
 

@@ -9,11 +9,6 @@
 #include "utl/time_utl.h"
 #include "utl/rand_utl.h"
 
-UINT RAND_Get(void)
-{
-    return rand();
-}
-
 UINT RAND_GetNonZero(void)
 {
     UINT uiRand;
@@ -72,7 +67,7 @@ unsigned long RAND_GetRandom(void)
 
 static void rand_init(void)
 {
-    srand(time(NULL));
+    RAND_Init();
 }
 
 CONSTRUCTOR(init) {

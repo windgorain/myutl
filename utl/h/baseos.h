@@ -8,8 +8,6 @@
 #ifndef __BASEOS_H_
 #define __BASEOS_H_
 
-#include "os_def.h"
-
 #ifdef __cplusplus
     extern "C" {
 #endif 
@@ -114,6 +112,7 @@
 #define likely(x)	__builtin_expect((x),1)
 #define unlikely(x)	__builtin_expect((x),0)
 #endif
+
 
 #ifdef __cplusplus
     }

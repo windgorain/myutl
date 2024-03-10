@@ -45,8 +45,8 @@ typedef struct
     USHORT usPort;      
 }DC_MYSQL_PARAM_S;
 
-typedef BS_WALK_RET_E (*PF_DC_WALK_TBL_CB_FUNC)(IN CHAR *pszTblName, IN HANDLE hUserHandle);
-typedef BS_WALK_RET_E (*PF_DC_WALK_OBJECT_CB_FUNC)(IN DC_DATA_S *pstKey, IN HANDLE hUserHandle);
+typedef int (*PF_DC_WALK_TBL_CB_FUNC)(IN CHAR *pszTblName, IN HANDLE hUserHandle);
+typedef int (*PF_DC_WALK_OBJECT_CB_FUNC)(IN DC_DATA_S *pstKey, IN HANDLE hUserHandle);
 
 HANDLE       DC_OpenInstance(IN DC_TYPE_E eDcType, IN VOID *pParam);
 VOID        DC_CloseInstance(IN HANDLE hDcHandle);

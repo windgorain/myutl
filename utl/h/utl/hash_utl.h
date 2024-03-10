@@ -22,7 +22,7 @@ typedef struct
 
 typedef UINT (*PF_HASH_INDEX_FUNC)(IN VOID *pstHashNode); 
 typedef INT  (*PF_HASH_CMP_FUNC)(IN VOID * pstHashNode, IN VOID * pstNodeToFind);
-typedef BS_WALK_RET_E (*PF_HASH_WALK_FUNC)(IN HASH_HANDLE hHashId, IN VOID *pstNode, IN VOID * pUserHandle);
+typedef int (*PF_HASH_WALK_FUNC)(IN HASH_HANDLE hHashId, IN VOID *pstNode, IN VOID * pUserHandle);
 typedef VOID  (*PF_HASH_FREE_FUNC)(IN HASH_HANDLE hHashId, IN VOID *pstHashNode, IN VOID * pUserHandle);
 
 HASH_HANDLE HASH_CreateInstance(void *memcap, IN UINT ulHashBucketNum, IN PF_HASH_INDEX_FUNC pfFunc);

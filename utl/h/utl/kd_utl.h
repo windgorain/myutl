@@ -22,7 +22,7 @@ typedef struct
     LSTR_S stData;
 }KD_S;
 
-typedef BS_WALK_RET_E (*PF_KD_WALK_FUNC)(IN KD_S *pstKeyData, IN HANDLE hUserHandle);
+typedef int (*PF_KD_WALK_FUNC)(IN KD_S *pstKeyData, IN HANDLE hUserHandle);
 
 KD_HANDLE KD_Create();
 VOID KD_Destory(IN KD_HANDLE hKDHandle);

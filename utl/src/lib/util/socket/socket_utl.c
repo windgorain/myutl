@@ -63,16 +63,11 @@ INT Socket_Read(IN INT iSocketId, OUT void *buf, IN UINT uiBufLen, IN UINT uiFla
 
     iReadLen = recv(iSocketId, buf, (INT)uiBufLen, (INT)uiFlag);
 
-    if (iReadLen == 0)
-    {
+    if (iReadLen == 0) {
         iRet = 0;
-    }
-    else if (iReadLen < 0)
-    {
+    } else if (iReadLen < 0) {
         iRet = socket_GetLastErrno();
-    }
-    else
-    {
+    } else {
         iRet = iReadLen;
     }
 
@@ -80,14 +75,7 @@ INT Socket_Read(IN INT iSocketId, OUT void *buf, IN UINT uiBufLen, IN UINT uiFla
 }
 
 
-BS_STATUS Socket_Read2
-(
-	IN INT iSocketId,
-	OUT void *buf,
-	IN UINT uiLen,
-	OUT UINT *puiReadLen,
-	IN UINT ulFlag
-)
+BS_STATUS Socket_Read2(int iSocketId, OUT void *buf, UINT uiLen, OUT UINT *puiReadLen, UINT ulFlag)
 {
     INT iLen;
     BS_STATUS eRet = BS_ERR;
@@ -96,19 +84,13 @@ BS_STATUS Socket_Read2
 
     iLen = Socket_Read(iSocketId, buf, uiLen, ulFlag);
 
-	if (iLen > 0)
-	{
+	if (iLen > 0) {
         eRet = BS_OK;
 		*puiReadLen = iLen;
-	}
-    else
-    {
-        if (iLen == 0)
-        {
+	} else {
+        if (iLen == 0) {
             eRet = BS_PEER_CLOSED;
-        }
-        else if (iLen == SOCKET_E_AGAIN)
-        {
+        } else if (iLen == SOCKET_E_AGAIN) {
             eRet = BS_OK;
         }
     }
@@ -161,6 +143,23 @@ INT Socket_Write(IN INT iSocketId, IN VOID *data, IN UINT ulLen, IN UINT ulFlag)
     return iRet;
 }
 
+
+int Socket_Write2(int fd, void *data, U32 len, U32 flag)
+{
+    int ret;
+    
+    ret = Socket_Write(fd, data, len, flag);
+    if (ret > 0) {
+        return ret;
+    }
+
+    if (ret == SOCKET_E_AGAIN) {
+        return 0;
+    }
+
+    return ret;
+}
+
 int Socket_WriteString(int fd, char *buf, unsigned int flag)
 {
     return Socket_Write(fd, buf, strlen(buf), flag);
@@ -174,8 +173,7 @@ BS_STATUS Socket_WriteUntilFinish(IN INT iSocketId, IN UCHAR *pucBuf, IN UINT ul
     while (uiSendLen < ulLen)
     {
         iLen = Socket_Write(iSocketId, pucBuf + uiSendLen, ulLen - uiSendLen, ulFlag);
-        if (iLen <= 0)
-        {
+        if (iLen <= 0) {
             RETURN(BS_ERR);
         }
         uiSendLen += (UINT)iLen;
@@ -204,6 +202,19 @@ int Socket_Connect(IN INT iSocketID, IN UINT ulIp, IN USHORT usPort)
     }
 
     return BS_OK;
+}
+
+
+int Socket_Connect2(int fd, UINT ulIp, USHORT usPort)
+{
+    int ret;
+    
+    ret = Socket_Connect(fd, ulIp, usPort);
+    if (ret == SOCKET_E_AGAIN) {
+        return 0;
+    }
+
+    return ret;
 }
 
 int Socket_ConnectUnixSocket(int fd, char *path)
@@ -265,52 +276,38 @@ BOOL_T Socket_IsIPv4(IN CHAR *pcIpOrName)
     CHAR *pcSplit;
     UINT ulLen, i, j;
 
-    for (j=0; j<4; j++)
-    {
+    for (j=0; j<4; j++) {
         
-        if (j < 3)
-        {
+        if (j < 3) {
             pcSplit = strchr(pcTmp, '.');
-            if (pcSplit == NULL)
-            {
+            if (pcSplit == NULL) {
                 return FALSE;
             }
-        }
-        else
-        {
+        } else {
             pcSplit = pcTmp + strlen(pcTmp);
         }
         
         ulLen = (UINT)(pcSplit - pcTmp);
-        if (ulLen > 3)      
-        {
+        if (ulLen > 3) {     
             return FALSE;
         }
-        for (i=0; i<ulLen; i++)     
-        {
-            if (!NUM_IN_RANGE((INT)pcTmp[i], (INT)'0', (INT)'9'))
-            {
+        for (i=0; i<ulLen; i++) {     
+            if (!NUM_IN_RANGE((INT)pcTmp[i], (INT)'0', (INT)'9')) {
                 return FALSE;
             }
         }
-        if (ulLen == 3)     
-        {
-            if (pcTmp[0] > '2')
-            {
+        if (ulLen == 3) {    
+            if (pcTmp[0] > '2') {
                 return FALSE;
             }
 
-            if (pcTmp[0] == '2')
-            {
-                if (pcTmp[1] > '5')
-                {
+            if (pcTmp[0] == '2') {
+                if (pcTmp[1] > '5') {
                     return FALSE;
                 }
 
-                if (pcTmp[1] == '5')
-                {
-                    if (pcTmp[2] > '5')
-                    {
+                if (pcTmp[1] == '5') {
+                    if (pcTmp[2] > '5') {
                         return FALSE;
                     }
                 }

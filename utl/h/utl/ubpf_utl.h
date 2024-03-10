@@ -6,8 +6,6 @@
 #ifndef _UBPF_UTL_H
 #define _UBPF_UTL_H
 
-#include "pcap.h"
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -23,15 +21,15 @@ typedef struct {
 
 
 
-int UBPF_S2c(int linktype, char *cbpf_string, OUT struct bpf_program *bpf_prog);
+int UBPF_S2c(int linktype, char *cbpf_string, OUT void *bpf_prog);
 
 UBPF_VM_HANDLE UBPF_S2e(int linktype, char *cbpf_string);
 int UBPF_S2j(int linktype, char *cbpf_string, OUT UBPF_JIT_S *jit);
 
 
-UBPF_VM_HANDLE UBPF_C2e(struct bpf_program *bpf_prog);
+UBPF_VM_HANDLE UBPF_C2e(void *bpf_prog);
 
-ubpf_jit_fn UBPF_C2j(struct bpf_program *bpf_prog, OUT UBPF_JIT_S *jit);
+ubpf_jit_fn UBPF_C2j(void *bpf_prog, OUT UBPF_JIT_S *jit);
 
 
 ubpf_jit_fn UBPF_E2j(UBPF_VM_HANDLE vm);

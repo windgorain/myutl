@@ -62,12 +62,13 @@ typedef struct {
     UINT bucket_num; 
 }MAP_PARAM_S;
 
-typedef BS_WALK_RET_E (*PF_MAP_WALK_FUNC)(IN MAP_ELE_S *pstEle, IN VOID *pUserHandle);
+typedef int (*PF_MAP_WALK_FUNC)(IN MAP_ELE_S *pstEle, IN VOID *pUserHandle);
 typedef void (*PF_MAP_FREE_FUNC)(void *data, void *ud);
 
 typedef void (*PF_MAP_Destroy)(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 typedef void (*PF_MAP_Reset)(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 typedef int (*PF_MAP_Add_Node)(MAP_HANDLE map, void *pKey, UINT uiKeyLen, void *pData, void *node, UINT flag);
+typedef void * (*PF_MAP_Del_Node)(MAP_HANDLE map, void *node);
 typedef int (*PF_MAP_Add)(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 typedef MAP_ELE_S* (*PF_MAP_GetEle)(MAP_HANDLE map, void *key, UINT key_len);
 typedef void* (*PF_MAP_Get)(MAP_HANDLE map, void *pKey, UINT uiKeyLen);
@@ -82,6 +83,7 @@ typedef struct {
     PF_MAP_Destroy destroy_func;
     PF_MAP_Reset reset_func;
     PF_MAP_Add_Node add_node_func;
+    PF_MAP_Del_Node del_node_func;
     PF_MAP_Add add_func;
     PF_MAP_GetEle get_ele_func;
     PF_MAP_Get get_func;
@@ -110,74 +112,96 @@ MAP_HANDLE MAP_RBTreeCreate(void *memcap );
 
 MAP_HANDLE MAP_ListCreate(void *memcap );
 
-static inline void * MAP_GetMemcap(MAP_HANDLE map) {
+static inline void * MAP_GetMemcap(MAP_HANDLE map)
+{
     return map->memcap;
 }
 
-static inline void MAP_Destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud) {
+static inline void MAP_Destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud)
+{
     map->funcs->destroy_func(map, free_func, ud);
 }
 
-static inline void MAP_Reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud) {
+static inline void MAP_Reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud)
+{
     map->funcs->reset_func(map, free_func, ud);
 }
 
-static inline void MAP_SetCapacity(MAP_HANDLE map, UINT capacity) {
+static inline void MAP_SetCapacity(MAP_HANDLE map, UINT capacity)
+{
     map->uiCapacity = capacity;
 }
 
-static inline UINT MAP_GetCapacity(MAP_HANDLE map) {
+static inline UINT MAP_GetCapacity(MAP_HANDLE map)
+{
     return map->uiCapacity;
 }
 
 
-static inline int MAP_Add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag) {
+static inline int MAP_Add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag)
+{
     return map->funcs->add_func(map, pKey, uiKeyLen, pData, flag);
 }
 
 
 static inline int MAP_AddNode(MAP_HANDLE map, void *pKey, UINT uiKeyLen,
-        void *pData, MAP_LINK_NODE_S *link_node, UINT flag) {
+        void *pData, MAP_LINK_NODE_S *link_node, UINT flag)
+{
     return map->funcs->add_node_func(map, pKey, uiKeyLen, pData, link_node, flag);
 }
 
-static inline MAP_ELE_S * MAP_GetEle(MAP_HANDLE map, void *key, UINT key_len) {
+
+static inline void * MAP_DelNode(MAP_HANDLE map, MAP_LINK_NODE_S *link_node)
+{
+    return map->funcs->del_node_func(map, link_node);
+}
+
+static inline MAP_ELE_S * MAP_GetEle(MAP_HANDLE map, void *key, UINT key_len)
+{
     return map->funcs->get_ele_func(map, key, key_len);
 }
 
-static inline BOOL_T MAP_IsExist(MAP_HANDLE map, void *key, UINT key_len) {
+static inline BOOL_T MAP_IsExist(MAP_HANDLE map, void *key, UINT key_len)
+{
     if (MAP_GetEle(map, key, key_len)) {
         return TRUE;
     }
     return FALSE;
 }
 
-static inline void * MAP_Get(MAP_HANDLE map, void *pKey, UINT uiKeyLen) {
+static inline void * MAP_Get(MAP_HANDLE map, void *pKey, UINT uiKeyLen)
+{
     return map->funcs->get_func(map, pKey, uiKeyLen);
 }
 
 
-static inline void * MAP_Del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen) {
+static inline void * MAP_Del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
+{
     return map->funcs->del_func(map, pKey, uiKeyLen);
 }
 
-static inline void * MAP_DelByEle(IN MAP_HANDLE map, IN MAP_ELE_S *ele) {
+static inline void * MAP_DelByEle(IN MAP_HANDLE map, IN MAP_ELE_S *ele)
+{
     return map->funcs->del_by_ele_func(map, ele);
 }
 
-static inline void MAP_DelAll(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData) {
+static inline void MAP_DelAll(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData)
+{
     map->funcs->del_all_func(map, func, pUserData);
 }
 
-static inline UINT MAP_Count(MAP_HANDLE map) {
+static inline UINT MAP_Count(MAP_HANDLE map)
+{
     return map->funcs->count_func(map);
 }
 
-static inline void MAP_Walk(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, IN VOID *pUserData) {
+static inline void MAP_Walk(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, IN VOID *pUserData)
+{
     map->funcs->walk_func(map, pfWalkFunc, pUserData);
 }
  
-static inline MAP_ELE_S * MAP_GetNextEle(MAP_HANDLE map, MAP_ELE_S *pstCurrent) {
+static inline MAP_ELE_S * MAP_GetNextEle(MAP_HANDLE map, MAP_ELE_S *pstCurrent)
+{
     return map->funcs->getnext_func(map, pstCurrent);
 }
 

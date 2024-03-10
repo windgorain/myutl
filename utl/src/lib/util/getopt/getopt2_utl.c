@@ -14,6 +14,7 @@
 #include "utl/num_list.h"
 #include "utl/getopt2_utl.h"
 #include "utl/socket_utl.h"
+#include "utl/ip_protocol.h"
 
 typedef int (*PF_GETOPT2_PARSE_VALUE)(GETOPT2_NODE_S *pstNode, CHAR *pcValue);
 
@@ -122,6 +123,13 @@ static int getopt2_parse_value_ipv4_prefix(GETOPT2_NODE_S *pstNode, CHAR *pcValu
 }
 
 
+static int getopt2_parse_value_ipv4_port(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
+{
+    IP_PORT_S *p = pstNode->value;
+    return IPString_ParseIpPort(pcValue, p);
+}
+
+
 static int getopt2_parse_value_range(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
 {
     LSTR_S lstr;
@@ -149,15 +157,32 @@ static int getopt2_parse_value_mac(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
     return 0;
 }
 
+static int getopt2_parse_value_ip_protocol(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
+{
+    int *protocol = pstNode->value;
+    int ret;
+
+    ret = IPProtocol_GetByName(pcValue);
+    if (ret < 0) {
+        return BS_BAD_PARA;
+    }
+
+    *protocol = ret;
+
+    return 0;
+}
+
 static GETOPT2_VALUE_TYPE_S g_getopt2_value_types[] = {
-    {.value_type = 's', .value_type_help="String", .func = getopt2_parse_value_string},
-    {.value_type = 'u', .value_type_help="U32", .func = getopt2_parse_value_u32},
-    {.value_type = 'b', .value_type_help="Bool", .func = getopt2_parse_value_bool},
-    {.value_type = 'r', .value_type_help="Range", .func = getopt2_parse_value_range},
-    {.value_type = 'm', .value_type_help="MAC", .func = getopt2_parse_value_mac},
-    {.value_type = '4', .value_type_help="IPv4", .func = getopt2_parse_value_ipv4},
-    {.value_type = '6', .value_type_help="IPv6", .func = getopt2_parse_value_ipv6},
+    {.value_type = GETOPT2_V_STRING, .value_type_help="String", .func = getopt2_parse_value_string},
+    {.value_type = GETOPT2_V_U32, .value_type_help="U32", .func = getopt2_parse_value_u32},
+    {.value_type = GETOPT2_V_BOOL, .value_type_help="Bool", .func = getopt2_parse_value_bool},
+    {.value_type = GETOPT2_V_RANGE, .value_type_help="Range", .func = getopt2_parse_value_range},
+    {.value_type = GETOPT2_V_MAC, .value_type_help="MAC", .func = getopt2_parse_value_mac},
+    {.value_type = GETOPT2_V_IP, .value_type_help="IPv4", .func = getopt2_parse_value_ipv4},
+    {.value_type = GETOPT2_V_IP6, .value_type_help="IPv6", .func = getopt2_parse_value_ipv6},
     {.value_type = GETOPT2_V_IP_PREFIX, .value_type_help="IP/Prefix", .func = getopt2_parse_value_ipv4_prefix},
+    {.value_type = GETOPT2_V_IP_PORT, .value_type_help="IP:Port", .func = getopt2_parse_value_ipv4_port},
+    {.value_type = GETOPT2_V_IP_PROTOCOL, .value_type_help="IPProtocol", .func = getopt2_parse_value_ip_protocol},
 };
 
 static GETOPT2_VALUE_TYPE_S * getopt2_find_value_type(int value_type)
@@ -388,6 +413,9 @@ int GETOPT2_ParseFromArgv0(UINT uiArgc, CHAR **ppcArgv, INOUT GETOPT2_NODE_S *op
 
     GETOPT2_NODE_S *err_node = GETOPT2_IsMustErr(opts);
     if (err_node) {
+        if (err_node->opt_type == 'P') {
+            RETURNI(BS_NOT_COMPLETE, "Require param %s", err_node->opt_long_name);
+        }
         if (err_node->opt_short_name) {
             RETURNI(BS_NOT_COMPLETE, "Require option \'-%c\'", err_node->opt_short_name);
         }
@@ -473,6 +501,8 @@ static void getopt2_build_opt_one(GETOPT2_NODE_S *node, OUT char *buf, int buf_s
 
     if (node->opt_short_name) {
         len += snprintf(buf+len, buf_size-len, "-%c ", node->opt_short_name);
+    } else {
+        len += snprintf(buf+len, buf_size-len, "   ");
     }
 
     if (node->opt_long_name) {
@@ -497,6 +527,10 @@ static int getopt2_build_opt_help(GETOPT2_NODE_S *nodes, OUT char *buf, int buf_
 
     for (node=nodes; node->opt_type!=0; node++) {
         if (! getopt2_is_opt_type(node->opt_type)) {
+            continue;
+        }
+
+        if (node->flag & GETOPT2_FLAG_HIDE) {
             continue;
         }
 

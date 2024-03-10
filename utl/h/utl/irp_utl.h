@@ -38,8 +38,8 @@ typedef struct {
     char *sport_pool;
     char *dport_pool;
 
-    IP_MAKS_S sip;
-    IP_MAKS_S dip;
+    IP_MASK_S sip;
+    IP_MASK_S dip;
     USHORT sport;
     USHORT dport;
 

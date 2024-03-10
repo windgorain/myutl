@@ -21,7 +21,7 @@ static inline UINT _csum_get_16b_sum(USHORT * data, int len)
     }
 
     if (len) {
-        checksum += *(uint8_t*)data;
+        checksum += *((unsigned char*)(void*)data);
     }
 
     return checksum;

@@ -11,13 +11,13 @@ extern "C"
 #endif
 
 typedef struct {
-    int sec_id;
+    int sec_id;        
     int map_def_size;
     int map_count;
     void *maps;
 }MYBPF_MAPS_SEC_S;
 
-typedef struct ebpf_inst {
+typedef struct {
 	UCHAR opcode;		
 	UCHAR dst_reg:4;	
 	UCHAR src_reg:4;	

@@ -20,7 +20,7 @@ typedef HANDLE TASK_WORKER_HANDLE;
 
 typedef VOID (*PF_TASK_WORKER_FUNC)(void *ud);
 
-TASK_WORKER_HANDLE TASK_Worker_Create(IN UINT uiWorkerNum, IN UINT uiTime);
+TASK_WORKER_HANDLE TASK_Worker_Create(char *name_prefix, UINT worker_num, UINT time);
 BS_STATUS TASK_Worker_SetEvent
 (
     IN TASK_WORKER_HANDLE hTaskWorker,

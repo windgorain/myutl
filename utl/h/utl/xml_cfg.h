@@ -130,8 +130,8 @@ CHAR * XMLC_GetKeyValueInMark(IN MKV_MARK_S *pstMark, IN CHAR *pcKey);
 	}while (0)
 
 
-typedef BS_WALK_RET_E (*PF_SXMLC_SEC_WALK_FUNC)(IN HANDLE hIniHandle, IN CHAR *pszSecName, IN HANDLE hUsrHandle);
-typedef BS_WALK_RET_E (*PF_SXMLC_KEY_WALK_FUNC)(IN HANDLE hIniHandle, IN CHAR *pszSecName, IN CHAR *pszKeyName, IN HANDLE hUsrHandle);
+typedef int (*PF_SXMLC_SEC_WALK_FUNC)(HANDLE hIniHandle, CHAR *pszSecName, HANDLE hUsrHandle);
+typedef int (*PF_SXMLC_KEY_WALK_FUNC)(HANDLE hIniHandle, CHAR *pszSecName, CHAR *pszKeyName, HANDLE hUsrHandle);
 
 extern HANDLE SXMLC_Open
 (

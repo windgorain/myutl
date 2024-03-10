@@ -16,9 +16,9 @@ extern "C"
 #define PCIE_TAG_MAX 256
 
 typedef struct {
-    int used:1;
-    int reserved1: 7;
-    int tag:8;
+    unsigned int used:1;
+    unsigned int reserved1: 7;
+    unsigned int tag:8;
     SEM_HANDLE sem;
     PCIE_TLP_S tlp;
 }PCIE_TAG_NODE_S;

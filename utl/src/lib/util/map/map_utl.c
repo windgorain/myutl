@@ -21,6 +21,7 @@ typedef struct
 static void map_hash_destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 static void map_hash_reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 static int map_hash_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, void *node, UINT flag);
+static void * map_hash_del_node(MAP_HANDLE map, void *node);
 static int map_hash_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 static MAP_ELE_S * map_hash_get_ele(MAP_HANDLE map, void *key, UINT key_len);
 static void * map_hash_get(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
@@ -35,6 +36,7 @@ static MAP_FUNC_S g_map_hash_funcs = {
     .destroy_func = map_hash_destroy,
     .reset_func = map_hash_reset,
     .add_node_func = map_hash_add_node,
+    .del_node_func = map_hash_del_node,
     .add_func = map_hash_add,
     .get_ele_func = map_hash_get_ele,
     .get_func = map_hash_get,
@@ -90,7 +92,7 @@ static MAP_HASH_NODE_S * _map_hash_find(IN MAP_CTRL_S *map, IN VOID *pKey, IN UI
     return HASH_Find(hash_map->hHash, _map_hash_cmp, &stNode);
 }
 
-static BS_WALK_RET_E _map_hash_walk(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUserHandle)
+static int _map_hash_walk(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUserHandle)
 {
     USER_HANDLE_S *pstUserHandle = pUserHandle;
     PF_MAP_WALK_FUNC pfWalkFunc = pstUserHandle->ahUserHandle[0];
@@ -133,24 +135,23 @@ static int _map_hash_getnext_cmp(IN MAP_ELE_S *pstNode, IN MAP_ELE_S *current)
     return iCmpRet;
 }
 
-static BS_WALK_RET_E _map_hash_getnext_each(IN MAP_ELE_S *pstEle, IN HANDLE hUserHandle)
+static int _map_hash_getnext_each(IN MAP_ELE_S *pstEle, IN HANDLE hUserHandle)
 {
     USER_HANDLE_S *pstUserHandle = hUserHandle;
     MAP_ELE_S *pstEleCurrent = pstUserHandle->ahUserHandle[0];
     MAP_ELE_S *pstEleNext = pstUserHandle->ahUserHandle[1];
 
     if ((pstEleCurrent != NULL) && (_map_hash_getnext_cmp(pstEle, pstEleCurrent) <= 0)) {
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
-    if ((pstEleNext != NULL) && (_map_hash_getnext_cmp(pstEle, pstEleNext) >= 0))
-    {
-        return BS_WALK_CONTINUE;
+    if ((pstEleNext != NULL) && (_map_hash_getnext_cmp(pstEle, pstEleNext) >= 0)) {
+        return 0;
     }
 
     pstUserHandle->ahUserHandle[1] = pstEle;
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 
@@ -326,6 +327,13 @@ static void * map_hash_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
         return NULL;
     }
 
+    return _map_hash_del_node(map, pstNode);
+}
+
+
+static void * map_hash_del_node(MAP_HANDLE map, void *node)
+{
+    MAP_HASH_NODE_S *pstNode = node;
     return _map_hash_del_node(map, pstNode);
 }
 

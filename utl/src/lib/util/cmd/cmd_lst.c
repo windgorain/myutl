@@ -170,7 +170,7 @@ BS_STATUS CMDLST_ScanByFile(CMDLST_S *ctrl, char *filename)
         RETURN(BS_CAN_NOT_OPEN);
     }
 
-    CMDLST_Scan(ctrl, (char*)filemap->pucFileData);
+    CMDLST_Scan(ctrl, (char*)filemap->data);
 
     FILE_MemFree(filemap);
 

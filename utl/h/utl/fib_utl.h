@@ -37,7 +37,7 @@ typedef struct
     UINT uiFlag;
 }FIB_NODE_S;
 
-typedef BS_WALK_RET_E (*PF_FIB_WALK_FUNC)(IN FIB_NODE_S *pstFibNode, IN HANDLE hUserHandle);
+typedef int (*PF_FIB_WALK_FUNC)(IN FIB_NODE_S *pstFibNode, IN HANDLE hUserHandle);
 
 #define FIB_INSTANCE_FLAG_CREATE_LOCK 0x1
 

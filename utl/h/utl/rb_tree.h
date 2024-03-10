@@ -27,7 +27,7 @@ typedef struct rb_root{
 }RB_TREE_CTRL_S;
 
 typedef int (*PF_RBTREE_CMP)(void *key, RB_TREE_NODE_S *node);
-typedef BS_WALK_RET_E (*PF_RBTREE_WALK)(RB_TREE_NODE_S *node, void *ud);
+typedef int (*PF_RBTREE_WALK)(RB_TREE_NODE_S *node, void *ud);
 typedef void (*PF_RBTREE_FREE)(RB_TREE_NODE_S *node, void *ud);
 
 void RBTree_Init(IN RB_TREE_CTRL_S *root);

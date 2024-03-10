@@ -20,7 +20,7 @@ typedef enum{
     CALLER_RET_MAX
 }CALLER_RET_E;
 
-typedef CALLER_RET_E (*PF_CALLER_FUNC)();
+typedef CALLER_RET_E (*PF_CALLER_FUNC)(void *ud);
 
 
 HANDLE Caller_Create();

@@ -14,8 +14,7 @@
 
 typedef HANDLE ORG_TREE_HANDLE;
 
-typedef BS_WALK_RET_E (*PF_OrgTree_Walk_Func)(IN ORG_TREE_HANDLE hUserTree, IN UINT64 uiID, IN HANDLE hUserHandle);
-
+typedef int (*PF_OrgTree_Walk_Func)(IN ORG_TREE_HANDLE hUserTree, IN UINT64 uiID, IN HANDLE hUserHandle);
 
 VOID OrgTree_Destroy(IN ORG_TREE_HANDLE hOrgTree);
 

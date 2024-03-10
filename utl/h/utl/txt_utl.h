@@ -27,7 +27,7 @@
 
 #define TXT_BLANK_CHARS " \t\r\n"
 
-#define TXT_SL(_x)  (_x), (sizeof(_x)-1)
+#define TXT_SL(_x)  (sizeof(_x)-1)
 
 
 #define TXT_IS_LINE_LAST_CHAR(ucChar) ((ucChar) == '\n')
@@ -55,6 +55,8 @@
         va_end(args);           \
         print_func(__msg, user_data);                 \
     }while(0)
+
+#define TXT_STRNCMP(_str1, _str2) strncmp((_str1), (_str2), TXT_SL(_str2))
 
 extern BS_STATUS TXT_Lower(INOUT CHAR *pucTxtBuf);
 
@@ -126,6 +128,8 @@ extern VOID TXT_ReplaceSubStrOnce
     IN ULONG ulOutSize
 );
 
+extern void TXT_N2RN(char *in, char *out, int out_size);
+
 extern char * TXT_CompressLine(INOUT char * pcString);
 
 extern CHAR * TXT_StrimHead(IN CHAR *pcData, IN ULONG ulDataLen, IN CHAR *pcSkipChars);
@@ -158,6 +162,8 @@ extern CHAR * TXT_FindOneOf(IN CHAR *pszStr, IN CHAR *pszPattern);
 extern BOOL_T TXT_IsInRange(IN CHAR cCh, IN UCHAR *pszStringRange, IN UINT ulLen);
 
 extern UINT TXT_StrToToken(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[], IN UINT uiMaxArgz);
+
+extern UINT TXT_StrToToken2(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[], IN UINT uiMaxArgz);
 
 extern UINT TXT_GetTokenNum(IN CHAR *pszStr, IN CHAR *pszPatterns);
 

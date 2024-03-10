@@ -36,6 +36,23 @@ static int _vbuf_resize_up(VBUF_S *pstVBuf, ULONG len)
     return _vbuf_resize_up_to(pstVBuf, pstVBuf->ulTotleLen + len);
 }
 
+static int _vbuf_pre_cat(IN VBUF_S *pstVBuf, IN ULONG ulLen)
+{
+    ULONG ulTailLen;
+
+    ulTailLen = (pstVBuf->ulTotleLen - pstVBuf->ulOffset) - pstVBuf->ulUsedLen;
+
+    if (ulTailLen >= ulLen) {
+        return 0;
+    }
+
+    if (pstVBuf->ulUsedLen + ulLen <= pstVBuf->ulTotleLen) {
+        return VBUF_MoveData(pstVBuf, 0);
+    }
+
+    return _vbuf_resize_up_to(pstVBuf, pstVBuf->ulUsedLen + ulLen);
+}
+
 VOID VBUF_Init(OUT VBUF_S *pstVBuf)
 {
     Mem_Zero(pstVBuf, sizeof(VBUF_S));
@@ -43,10 +60,7 @@ VOID VBUF_Init(OUT VBUF_S *pstVBuf)
 
 VOID VBUF_Finit(IN VBUF_S *pstVBuf)
 {
-    if (pstVBuf->pucData)
-    {
-        MEM_Free(pstVBuf->pucData);
-    }
+    MEM_SafeFree(pstVBuf->pucData);
 }
 
 VOID VBUF_SetMemDouble(OUT VBUF_S *pstVBuf, BOOL_T enable)
@@ -57,17 +71,22 @@ VOID VBUF_SetMemDouble(OUT VBUF_S *pstVBuf, BOOL_T enable)
 
 VOID VBUF_Clear(IN VBUF_S *pstVBuf)
 {
-    if (0 == pstVBuf)
-    {
+    if (! pstVBuf) {
         return;
     }
 
-    if (pstVBuf->pucData)
-    {
+    if (pstVBuf->pucData) {
         MEM_Free(pstVBuf->pucData);
     }
 
     Mem_Zero(pstVBuf, sizeof(VBUF_S));
+}
+
+
+void VBUF_ClearData(IN VBUF_S *pstVBuf)
+{
+    pstVBuf->ulUsedLen = 0;
+    pstVBuf->ulOffset = 0;
 }
 
 
@@ -114,19 +133,16 @@ BS_STATUS VBUF_ExpandTo(IN VBUF_S *pstVBuf, IN ULONG ulLen)
     UCHAR *pucTmp;
     UINT uiNewTotleLen = ulLen;
 
-    if (uiNewTotleLen <= pstVBuf->ulTotleLen)
-    {
+    if (uiNewTotleLen <= pstVBuf->ulTotleLen) {
         return BS_OK;
     }
 
     pucTmp = MEM_MallocAndCopy(pstVBuf->pucData + pstVBuf->ulOffset, pstVBuf->ulUsedLen, uiNewTotleLen);
-    if (NULL == pucTmp)
-    {
+    if (NULL == pucTmp) {
         RETURN(BS_NO_MEMORY);
     }
 
-    if (pstVBuf->pucData != NULL)
-    {
+    if (pstVBuf->pucData != NULL) {
         MEM_Free(pstVBuf->pucData);
     }
 
@@ -170,15 +186,33 @@ BS_STATUS VBUF_MoveData(IN VBUF_S *pstVBuf, IN ULONG ulOffset)
 }
 
 
+int VBUF_Cut(VBUF_S *vbuf, ULONG offset, ULONG cut_len)
+{
+    if (offset + cut_len >= vbuf->ulUsedLen) {
+        vbuf->ulUsedLen = offset;
+        return 0;
+    }
+
+    char *data = VBUF_GetData(vbuf);
+    char *dst = data + offset;
+    char *src = dst + cut_len;
+    ULONG src_len = vbuf->ulUsedLen - (offset + cut_len);
+
+    memmove(dst, src, src_len);
+
+    vbuf->ulUsedLen -= cut_len;
+
+    return 0;
+
+}
+
+
 BS_STATUS VBUF_CutHead(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
 {
-    if (ulCutLen < pstVBuf->ulUsedLen)
-    {
+    if (ulCutLen < pstVBuf->ulUsedLen) {
         pstVBuf->ulUsedLen -= ulCutLen;
         memmove(pstVBuf->pucData, pstVBuf->pucData + pstVBuf->ulOffset + ulCutLen, pstVBuf->ulUsedLen);
-    }
-    else
-    {
+    } else {
         pstVBuf->ulUsedLen = 0;
     }
 
@@ -193,13 +227,10 @@ BS_STATUS VBUF_EarseHead(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
 {
     BS_DBGASSERT(0 != pstVBuf);
 
-    if (ulCutLen < pstVBuf->ulUsedLen)
-    {
+    if (ulCutLen < pstVBuf->ulUsedLen) {
         pstVBuf->ulUsedLen -= ulCutLen;
         pstVBuf->ulOffset = pstVBuf->ulOffset + ulCutLen;
-    }
-    else
-    {
+    } else {
         pstVBuf->ulUsedLen = 0;
         pstVBuf->ulOffset = 0;
     }
@@ -229,23 +260,6 @@ BS_STATUS VBUF_CutTail(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
     }
 
     return BS_OK;
-}
-
-static int _vbuf_pre_cat(IN VBUF_S *pstVBuf, IN ULONG ulLen)
-{
-    ULONG ulTailLen;
-
-    ulTailLen = (pstVBuf->ulTotleLen - pstVBuf->ulOffset) - pstVBuf->ulUsedLen;
-
-    if (ulTailLen >= ulLen) {
-        return 0;
-    }
-
-    if (pstVBuf->ulUsedLen + ulLen <= pstVBuf->ulTotleLen) {
-        return VBUF_MoveData(pstVBuf, 0);
-    }
-
-    return _vbuf_resize_up_to(pstVBuf, pstVBuf->ulUsedLen + ulLen);
 }
 
 BS_STATUS VBUF_CatFromBuf(IN VBUF_S *pstVBuf, IN VOID *buf, IN ULONG ulLen)
@@ -350,5 +364,24 @@ VOID * VBUF_GetData(IN VBUF_S *pstVBuf)
 VOID * VBUF_GetTailFreeBuf(IN VBUF_S *pstVBuf)
 {
     return pstVBuf->pucData + pstVBuf->ulOffset + pstVBuf->ulUsedLen;
+}
+
+
+long VBUF_Ptr2Offset(VBUF_S *vbuf, void *ptr)
+{
+    long offset;
+    char *data = VBUF_GetData(vbuf);
+    char *tmp = ptr;
+
+    if (data > tmp) {
+        return -1;
+    }
+
+    offset = tmp - data;
+    if (offset >= vbuf->ulUsedLen) {
+        return -1;
+    }
+
+    return offset;
 }
 

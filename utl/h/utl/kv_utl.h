@@ -30,7 +30,7 @@ typedef struct {
 }KV_PARAM_S;
 
 typedef CHAR* (*PF_KV_DECODE_FUNC)(IN LSTR_S *pstLstr, void *memcap);
-typedef BS_WALK_RET_E (*PF_KV_WALK_FUNC)(IN CHAR *pcKey, IN CHAR *pcValue, IN HANDLE hUserHandle);
+typedef int (*PF_KV_WALK_FUNC)(IN CHAR *pcKey, IN CHAR *pcValue, IN HANDLE hUserHandle);
 
 KV_HANDLE KV_Create(KV_PARAM_S *p);
 VOID KV_Destory(IN KV_HANDLE hKvHandle);

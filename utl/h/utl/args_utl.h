@@ -11,12 +11,7 @@ extern "C"
 #endif
 
 
-int ARGS_Split
-(
-    char *string,
-    char **args,   
-    int max_count
-);
+int ARGS_Split(char *string, OUT char **args,  int max_count);
 
 #ifdef __cplusplus
 }

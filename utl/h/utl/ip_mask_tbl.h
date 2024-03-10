@@ -28,7 +28,7 @@ typedef struct {
     UINT bf[1024*1024*2]; 
 }IPMASKTBL_BF_S;
 
-typedef BS_WALK_RET_E (*PF_IPMASKTBL_WALK_FUNC)(IN IPMASKTBL_NODE_S *pstIpMaskTblNode, IN HANDLE hUserHandle);
+typedef int (*PF_IPMASKTBL_WALK_FUNC)(IN IPMASKTBL_NODE_S *pstIpMaskTblNode, IN HANDLE hUserHandle);
 typedef void (*PF_IPMASKTBL_MERGE_USER_DATA)(IPMASKTBL_NODE_S *node_to, IPMASKTBL_NODE_S *node_from);
 
 int IPMASKTBL_Init(IN IPMASKTBL_S *ipmasktbl);

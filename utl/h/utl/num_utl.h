@@ -56,6 +56,17 @@
 #define NUM_IS2NDEC1(_num) (((_num) > 0) && (((_num) & ((_num)+1))==0))
 
 
+#define NUM_CYCLE_INDEX_ADD(uiIndex, uiInc, uiMaxCount)   \
+    do {    \
+        (uiIndex) = (uiIndex) + (uiInc); \
+        if ((uiIndex) >= (uiMaxCount))     \
+        {   \
+            (uiIndex) -= (uiMaxCount); \
+        }   \
+    } while(0)
+
+
+
 static inline UINT NUM_To2N(UINT x)
 {
     x--;
@@ -68,17 +79,6 @@ static inline UINT NUM_To2N(UINT x)
 
     return x + 1;
 }
-
-
-#define NUM_CYCLE_INDEX_ADD(uiIndex, uiInc, uiMaxCount)   \
-    do {    \
-        (uiIndex) = (uiIndex) + (uiInc); \
-        if ((uiIndex) >= (uiMaxCount))     \
-        {   \
-            (uiIndex) -= (uiMaxCount); \
-        }   \
-    } while(0)
-
 
 
 static inline ULONG NUM_DoDiv(IN ULONG *pulNum, IN ULONG ulBase)
@@ -121,10 +121,12 @@ static inline INT NUM_Cmp(IN UINT uiNum1, IN UINT uiNum2)
 }
 
 
+
 static inline unsigned int NUM_Rol32(unsigned int word, unsigned int shift)
 {
 	return (word << (shift & 31)) | (word >> ((-shift) & 31));
 }
+
 
 #ifdef __cplusplus
     }

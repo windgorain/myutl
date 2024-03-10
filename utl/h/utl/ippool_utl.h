@@ -14,7 +14,7 @@
 
 typedef HANDLE IPPOOL_HANDLE;
 
-typedef BS_WALK_RET_E (*PF_IPPOOL_WALK_FUNC)(IN UINT uiIp, IN HANDLE hUserHandle);
+typedef int (*PF_IPPOOL_WALK_FUNC)(IN UINT uiIp, IN HANDLE hUserHandle);
 
 IPPOOL_HANDLE IPPOOL_Create();
 

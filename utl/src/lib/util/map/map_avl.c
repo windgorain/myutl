@@ -25,6 +25,7 @@ static BS_STATUS map_avl_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pD
 static MAP_ELE_S * map_avl_get_ele(MAP_HANDLE map, void *key, UINT key_len);
 static void * map_avl_get(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
 static void * map_avl_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
+static void * map_avl_del_node(MAP_HANDLE map, void *n);
 static void * map_avl_del_by_ele(IN MAP_HANDLE map, IN MAP_ELE_S *ele);
 static void map_avl_del_all(MAP_HANDLE map, PF_MAP_FREE_FUNC func, void * pUserData);
 static UINT map_avl_count(MAP_HANDLE map);
@@ -35,6 +36,7 @@ static MAP_FUNC_S g_map_avl_funcs = {
     .destroy_func = map_avl_destroy,
     .reset_func = map_avl_reset,
     .add_node_func = map_avl_add_node,
+    .del_node_func = map_avl_del_node,
     .add_func = map_avl_add,
     .get_ele_func = map_avl_get_ele,
     .get_func = map_avl_get,
@@ -70,7 +72,7 @@ static MAP_AVL_NODE_S * _map_avl_find(IN MAP_CTRL_S *map, IN VOID *pKey, IN UINT
     return avlSearch(avl_map->avl_root, &ele, _map_avl_cmp);
 }
 
-static BS_WALK_RET_E _map_avl_walk(void *node, void *ud)
+static int _map_avl_walk(void *node, void *ud)
 {
     USER_HANDLE_S *pstUserHandle = ud;
     PF_MAP_WALK_FUNC pfWalkFunc = pstUserHandle->ahUserHandle[0];
@@ -248,6 +250,13 @@ static void * map_avl_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
         return NULL;
     }
 
+    return _map_avl_del_node(map, pstNode);
+}
+
+
+static void * map_avl_del_node(MAP_HANDLE map, void *n)
+{
+    MAP_AVL_NODE_S *pstNode = n;
     return _map_avl_del_node(map, pstNode);
 }
 

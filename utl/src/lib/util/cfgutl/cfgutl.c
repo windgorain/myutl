@@ -56,9 +56,9 @@ VOID CFGUTL_Open(IN CHAR *pszFileName, IN CFGUTL_REG_TBL_S *pstRegTbl, IN UINT u
         return;
     }
     
-    TXT_StrimAndMove((CHAR*)pstMemMap->pucFileData);
+    TXT_StrimAndMove((CHAR*)pstMemMap->data);
 
-    TXT_SCAN_LINE_BEGIN((CHAR*)pstMemMap->pucFileData,pucLineHead,ulLineLen)
+    TXT_SCAN_LINE_BEGIN((CHAR*)pstMemMap->data, pucLineHead, ulLineLen)
     {
         pucLineHead[ulLineLen] = '\0';
         TXT_StrimAndMove(pucLineHead);

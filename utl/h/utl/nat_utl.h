@@ -60,7 +60,7 @@ typedef struct
     UCHAR aucReserved[2];
 }NAT_NODE_S;
 
-typedef BS_WALK_RET_E (*PF_NAT_WALK_CALL_BACK_FUNC)(IN NAT_NODE_S *pstNatNode, IN HANDLE hUserHandle);
+typedef int (*PF_NAT_WALK_CALL_BACK_FUNC)(IN NAT_NODE_S *pstNatNode, IN HANDLE hUserHandle);
 
 NAT_HANDLE NAT_Create
 (
