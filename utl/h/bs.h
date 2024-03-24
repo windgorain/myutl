@@ -12,14 +12,14 @@
     extern "C" {
 #endif 
 
-#include "cpu_def.h"
+#include "utl/cpu_def.h"
 #include "bs/head_bs.h"
 #include "bs/mem_bs.h"
 #include "utl/mem_utl.h"
 #include "utl/backtrace_utl.h"
 #include "utl/dll_utl.h"
 
-#include "stub_bs.h"
+#include "utl/stub_bs.h"
 
 #include "utl/err_code.h"
 #include "utl/num_utl.h"
