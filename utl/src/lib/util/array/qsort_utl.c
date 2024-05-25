@@ -58,7 +58,7 @@ void QSORT_Do(void *base, int num, int width, PF_CMP_FUNC cmp_func)
 recurse:
 
     
-    size = (hi - lo) / width + 1;
+    size = ((U32)(hi - lo) / (U32)width) + 1;
 
     
     if (size <= CUTOFF) {

@@ -12,8 +12,8 @@ extern "C"
 #endif
 
 typedef struct {
-    volatile int begin;
-    volatile int end;
+    volatile S64 begin;
+    volatile S64 end;
 }ATOM_ONCE_S;
 
 #define ATOM_ONCE_INIT_VALUE {0}
@@ -23,7 +23,7 @@ typedef int (*PF_ATOM_ONCE_CB)(void *ud);
 
 static inline void AtomOnce_Do(ATOM_ONCE_S *once, PF_ATOM_ONCE_CB func, void *ud)
 {
-    int to = 0;
+    S64 to = 0;
 
     if (once->end) {
         
@@ -52,9 +52,9 @@ static inline void AtomOnce_WaitDo(ATOM_ONCE_S *once, PF_ATOM_ONCE_CB func, void
     if (ATOM_BOOL_COMP_SWAP(&once->begin, &to, 1)) {
         func(ud);
         ATOM_BARRIER();
-        ATOM_SET(&once->end, 1);
+        once->end = 1;
     } else {
-        while (0 == ATOM_GET(&once->end)) {
+        while (0 == once->end) {
             
         }
     }

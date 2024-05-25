@@ -19,8 +19,7 @@ typedef struct
 
 static void map_rbtree_destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 static void map_rbtree_reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
-static BS_STATUS map_rbtree_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
-        void *pData, void *node, UINT flag);
+static int map_rbtree_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag);
 static BS_STATUS map_rbtree_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 static MAP_ELE_S * map_rbtree_get_ele(MAP_HANDLE map, void *key, UINT key_len);
 static void * map_rbtree_get(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
@@ -146,8 +145,7 @@ static inline int _map_rbtree_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
     return BS_OK;
 }
 
-static BS_STATUS map_rbtree_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
-        void *pData, void *node, UINT flag)
+static int map_rbtree_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag)
 {
     _MAP_RBTREE_S *rbtree_map = map->impl_map;
     MAP_RBTREE_NODE_S *pstNode = node;
@@ -160,7 +158,7 @@ static BS_STATUS map_rbtree_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
 
     pstNode->stEle.link_alloced = 0;
 
-    return _map_rbtree_add(map, pKey, uiKeyLen, pData, pstNode, flag);
+    return _map_rbtree_add(map, key->data, key->len, pData, pstNode, flag);
 }
 
 static BS_STATUS map_rbtree_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag)

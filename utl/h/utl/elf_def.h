@@ -14,8 +14,8 @@ typedef struct {
     char *sec_name;
     char *func_name;
     UINT sec_offset; 
-    UINT prog_offset; 
-    UINT size; 
+    UINT func_offset; 
+    UINT func_size; 
     int  sec_id; 
 }ELF_PROG_INFO_S;
 

@@ -24,11 +24,14 @@ typedef struct {
 
 int VBUF_AddHead(INOUT VBUF_S *vbuf, ULONG len);
 int VBUF_AddHeadBuf(INOUT VBUF_S *vbuf, void *buf, ULONG len);
+int VBUF_AddTail(INOUT VBUF_S *vbuf, ULONG len);
 BS_STATUS VBUF_CatFromVBuf(IN VBUF_S *pstVBufDst, IN VBUF_S *pstVBufSrc);
 BS_STATUS VBUF_CpyFromVBuf(IN VBUF_S *pstVBufDst, IN VBUF_S *pstVBufSrc);
 INT VBUF_CmpByBuf(IN VBUF_S *pstVBuf, IN void *buf, IN ULONG ulLen);
 INT VBUF_CmpByVBuf(IN VBUF_S *pstVBuf1, IN VBUF_S *pstVBuf2);
 long VBUF_Ptr2Offset(VBUF_S *vbuf, void *ptr);
+int VBUF_Insert(VBUF_S *vbuf, U64 data_offset, U64 len);
+int VBUF_InsertBuf(VBUF_S *vbuf, U64 data_offset, void *buf, U64 buf_len);
 int VBUF_WriteFile(char *filename, VBUF_S *vbuf);
 int VBUF_ReadFP(void *fp, OUT VBUF_S *vbuf);
 int VBUF_ReadFile(char *filename, OUT VBUF_S *vbuf);
@@ -136,7 +139,25 @@ static inline void VBUF_Finit(IN VBUF_S *pstVBuf)
 {
     if (pstVBuf->pucData) {
         MEM_Free(pstVBuf->pucData);
+        Mem_Zero(pstVBuf, sizeof(VBUF_S));
     }
+}
+
+
+static inline void * VBUF_Steal(INOUT VBUF_S *vbuf)
+{
+    _vbuf_move_data(vbuf, 0);
+    void *mem = vbuf->pucData;
+    VBUF_Init(vbuf);
+    return mem;
+}
+
+static inline void VBUF_SetData(INOUT VBUF_S *pstVBuf, void *data, int data_len)
+{
+    VBUF_Finit(pstVBuf);
+    pstVBuf->pucData = data;
+    pstVBuf->ulTotleLen = data_len;
+    pstVBuf->ulUsedLen = data_len;
 }
 
 static inline void * VBUF_GetData(IN VBUF_S *pstVBuf)
@@ -158,6 +179,21 @@ static inline ULONG VBUF_GetDataLength(IN VBUF_S *pstVBuf)
 }
 
 
+static inline void VBUF_ToM(INOUT VBUF_S *vbuf, OUT LLDATA_S *m)
+{
+    m->len = VBUF_GetDataLength(vbuf);
+    m->data = VBUF_Steal(vbuf);
+}
+
+
+static inline void VBUF_FromM(OUT VBUF_S *vbuf, INOUT LLDATA_S *m)
+{
+    VBUF_SetData(vbuf, m->data, m->len);
+    m->data = NULL;
+    m->len = 0;
+}
+
+
 static inline ULONG VBUF_GetHeadFreeLength(IN VBUF_S *pstVBuf)
 {
     return pstVBuf->ulOffset;
@@ -170,7 +206,7 @@ static inline ULONG VBUF_GetTailFreeLength(IN VBUF_S *pstVBuf)
     return (pstVBuf->ulTotleLen - pstVBuf->ulOffset) - pstVBuf->ulUsedLen;
 }
 
-static inline int VBUF_CpyFromBuf(IN VBUF_S *pstVBuf, IN void *buf, IN ULONG ulLen)
+static inline int VBUF_CpyBuf(IN VBUF_S *pstVBuf, IN void *buf, IN ULONG ulLen)
 {
     BS_DBGASSERT(0 != pstVBuf);
 
@@ -195,8 +231,7 @@ static inline int VBUF_CpyFromBuf(IN VBUF_S *pstVBuf, IN void *buf, IN ULONG ulL
     return BS_OK;
 }
 
-
-static inline int VBUF_CatFromBuf(INOUT VBUF_S *pstVBuf, IN VOID *buf, IN ULONG ulLen)
+static inline int VBUF_CatBuf(INOUT VBUF_S *pstVBuf, IN VOID *buf, IN ULONG ulLen)
 {
     int ret;
 
@@ -204,7 +239,7 @@ static inline int VBUF_CatFromBuf(INOUT VBUF_S *pstVBuf, IN VOID *buf, IN ULONG 
     BS_DBGASSERT(NULL != buf);
 
     if (pstVBuf->ulUsedLen == 0) {
-        return VBUF_CpyFromBuf(pstVBuf, buf, ulLen);
+        return VBUF_CpyBuf(pstVBuf, buf, ulLen);
     }
 
     ret = _vbuf_pre_cat(pstVBuf, ulLen);

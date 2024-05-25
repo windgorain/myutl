@@ -18,8 +18,7 @@ typedef struct
 
 static void map_list_destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 static void map_list_reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
-static BS_STATUS map_list_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
-        void *pData, void *node, UINT flag);
+static int map_list_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag);
 static BS_STATUS map_list_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 static MAP_ELE_S * map_list_get_ele(MAP_HANDLE map, void *key, UINT key_len);
 static void * map_list_get(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen);
@@ -166,20 +165,19 @@ static inline int _map_list_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
     return BS_OK;
 }
 
-static BS_STATUS map_list_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
-        void *pData, void *node, UINT flag)
+static int map_list_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag)
 {
     MAP_LIST_NODE_S *pstNode = node;
     int ret;
 
-    ret = _map_list_add_check(map, pKey, uiKeyLen, flag);
+    ret = _map_list_add_check(map, key->data, key->len, flag);
     if (ret < 0) {
         return ret;
     }
 
     pstNode->stEle.link_alloced = 0;
 
-    return _map_list_add(map, pKey, uiKeyLen, pData, pstNode, flag);
+    return _map_list_add(map, key->data, key->len, pData, pstNode, flag);
 }
 
 static BS_STATUS map_list_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag)

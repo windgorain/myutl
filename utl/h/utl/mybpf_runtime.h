@@ -16,7 +16,10 @@ extern "C"
 #endif
 
 typedef struct {
-    MAP_HANDLE loader_map;
+    DLL_HEAD_S list; 
+    void *namefunc_tbl;
+    void *idfunc_tbl;
+    void *evob_tbl;
     DLL_HEAD_S hp_list[MYBPF_HP_MAX];
 }MYBPF_RUNTIME_S;
 

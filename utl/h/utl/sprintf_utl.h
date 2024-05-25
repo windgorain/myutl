@@ -37,31 +37,12 @@ INT BS_Printf(const char *fmt, ...);
 INT BS_Sprintf(char * buf, const char *fmt, ...);
 INT BS_Snprintf(char * buf, IN INT iLen, const char *fmt, ...);
 INT BS_Vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
+int BS_Scnprintf(char *buf, int size, const char *fmt, ...);
 
 int BS_FormatCompile(FormatCompile_S *fc, char *fmt);
 int BS_VFormat(FormatCompile_S *fc, char *buf, size_t size, va_list args);
 int BS_Format(FormatCompile_S *fc, char * buf, ...);
 int BS_FormatN(FormatCompile_S *fc, char *buf, int size, ...);
-
-static inline int BS_Scnprintf(char *buf, int size, const char *fmt, ...)
-{
-	va_list args;
-	int ret_len;
-
-    if ((! buf) || (size <= 1)){
-        return 0;
-    }
-
-	va_start(args, fmt);
-	ret_len = vsnprintf(buf, size, fmt, args);
-	va_end(args);
-
-    if (ret_len >= size) {
-        return size - 1;
-    }
-
-    return ret_len;
-}
 
 
 #define scnprintf BS_Scnprintf

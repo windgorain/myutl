@@ -34,6 +34,22 @@ typedef long long S64;
 
 typedef void *              HANDLE;
 
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef BOOL_TRUE
+#define BOOL_TRUE TRUE
+#endif
+
+#ifndef BOOL_FALSE
+#define BOOL_FALSE FALSE
+#endif
+
 #ifdef __cplusplus
 }
 #endif

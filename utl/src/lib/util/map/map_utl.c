@@ -15,12 +15,12 @@
 
 typedef struct
 {
-    HASH_HANDLE hHash;
+    HASH_S * hHash;
 }_MAP_HASH_S;
 
 static void map_hash_destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 static void map_hash_reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
-static int map_hash_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, void *node, UINT flag);
+static int map_hash_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag);
 static void * map_hash_del_node(MAP_HANDLE map, void *node);
 static int map_hash_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 static MAP_ELE_S * map_hash_get_ele(MAP_HANDLE map, void *key, UINT key_len);
@@ -92,7 +92,7 @@ static MAP_HASH_NODE_S * _map_hash_find(IN MAP_CTRL_S *map, IN VOID *pKey, IN UI
     return HASH_Find(hash_map->hHash, _map_hash_cmp, &stNode);
 }
 
-static int _map_hash_walk(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUserHandle)
+static int _map_hash_walk(IN void *hHashId, IN VOID *pNode, IN VOID * pUserHandle)
 {
     USER_HANDLE_S *pstUserHandle = pUserHandle;
     PF_MAP_WALK_FUNC pfWalkFunc = pstUserHandle->ahUserHandle[0];
@@ -102,7 +102,7 @@ static int _map_hash_walk(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUse
     return pfWalkFunc(&pstNode->stEle, pUserHandleTmp);
 }
 
-static void _map_hash_free_all(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUserHandle)
+static void _map_hash_free_all(IN void * hHashId, IN VOID *pNode, IN VOID * pUserHandle)
 {
     USER_HANDLE_S *pstUserHandle = pUserHandle;
     PF_MAP_FREE_FUNC func = pstUserHandle->ahUserHandle[0];
@@ -215,23 +215,22 @@ static inline int _map_hash_add(MAP_HANDLE map, void *pKey, UINT uiKeyLen, void 
     return BS_OK;
 }
 
-static BS_STATUS map_hash_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
-        void *pData, void *node, UINT flag)
+static int map_hash_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag)
 {
     MAP_HASH_NODE_S *pstNode = node;
     UINT hash_factor;
     int ret;
 
-    hash_factor = _map_key_hash_factor(pKey, uiKeyLen);
+    hash_factor = _map_key_hash_factor(key->data, key->len);
 
-    ret = _map_hash_add_check(map, pKey, uiKeyLen, flag, hash_factor);
+    ret = _map_hash_add_check(map, key->data, key->len, flag, hash_factor);
     if (ret < 0) {
         return ret;
     }
 
     pstNode->stEle.link_alloced = 0;
 
-    ret = _map_hash_add(map, pKey, uiKeyLen, pData, pstNode, flag, hash_factor);
+    ret = _map_hash_add(map, key->data, key->len, pData, pstNode, flag, hash_factor);
     if (ret < 0) {
         return ret;
     }
@@ -420,13 +419,5 @@ MAP_HANDLE MAP_HashCreate(MAP_PARAM_S *p)
     return ctrl;
 }
 
-void MAP_HashSetResizeWatter(MAP_HANDLE map, UINT high_watter_percent, UINT low_watter_percent)
-{
-    _MAP_HASH_S *hash_map = map->impl_map;
-
-    BS_DBGASSERT(map->funcs == &g_map_hash_funcs);
-
-    HASH_SetResizeWatter(hash_map->hHash, high_watter_percent, low_watter_percent);
-}
 
 

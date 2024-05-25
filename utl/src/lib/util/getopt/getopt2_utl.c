@@ -4,10 +4,10 @@
 * Description: 
 * History:     
 ******************************************************************************/
-
 #include "bs.h"
 
 #include "utl/bit_opt.h"
+#include "utl/ctype_utl.h"
 #include "utl/ip_string.h"
 #include "utl/ip_utl.h"
 #include "utl/txt_utl.h"
@@ -59,14 +59,10 @@ static inline BOOL_T getopt2_is_must(GETOPT2_NODE_S *node)
 
 static int getopt2_parse_value_u32(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
 {
-    UINT uiData;
-
-    if (BS_OK != TXT_Atoui(pcValue, &uiData)) {
+	if (FALSE == CTYPE_IsNumString(pcValue)) {
         return BS_ERR;
-    }
-
-    *((UINT*)pstNode->value) = uiData;
-
+	}
+    *((UINT*)pstNode->value) = strtoul(pcValue, NULL, 10);
     return 0;
 }
 
@@ -104,7 +100,7 @@ static int getopt2_parse_value_ipv4(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
 
 static int getopt2_parse_value_ipv6(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
 {
-    char tmp[256] = {0};
+    char tmp[256];
     struct in6_addr addr;
     char *p = pcValue;
 
@@ -414,12 +410,12 @@ int GETOPT2_ParseFromArgv0(UINT uiArgc, CHAR **ppcArgv, INOUT GETOPT2_NODE_S *op
     GETOPT2_NODE_S *err_node = GETOPT2_IsMustErr(opts);
     if (err_node) {
         if (err_node->opt_type == 'P') {
-            RETURNI(BS_NOT_COMPLETE, "Require param %s", err_node->opt_long_name);
+            return BS_NOT_COMPLETE;
         }
         if (err_node->opt_short_name) {
-            RETURNI(BS_NOT_COMPLETE, "Require option \'-%c\'", err_node->opt_short_name);
+            return BS_NOT_COMPLETE;
         }
-        RETURNI(BS_NOT_COMPLETE, "Require option \'--%s\'", err_node->opt_long_name);
+        return BS_NOT_COMPLETE;
     }
 
     return 0;

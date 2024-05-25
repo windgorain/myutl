@@ -67,7 +67,7 @@ typedef void (*PF_MAP_FREE_FUNC)(void *data, void *ud);
 
 typedef void (*PF_MAP_Destroy)(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 typedef void (*PF_MAP_Reset)(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
-typedef int (*PF_MAP_Add_Node)(MAP_HANDLE map, void *pKey, UINT uiKeyLen, void *pData, void *node, UINT flag);
+typedef int (*PF_MAP_Add_Node)(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag);
 typedef void * (*PF_MAP_Del_Node)(MAP_HANDLE map, void *node);
 typedef int (*PF_MAP_Add)(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 typedef MAP_ELE_S* (*PF_MAP_GetEle)(MAP_HANDLE map, void *key, UINT key_len);
@@ -104,7 +104,6 @@ typedef struct tagMAP_CTRL_S{
 
 
 MAP_HANDLE MAP_HashCreate(MAP_PARAM_S *p);
-void MAP_HashSetResizeWatter(MAP_HANDLE map, UINT high_watter_percent, UINT low_watter_percent);
 
 MAP_HANDLE MAP_AvlCreate(void *memcap );
 
@@ -147,7 +146,10 @@ static inline int MAP_Add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData
 static inline int MAP_AddNode(MAP_HANDLE map, void *pKey, UINT uiKeyLen,
         void *pData, MAP_LINK_NODE_S *link_node, UINT flag)
 {
-    return map->funcs->add_node_func(map, pKey, uiKeyLen, pData, link_node, flag);
+    LDATA_S key;
+    key.data = pKey;
+    key.len = uiKeyLen;
+    return map->funcs->add_node_func(map, &key, pData, link_node, flag);
 }
 
 

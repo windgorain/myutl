@@ -15,19 +15,25 @@
 #endif 
 
 #define MEM_Set(pBuf, ucTo, uiLen) memset(pBuf, ucTo, uiLen)
-#define Mem_Zero(pMem,ulSize)  MEM_Set(pMem, 0, ulSize)
+#define Mem_Zero(pMem,ulSize)  memset(pMem, 0, ulSize)
 
 #if defined(USE_BS)
 #define SUPPORT_MEM_MANAGED
 #endif
 
+
 #define MEM_Malloc(uiSize)  _mem_Malloc(uiSize, __FILE__,  __LINE__)
 #define MEM_ZMalloc(ulSize)  _mem_MallocWithZero(ulSize, __FILE__,  __LINE__)
 #define MEM_MallocAndCopy(pSrc,uiSrcLen,uiMallocLen) _mem_MallocAndCopy(pSrc,uiSrcLen,uiMallocLen,__FILE__,__LINE__)
-
 #define MEM_Free(pMem)  _mem_Free((VOID*)(pMem), __FILE__, __LINE__)
- 
-#define MEM_SafeFree(pMem) do {if (pMem) {MEM_Free(pMem);}}while(0)
+#define MEM_SafeFree(pMem) do {if (pMem) {MEM_Free(pMem);}}while(0) 
+
+
+#define MEM_Kalloc(uiSize) MEM_Malloc(uiSize)
+#define MEM_ZKalloc(uiSize) MEM_ZMalloc(uiSize)
+#define MEM_KallocAndCopy(uiSize) MEM_MallocAndCopy(uiSize)
+#define MEM_KFree(pMem)  MEM_Free(pMem)
+#define MEM_SafeKFree(pMem) MEM_SafeFree(pMem)
 
 #define MEM_ZMallocAndCopy(pSrc,uiSrcLen,uiMallocLen) ({ \
         char *_mem = MEM_MallocAndCopy(pSrc,uiSrcLen, uiMallocLen); \
@@ -64,21 +70,12 @@ static inline VOID * _mem_MallocWithZero(IN UINT uiSize, const char *pszFileName
     return pMem;
 }
 
-static inline VOID MEM_Copy(IN VOID *pucDest, IN VOID *pucSrc, IN UINT ulLen)
-{
-#ifdef IN_DEBUG
-    {
-        char *d1_min = pucDest;
-        char *d1_max = (d1_min + ulLen) - 1;
-        char *d2_min = pucSrc;
-        char *d2_max = (d2_min + ulLen) - 1;
-        if (NUM_AREA_IS_OVERLAP(d1_min, d1_max, d2_min, d2_max) != FALSE) {
-            BS_DBGASSERT(0);
-        }
-    }
+#ifdef IN_DEBUG 
+#define MEM_Copy(d,s,l) MEM_CopyWithCheck(d,s,l)
+#else 
+#define MEM_Copy(d,s,l) memcpy(d,s,l)
 #endif
-    memcpy(pucDest, pucSrc, ulLen);
-}
+
 
 static inline int MEM_Cmp(IN UCHAR *pucMem1, IN UINT uiMem1Len, IN UCHAR *pucMem2, IN UINT uiMem2Len)
 {
@@ -101,7 +98,7 @@ void * _mem_rcu_zmalloc(IN UINT uiSize, const char *file, int line);
 void * _mem_rcu_dup(void *mem, int size, const char *file, int line);
 #define MEM_RcuDup(mem, size) _mem_rcu_dup(mem, size, __FILE__, __LINE__)
 
-void MEM_RcuFree(IN VOID *pMem);
+void MEM_RcuFree(void *mem);
 
 void * MEM_Find(IN VOID *pMem, IN UINT ulMemLen, IN VOID *pMemToFind, IN UINT ulMemToFindLen);
 
@@ -139,8 +136,6 @@ int MEM_IsZero(void *data, int size);
 
 int MEM_IsFF(void *data, int size);
 
-void MEM_ZeroByUlong(void *data, int count);
-
 int MEM_SprintCFromat(void *mem, UINT len, OUT char *buf, int buf_size);
 int MEM_Sprint(void *pucMem, UINT uiLen, OUT char *buf, int buf_size);
 typedef void (*PF_MEM_PRINT_FUNC)(const char *fmt, ...);
@@ -153,9 +148,12 @@ int MEM_ReplaceChar(void *data, int len, UCHAR src, UCHAR dst);
 
 int MEM_ReplaceOneChar(void *data, int len, UCHAR src, UCHAR dst);
 
-
 void MEM_Swap(void *buf1, void *buf2, int len);
 int MEM_SwapByOff(void *buf, int buf_len, int off);
+int MEM_MoveData(void *data, S64 len, S64 offset);
+int MEM_MoveDataTo(void *data, U64 len, void *dst);
+
+void MEM_CopyWithCheck(void *dst, void *src, U32 len);
 
 #ifdef __cplusplus
 }

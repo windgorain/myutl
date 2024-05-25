@@ -31,18 +31,12 @@
 #define ATOM_INC_FETCH(ptr)      ATOM_ADD_FETCH(ptr,1)
 #define ATOM_DEC_FETCH(ptr)      ATOM_SUB_FETCH(ptr,1)
 
-
-#define ATOM_BOOL_COMP_SWAP(ptr,ifptr,newval) \
-        __atomic_compare_exchange_n((ptr), (ifptr), (newval), 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED)
-
-#define ATOM_BARRIER()  __atomic_thread_fence(__ATOMIC_ACQUIRE)
-
 #else
 
 #define ATOM_GET(ptr)  (*(ptr))
 #define ATOM_SET(ptr,val)  (*(ptr) = (val))
 
-#define ATOM_FETCH_SET(ptr,val) (__sync_val_compare_and_swap(ptr, ptr, (val)))
+#define ATOM_FETCH_SET(ptr,val) (__sync_val_compare_and_swap(ptr, *(ptr), (val)))
 #define ATOM_FETCH_ADD(ptr,val)  (__sync_fetch_and_add(ptr,val))
 #define ATOM_FETCH_SUB(ptr,val)  (__sync_fetch_and_sub(ptr,val))
 #define ATOM_FETCH_AND(ptr,val)  (__sync_fetch_and_and(ptr,val))
@@ -57,12 +51,11 @@
 #define ATOM_INC_FETCH(ptr)        ATOM_ADD_FETCH(ptr,1)
 #define ATOM_DEC_FETCH(ptr)        ATOM_SUB_FETCH(ptr,1)
 
-#define ATOM_BOOL_COMP_SWAP(ptr,ifptr,newval) \
-        __sync_bool_compare_and_swap((ptr), *(ifptr), (newval))
-
-#define ATOM_BARRIER() (__sync_synchronize())
-
 #endif
+
+
+#define ATOM_BOOL_COMP_SWAP(ptr,ifptr,newval) __sync_bool_compare_and_swap((ptr), *(ifptr), (newval))
+#define ATOM_BARRIER() (__sync_synchronize())
 
 #ifdef __cplusplus
     }

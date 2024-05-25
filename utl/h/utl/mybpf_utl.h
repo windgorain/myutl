@@ -10,6 +10,8 @@ extern "C"
 {
 #endif
 
+#define MYBPF_NAME_SIZE 32
+
 typedef struct {
     U64 p[5];    
     U64 bpf_ret; 

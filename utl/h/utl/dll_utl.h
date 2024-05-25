@@ -15,14 +15,12 @@ extern "C" {
 
 typedef struct tagDLL_HEAD_S _DLL_HEAD_S;
 
-typedef struct tagDLL_NODE_S
-{
+typedef struct tagDLL_NODE_S {
     struct tagDLL_NODE_S    *prev, *next;
     _DLL_HEAD_S * pstHead;
 }DLL_NODE_S;
 
-typedef struct tagDLL_HEAD_S
-{
+typedef struct tagDLL_HEAD_S {
     DLL_NODE_S *prev, *next;
     UINT       ulCount;
 }DLL_HEAD_S;
@@ -55,8 +53,7 @@ static inline UINT DLL_COUNT(void *dll_head) {
 
 #define DLL_GET_HEAD(pstNode) (((DLL_NODE_S*)(pstNode))->pstHead)
 
-static inline void * DLL_FIRST(DLL_HEAD_S *pstDllHead)
-{
+static inline void * DLL_FIRST(DLL_HEAD_S *pstDllHead) {
     if (DLL_COUNT(pstDllHead) == 0) {
         return NULL;
     }
@@ -74,16 +71,17 @@ static inline void * DLL_FIRST(DLL_HEAD_S *pstDllHead)
 
 
 
-static inline void DLL_ADD_TO_HEAD_RCU(DLL_HEAD_S *pstDllHead, void *new_node) {
-    DLL_NODE_S *pstNewNode = new_node;
-    pstNewNode->pstHead = pstDllHead;
-    pstNewNode->next = pstDllHead->next;
-    pstNewNode->prev = (void*)pstDllHead;
-    ATOM_BARRIER();
-    pstDllHead->next->prev = pstNewNode;
-    pstDllHead->next = pstNewNode;
-    pstDllHead->ulCount++;
-}
+#define DLL_ADD_TO_HEAD_RCU(pstDllHead, new_node) do { \
+    DLL_NODE_S *pstNewNode = new_node; \
+    pstNewNode->pstHead = pstDllHead; \
+    pstNewNode->next = pstDllHead->next; \
+    pstNewNode->prev = (void*)pstDllHead; \
+    ATOM_BARRIER(); \
+    pstDllHead->next->prev = pstNewNode; \
+    pstDllHead->next = pstNewNode; \
+    pstDllHead->ulCount++; \
+}while(0)
+
 
 static inline void DLL_ADD_TO_HEAD(DLL_HEAD_S *pstDllHead, void *new_node) {
     DLL_NODE_S *pstNewNode = new_node;
@@ -96,16 +94,16 @@ static inline void DLL_ADD_TO_HEAD(DLL_HEAD_S *pstDllHead, void *new_node) {
 }
 
 
-static inline void DLL_ADD_RCU(DLL_HEAD_S *pstDllHead, void *new_node) {
-    DLL_NODE_S *pstNewNode = new_node;
-    pstNewNode->pstHead = pstDllHead;
-    pstNewNode->next = (void*)pstDllHead;
-    pstNewNode->prev = pstDllHead->prev;
-    ATOM_BARRIER();
-    pstDllHead->prev->next = pstNewNode;
-    pstDllHead->prev = pstNewNode;
-    pstDllHead->ulCount++;
-}
+#define DLL_ADD_RCU(pstDllHead, new_node) do { \
+    DLL_NODE_S *_pstNewNode = (new_node); \
+    _pstNewNode->pstHead = (pstDllHead); \
+    _pstNewNode->next = (void*)(pstDllHead); \
+    _pstNewNode->prev = (pstDllHead)->prev; \
+    ATOM_BARRIER(); \
+    (pstDllHead)->prev->next = _pstNewNode; \
+    (pstDllHead)->prev = _pstNewNode; \
+    (pstDllHead)->ulCount++; \
+}while(0)
 
 
 static inline void DLL_ADD(DLL_HEAD_S *pstDllHead, void *new_node) {

@@ -89,13 +89,11 @@ VOID DLL_Cat (IN DLL_HEAD_S *pstDllHeadDst, IN DLL_HEAD_S *pstDllHeadSrc)
     DLL_NODE_S *pstDllNodeFirst, *pstDllNodeLast;
     DLL_NODE_S *pstNode;
     
-    if (0 == DLL_COUNT (pstDllHeadSrc))
-    {
+    if (0 == DLL_COUNT (pstDllHeadSrc)) {
         return;
     }
 
-    DLL_SCAN(pstDllHeadSrc, pstNode)
-    {
+    DLL_SCAN(pstDllHeadSrc, pstNode) {
         pstNode->pstHead = pstDllHeadDst;
     }
 
@@ -117,10 +115,8 @@ VOID * DLL_Find(IN DLL_HEAD_S *pstDllHead, IN PF_DLL_CMP_FUNC pfCmpFunc, IN VOID
 {
     DLL_NODE_S *pstNode;
     
-    DLL_SCAN(pstDllHead, pstNode)
-    {
-        if (pfCmpFunc(pstNode, pstNodeToFind, hUserHandle) == 0)
-        {
+    DLL_SCAN(pstDllHead, pstNode) {
+        if (pfCmpFunc(pstNode, pstNodeToFind, hUserHandle) == 0) {
             return pstNode;
         }
     }

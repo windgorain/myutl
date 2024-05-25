@@ -14,9 +14,10 @@ extern "C"
 
 typedef struct {
     SL_HEAD_S list[2];
-    volatile int counter[2];
+    volatile S64 counter[2];
     volatile int grace_period_count;
     volatile int state;
+    SPINLOCK_S lock;
 }RCU_DELAY_S;
 
 int RcuDelay_Init(RCU_DELAY_S *ctrl);

@@ -7,6 +7,7 @@
 #include "bs.h"
 #include "utl/mem_utl.h"
 #include "utl/data2hex_utl.h"
+#include "utl/ulc_user.h"
 
 static inline void _mem_swap(void *buf1, void *buf2, int len)
 {
@@ -210,32 +211,30 @@ int MEM_Sprint(void *mem, UINT mem_len, OUT char *buf, int buf_size)
 void MEM_Print(void *mem, int len, PF_MEM_PRINT_FUNC print_func)
 {
     char info[3*16+1];
-    PF_MEM_PRINT_FUNC func = print_func;
     int print_len = 0;
-
-    if (! func) {
-        func = (void*)printf;
-    }
 
     while (len > print_len) {
         print_len += MEM_Sprint(mem + print_len, len - print_len, info, sizeof(info));
-        func(info);
+        if (print_func) {
+            print_func(info);
+        } else {
+            printf("%s", info);
+        }
     }
 }
 
 void MEM_PrintCFormat(void *mem, int len, PF_MEM_PRINT_FUNC print_func)
 {
     char info[5*16+2];
-    PF_MEM_PRINT_FUNC func = print_func;
     int print_len = 0;
-
-    if (! func) {
-        func = (void*)printf;
-    }
 
     while (len > print_len) {
         print_len += MEM_SprintCFromat(mem + print_len, len - print_len, info, sizeof(info));
-        func(info);
+        if (print_func) {
+            print_func(info);
+        } else {
+            printf("%s", info);
+        }
     }
 }
 
@@ -344,18 +343,6 @@ int MEM_IsFF(void *data, int size)
 }
 
 
-void MEM_ZeroByUlong(void *data, int count)
-{
-    ULONG *a = data;
-    int i;
-
-    for (i=0; i<count; i++) {
-        *a = 0;
-        a++;
-    }
-}
-
-
 int MEM_ReplaceChar(void *data, int len, UCHAR src, UCHAR dst)
 {
     int i;
@@ -420,5 +407,59 @@ int MEM_SwapByOff(void *buf, int buf_len, int off)
     MEM_Free(tmp);
 
     return 0;
+}
+
+
+
+
+int MEM_MoveData(void *data, S64 len, S64 offset)
+{
+    if (offset == 0) {
+        return 0;
+    }
+
+    void *tmp = MEM_Malloc(len);
+    if (! tmp) {
+        RETURN(BS_NO_MEMORY);
+    }
+
+    memcpy(tmp, data, len);
+
+    if (offset < 0) { 
+        char *d = (char*)data + offset;
+        memmove(d + len, d, -offset);
+    } else { 
+        char *d = (char*)data + len;
+        memmove(data, d, offset);
+    }
+
+    memcpy((char*)data + offset, tmp, len);
+
+    MEM_Free(tmp);
+
+    return 0;
+}
+
+
+
+
+int MEM_MoveDataTo(void *data, U64 len, void *dst)
+{
+    return MEM_MoveData(data, len, (S64)dst - (S64)data);
+}
+
+void MEM_CopyWithCheck(void *dst, void *src, U32 len)
+{
+    
+    {
+        char *d1_min = dst;
+        char *d1_max = (d1_min + len) - 1;
+        char *d2_min = src;
+        char *d2_max = (d2_min + len) - 1;
+        if (NUM_AREA_IS_OVERLAP(d1_min, d1_max, d2_min, d2_max) != FALSE) {
+            BS_DBGASSERT(0);
+        }
+    }
+    memcpy(dst, src, len);
 }
 

@@ -14,12 +14,11 @@
     extern "C" {
 #endif 
 
-#ifdef IN_WINDOWS
-#define isdigit(c)	('0' <= (c) && (c) <= '9')
-#define islower(c)	('a' <= (c) && (c) <= 'z')
-#define tolower(c)  ((c) | 0x20)
-#define isupper(c)  (((c) >= 'A') && ((c) <= 'Z'))
-#endif
+
+#define TXT_CONST_STRCMP(name, str)  ({ \
+        char _str[] = (str); \
+        strcmp((name), _str); \
+        })
 
 #define TXT_IS_EMPTY(_pstStr) (((_pstStr) == NULL) || ((_pstStr[0]) == '\0'))
 
@@ -178,6 +177,8 @@ extern UINT TXT_CountCharNum(IN CHAR *pszString, IN CHAR cCharToCount);
 extern VOID TXT_Strlwr(INOUT CHAR *pszString);
 
 extern char *TXT_Strdup(IN CHAR *pcStr);
+
+extern BOOL_T TXT_EndcharMatch(char *string, char *pattern, int pattern_len, char end_char);
 
 extern BS_STATUS TXT_StrCpy(IN CHAR *pszDest, IN CHAR *pszSrc);
 

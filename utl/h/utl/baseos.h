@@ -75,6 +75,7 @@
     #include   <sys/ioctl.h>  
     #include   <sys/select.h>  
     #include   <errno.h>   
+    #include   <sys/mman.h>
 #ifndef IN_MAC
     #include   <asm/ioctls.h>
 #endif
